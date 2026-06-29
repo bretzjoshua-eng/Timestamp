@@ -744,10 +744,15 @@ function rxp(){
         const d=new Date(mon);d.setDate(mon.getDate()+i);
         if(urlaubAnTag.has(i)){
           const uk=urlTage.find(k=>{const dd=new Date(k+'T12:00:00');return((dd.getDay()+6)%7)===i});
-          const lbl=uk&&D[uk]?.src==='ot'?'Zeitausgleich':'Urlaub';
+          const isZA=uk&&D[uk]?.src==='ot';
+          const lbl=isZA?'Zeitausgleich':'Urlaub';
+          const col=isZA?'#FF6B35':'#30D158';
+          // Zeitausgleich: Mo–Do 8h, Fr 7h bei APS; Urlaubskonto: nur Kennzeichnung
+          const rechts=isZA?`<span style="font-weight:600;color:${col}">${fmt(istVierzig?8*60:(i<4?8*60:7*60))}</span>`
+            :`<span style="font-weight:600;color:${col}">${lbl}</span>`;
           h+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
-            <span style="color:#30D158">🏖️ ${tn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag u">${lbl}</span></span>
-            <span style="font-weight:600;color:#30D158">${lbl}</span></div>`;
+            <span style="color:${col}">🏖️ ${tn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag u">${lbl}</span></span>
+            ${rechts}</div>`;
         } else if(feiAnTag.has(i)){
           h+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
             <span style="color:#FF9F0A">🎉 ${tn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag f">Feiertag</span></span>
@@ -789,11 +794,16 @@ function rxp(){
         </div>`;
       wKeys.forEach(k=>{
         const e=D[k],t=e.type;
-        const tag=t==='u'?`<span class="etag u">${e.src==='ot'?'Zeitausgleich':'Urlaub'}</span>`:t==='nt'?'<span class="etag n">Nacht</span>':t==='f'?'<span class="etag f">Feiertag</span>':'';
-        const detail=t==='u'?`Urlaubstag (${e.src==='ot'?'aus Überstunden':'aus Urlaubskonto'})`:t==='f'?`Feiertag${e.note?' · '+esc(e.note):''}`:`${e.start}–${e.end} · Pause ${e.pause}min`;
+        const isZA=t==='u'&&e.src==='ot';
+        const tag=t==='u'?`<span class="etag u">${isZA?'Zeitausgleich':'Urlaub'}</span>`:t==='nt'?'<span class="etag n">Nacht</span>':t==='f'?'<span class="etag f">Feiertag</span>':'';
+        const detail=t==='u'?`Urlaubstag (${isZA?'aus Überstunden':'aus Urlaubskonto'})`:t==='f'?`Feiertag${e.note?' · '+esc(e.note):''}`:`${e.start}–${e.end} · Pause ${e.pause}min`;
+        // Fussenegger: Zeitausgleich=8h, Urlaubskonto/Feiertag=nur Kennzeichnung
+        const rechts=isZA?`<span style="font-weight:600;flex-shrink:0;margin-left:8px">${fmt(8*60)}</span>`
+          :(t==='u'||t==='f')?`<span style="flex-shrink:0;margin-left:8px;font-size:12px;color:#636366">${t==='f'?'Feiertag':'Urlaub'}</span>`
+          :`<span style="font-weight:600;flex-shrink:0;margin-left:8px">${fmt(e.net)}</span>`;
         h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
           <div><span style="color:#8E8E93">${ddisp(k)}${tag}</span><div style="font-size:11px;color:#48484A">${detail}</div></div>
-          <span style="font-weight:600;flex-shrink:0;margin-left:8px">${fmt(e.net)}</span></div>`;
+          ${rechts}</div>`;
       });
       h+='</div>';
     });
