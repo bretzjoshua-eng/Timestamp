@@ -25,7 +25,6 @@
             padding-bottom: 100px;
         }
 
-        /* HEADER */
         .hdr {
             background: #18181b;
             border-bottom: 1px solid #27272a;
@@ -46,8 +45,6 @@
             color: #71717a;
             margin-top: 2px;
         }
-
-        /* TABS */
         .tabs {
             display: flex;
             background: #18181b;
@@ -79,8 +76,6 @@
             border-bottom-color: #f97316;
             font-weight: 700;
         }
-
-        /* SECTIONS */
         .sec {
             padding: 12px 12px 0;
             display: none;
@@ -88,8 +83,6 @@
         .sec.on {
             display: block;
         }
-
-        /* CARDS */
         .card {
             background: #18181b;
             border-radius: 14px;
@@ -118,8 +111,6 @@
             letter-spacing: 0.8px;
             margin-bottom: 8px;
         }
-
-        /* FORM */
         .lbl {
             display: block;
             font-size: 10px;
@@ -161,8 +152,6 @@
         .field {
             margin-bottom: 8px;
         }
-
-        /* SEGMENTED CONTROL */
         .seg {
             display: flex;
             background: #27272a;
@@ -215,8 +204,6 @@
             background: #3b82f6;
             color: #fff;
         }
-
-        /* BUTTONS */
         .btn {
             display: block;
             width: 100%;
@@ -255,8 +242,6 @@
         .btn-sm:active {
             background: #3f3f46;
         }
-
-        /* CLOCK */
         .clk {
             background: linear-gradient(135deg, #18181b, #1f1f23);
             border-radius: 14px;
@@ -286,8 +271,6 @@
         .pvb strong {
             color: #f97316;
         }
-
-        /* KONTEN */
         .konto {
             border-radius: 14px;
             padding: 14px;
@@ -365,8 +348,6 @@
             background: #f97316;
             transition: width 0.4s;
         }
-
-        /* WOCHE / MONAT */
         .wnav {
             display: flex;
             align-items: center;
@@ -587,8 +568,6 @@
             background: rgba(59, 130, 246, 0.2);
             color: #60a5fa;
         }
-
-        /* AUSDRUCK */
         .xview-entry {
             display: flex;
             justify-content: space-between;
@@ -640,8 +619,6 @@
             color: #52525b;
             font-size: 13px;
         }
-
-        /* PRINT */
         #print-area {
             display: none;
         }
@@ -657,8 +634,6 @@
                 display: block !important;
             }
         }
-
-        /* SCROLLBAR */
         ::-webkit-scrollbar {
             width: 0;
             height: 0;
@@ -720,8 +695,7 @@
                     </div>
                 </div>
                 <div class="pvb" id="pvb"></div>
-                <div class="field"><label class="lbl">Bemerkung (optional)</label><input type="text" id="fn"
-                        placeholder="z.B. Baustelle Dornbirn"></div>
+                <div class="field"><label class="lbl">Bemerkung (optional)</label><input type="text" id="fn" placeholder="z.B. Baustelle Dornbirn"></div>
                 <button class="btn btn-o" id="sbtn" onclick="saveE()">Speichern</button>
                 <button class="btn btn-s" id="cbtn" onclick="cancelE()" style="display:none">Abbrechen</button>
             </div>
@@ -733,9 +707,7 @@
                 <div class="kl aps" id="aps-label">APS – Überstundenkonto</div>
                 <div class="kh aps" id="aps-h">7h</div>
                 <div class="ksub" id="aps-sub">von max. 8h</div>
-                <div class="kbar">
-                    <div class="kfill" id="aps-bar" style="width:87.5%"></div>
-                </div>
+                <div class="kbar"><div class="kfill" id="aps-bar" style="width:87.5%"></div></div>
             </div>
             <div class="konto k-fus">
                 <div class="kl fus">Fussenegger – Überstundenkonto</div>
@@ -750,16 +722,11 @@
             <div class="card">
                 <div class="ct-sm">⚙️ Einstellungen</div>
                 <div class="row2">
-                    <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="20"
-                            max="60" step="0.5" oninput="saveSett();rkonten()"></div>
-                    <div><label class="lbl">Urlaubstage (Start)</label><input type="number" id="url-start" value="5"
-                            min="0" step="0.5" oninput="saveSett();rkonten()"></div>
+                    <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="20" max="60" step="0.5" oninput="saveSett();rkonten()"></div>
+                    <div><label class="lbl">Urlaubstage (Start)</label><input type="number" id="url-start" value="5" min="0" step="0.5" oninput="saveSett();rkonten()"></div>
                 </div>
-                <div class="field"><label class="lbl">Urlaubszählung ab (+1 Tag / 2 Wochen)</label><input type="date"
-                        id="url-from" oninput="saveSett();rkonten()"></div>
-                <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsüberstunden (h)</label><input
-                        type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5"
-                        oninput="saveSett();rkonten()"></div>
+                <div class="field"><label class="lbl">Urlaubszählung ab (+1 Tag / 2 Wochen)</label><input type="date" id="url-from" oninput="saveSett();rkonten()"></div>
+                <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsüberstunden (h)</label><input type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5" oninput="saveSett();rkonten()"></div>
             </div>
             <div class="card">
                 <div class="ct-sm">Diese Woche</div>
@@ -770,19 +737,19 @@
         <!-- WOCHE -->
         <div class="sec" id="sec-w">
             <div class="wnav">
-                <button class="wnb" onclick="wOff--;rwv()">‹</button>
+                <button class="wnb" onclick="prevWeek()">‹</button>
                 <div class="wnl" id="wnl"></div>
-                <button class="wnb" onclick="wOff++;rwv()">›</button>
+                <button class="wnb" onclick="nextWeek()">›</button>
             </div>
             <div id="wbox"></div>
         </div>
 
-        <!-- MONAT (nur Tage des Monats) -->
+        <!-- MONAT -->
         <div class="sec" id="sec-m">
             <div class="wnav">
-                <button class="wnb" onclick="mOff--;rmonth()">‹</button>
+                <button class="wnb" onclick="prevMonth()">‹</button>
                 <div class="wnl" id="mnl"></div>
-                <button class="wnb" onclick="mOff++;rmonth()">›</button>
+                <button class="wnb" onclick="nextMonth()">›</button>
             </div>
             <div id="mbox"></div>
         </div>
@@ -792,9 +759,7 @@
             <div class="card">
                 <div class="ct">Stundenzettel</div>
                 <div class="field"><label class="lbl">Monat</label>
-                    <select id="xmon" onchange="rxp()">
-                        <option value="">Alle</option>
-                    </select>
+                    <select id="xmon" onchange="rxp()"><option value="">Alle</option></select>
                 </div>
                 <div class="seg" style="margin-bottom:10px">
                     <button class="sg on cn" id="xv-aps" onclick="setXV('aps')">🟠 APS</button>
@@ -804,8 +769,7 @@
             </div>
             <div class="card" style="border-color:#3f3f46">
                 <div class="ct-sm">Datensicherung</div>
-                <p style="font-size:11px;color:#71717a;margin-bottom:10px">Einträge lokal gespeichert — regelmäßig
-                    exportieren!</p>
+                <p style="font-size:11px;color:#71717a;margin-bottom:10px">Einträge lokal gespeichert — regelmäßig exportieren!</p>
                 <button class="btn-sm" onclick="doExp()">💾 JSON exportieren</button>
             </div>
         </div>
@@ -814,20 +778,15 @@
 
     <script>
         (function() {
-            // ════════════════════════════════════════════════════════
-            // KONSTANTEN
-            // ════════════════════════════════════════════════════════
             const SK = 'zt_v6';
             const SS = 'zt_s6';
             const DY = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
             const DMS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-            const DML = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober',
-                'November', 'Dezember'
-            ];
-            const INTERN_TYPES = ['u', 's', 'h', 'f']; // Urlaub, Schlechtwetter, Hitzefrei, Feiertag
-            const OT_MINS = 8 * 60; // Überstunden-Tag: 8h
-            const APS_MAX = 8 * 60; // APS-Maximum: 8h
-            const APS_WEEK_CAP = 39 * 60; // APS-Wochencap: 39h
+            const DML = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+            const INTERN_TYPES = ['u', 's', 'h', 'f'];
+            const OT_MINS = 8 * 60;
+            const APS_MAX = 8 * 60;
+            const APS_WEEK_CAP = 39 * 60;
 
             const TINFO = {
                 n: { dot: 'dot-n', col: 'col-n', tag: 'et-n', lbl: 'Normal' },
@@ -839,27 +798,13 @@
                 f: { dot: 'dot-f', col: 'col-f', tag: 'et-f', lbl: 'Feiertag' },
             };
 
-            // ════════════════════════════════════════════════════════
-            // STATE
-            // ════════════════════════════════════════════════════════
-            let D = {}; // { 'YYYY-MM-DD': { type, start, end, pause, net, ... } }
-            let S = {
-                soll: 40, // Sollstunden/Woche
-                urlStart: 5, // Urlaubstage Start
-                urlFrom: '', // Urlaubszählung ab
-                apsStart: 7, // APS-Anfangsüberstunden (in h)
-                apsFull: false, // APS-Konto voll?
-                apsFullDate: '' // Datum wann APS voll wurde
-            };
-            let eT = 'n'; // aktueller Eintragstyp
-            let wOff = 0; // Wochen-Offset
-            let mOff = 0; // Monats-Offset
-            let xView = 'aps'; // Ausdruck-Ansicht
-            let editK = null; // Schlüssel des zu bearbeitenden Eintrags
+            let D = {};
+            let S = { soll: 40, urlStart: 5, urlFrom: '', apsStart: 7, apsFull: false, apsFullDate: '' };
+            let eT = 'n';
+            let wOff = 0, mOff = 0;
+            let xView = 'aps';
+            let editK = null;
 
-            // ════════════════════════════════════════════════════════
-            // STORAGE
-            // ════════════════════════════════════════════════════════
             const mem = {};
             const st = {
                 g: k => { try { return localStorage.getItem(k) } catch { return mem[k] ?? null } },
@@ -868,7 +813,6 @@
 
             function loadD() { try { D = JSON.parse(st.g(SK)) || {} } catch { D = {} } }
             function saveD() { st.s(SK, JSON.stringify(D)) }
-
             function loadS() {
                 try { const s = JSON.parse(st.g(SS)); if (s) Object.assign(S, s) } catch {}
                 document.getElementById('soll').value = S.soll;
@@ -876,7 +820,6 @@
                 document.getElementById('url-from').value = S.urlFrom || '';
                 document.getElementById('aps-start-val').value = S.apsStart;
             }
-
             function saveSett() {
                 S.soll = parseFloat(document.getElementById('soll').value) || 40;
                 S.urlStart = parseFloat(document.getElementById('url-start').value) || 5;
@@ -885,88 +828,50 @@
                 st.s(SS, JSON.stringify(S));
             }
 
-            // ════════════════════════════════════════════════════════
-            // HELPERS
-            // ════════════════════════════════════════════════════════
             const pad = n => String(n).padStart(2, '0');
             const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
             const toM = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m };
             const fmt = m => {
                 if (!m && m !== 0) return '–';
-                const h = Math.floor(Math.abs(m) / 60),
-                    mn = Math.round(Math.abs(m) % 60);
+                const h = Math.floor(Math.abs(m) / 60), mn = Math.round(Math.abs(m) % 60);
                 return (m < 0 ? '−' : '') + (mn ? `${h}h ${mn}min` : `${h}h`);
             };
-            const fmtDecimal = m => {
-                if (!m && m !== 0) return '–';
-                const h = Math.abs(m) / 60;
-                return (m < 0 ? '−' : '') + h.toFixed(1) + 'h';
-            };
 
-            function ddisp(s) {
-                const d = new Date(s + 'T12:00:00');
-                return `${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}`;
-            }
-
-            function span(a, b) { let s = toM(a),
-                    e = toM(b); if (e <= s) e += 1440; return e - s }
-
+            function ddisp(s) { const d = new Date(s + 'T12:00:00'); return `${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}` }
+            function span(a, b) { let s = toM(a), e = toM(b); if (e <= s) e += 1440; return e - s }
             function nightAdj(a, b, p, f) {
-                let s = toM(a),
-                    e = toM(b); if (e <= s) e += 1440;
+                let s = toM(a), e = toM(b); if (e <= s) e += 1440;
                 const tot = e - s; if (!tot) return { net: 0, nMin: 0, dMin: 0 };
                 let nRaw = 0;
-                for (let d = -1; d <= 1; d++) { const ws = d * 1440 + 1200,
-                        we = d * 1440 + 1740;
-                    nRaw += Math.max(0, Math.min(e, we) - Math.max(s, ws)) }
-                nRaw = Math.min(tot, nRaw);
-                const dRaw = tot - nRaw;
-                const nNet = Math.max(0, nRaw - p * (nRaw / tot)),
-                    dNet = Math.max(0, dRaw - p * (dRaw / tot));
+                for (let d = -1; d <= 1; d++) { const ws = d * 1440 + 1200, we = d * 1440 + 1740; nRaw += Math.max(0, Math.min(e, we) - Math.max(s, ws)) }
+                nRaw = Math.min(tot, nRaw); const dRaw = tot - nRaw;
+                const nNet = Math.max(0, nRaw - p * (nRaw / tot)), dNet = Math.max(0, dRaw - p * (dRaw / tot));
                 return { net: dNet + nNet * f, nMin: nNet, dMin: dNet };
             }
-
             function isoWk(s) {
-                const d = new Date(s + 'T12:00:00'),
-                    t = new Date(d);
+                const d = new Date(s + 'T12:00:00'), t = new Date(d);
                 t.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
-                const y = t.getFullYear(),
-                    j = new Date(y, 0, 1);
+                const y = t.getFullYear(), j = new Date(y, 0, 1);
                 j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
                 return `${y}-W${pad(1+Math.round((t-j)/604800000))}`;
             }
-
             function wkMon(y, w) {
-                const j = new Date(y, 0, 1);
-                j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
-                const t = new Date(j);
-                t.setDate(j.getDate() + (w - 1) * 7);
-                t.setDate(t.getDate() - 3);
+                const j = new Date(y, 0, 1); j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
+                const t = new Date(j); t.setDate(j.getDate() + (w - 1) * 7); t.setDate(t.getDate() - 3);
                 return t;
             }
-
             function wkLabel(k) {
-                const [ys, ws] = k.split('-W');
-                const w = parseInt(ws),
-                    y = parseInt(ys);
-                const m = wkMon(y, w),
-                    su = new Date(m);
-                su.setDate(m.getDate() + 6);
-                return m.getMonth() === su.getMonth() ?
-                    `${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}` :
-                    `${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
+                const [ys, ws] = k.split('-W'); const w = parseInt(ws), y = parseInt(ys);
+                const m = wkMon(y, w), su = new Date(m); su.setDate(m.getDate() + 6);
+                return m.getMonth() === su.getMonth() ? `${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}` : `${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
             }
             const keys = () => Object.keys(D).sort();
 
-            // ════════════════════════════════════════════════════════
-            // BERECHNUNGEN
-            // ════════════════════════════════════════════════════════
             function calcOT() {
                 const soll = S.soll * 60;
                 const byWk = {};
                 keys().forEach(k => {
-                    const e = D[k];
-                    const wk = isoWk(k);
+                    const e = D[k]; const wk = isoWk(k);
                     if (!byWk[wk]) byWk[wk] = 0;
                     if (e.type === 'o') byWk[wk] += OT_MINS;
                     else if (e.type === 'n' || e.type === 'nt') byWk[wk] += (e.net || 0);
@@ -977,538 +882,307 @@
                 const fus = S.apsFull ? (apsStart + totalOT) : Math.max(0, totalOT - (APS_MAX - apsStart));
                 return { totalOT, aps, fus, byWk };
             }
-
             function calcUrl() {
                 let auto = 0;
                 if (S.urlFrom) {
-                    const from = new Date(S.urlFrom + 'T12:00:00'),
-                        now = new Date();
-                    const diffMs = now - from;
-                    if (diffMs > 0) auto = Math.floor(diffMs / (14 * 86400000));
+                    const from = new Date(S.urlFrom + 'T12:00:00'), now = new Date();
+                    const diffMs = now - from; if (diffMs > 0) auto = Math.floor(diffMs / (14 * 86400000));
                 }
                 const used = keys().filter(k => D[k].type === 'u').length;
                 const otUsed = keys().filter(k => D[k].type === 'o').length;
                 return { saldo: S.urlStart + auto - used, auto, used, otUsed };
             }
 
-            // ════════════════════════════════════════════════════════
-            // UHRZEIT
-            // ════════════════════════════════════════════════════════
             function tick() {
                 const n = new Date();
                 document.getElementById('clkt').textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}`;
-                document.getElementById('clkd').textContent =
-                    `${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
+                document.getElementById('clkd').textContent = `${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
             }
-
-            function setNow() { const n = new Date();
-                document.getElementById('fe').value = `${pad(n.getHours())}:${pad(n.getMinutes())}`;
-                uprev() }
-
-            // ════════════════════════════════════════════════════════
-            // TABS
-            // ════════════════════════════════════════════════════════
+            function setNow() { const n = new Date(); document.getElementById('fe').value = `${pad(n.getHours())}:${pad(n.getMinutes())}`; uprev() }
             function go(t) {
                 document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
                 document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
                 document.getElementById('sec-' + t).classList.add('on');
-                ['e', 'k', 'w', 'm', 'x'].forEach((id, i) => { if (id === t) document.querySelectorAll('.tb')[i]
-                        .classList.add('on') });
+                ['e','k','w','m','x'].forEach((id,i) => { if (id === t) document.querySelectorAll('.tb')[i].classList.add('on') });
                 if (t === 'k') rkonten();
                 if (t === 'w') rwv();
                 if (t === 'm') rmonth();
                 if (t === 'x') rxsel();
             }
-            window.go = go;
-
-            // ════════════════════════════════════════════════════════
-            // EINTRAGEN
-            // ════════════════════════════════════════════════════════
             function setT(t) {
                 eT = t;
-                Object.keys(TINFO).forEach(x => { const el = document.getElementById('tb-' + x); if (el) el
-                        .classList.remove('on') });
-                document.getElementById('tb-' + t)?.classList.add('on');
+                Object.keys(TINFO).forEach(x => { const el = document.getElementById('tb-'+x); if(el) el.classList.remove('on') });
+                document.getElementById('tb-'+t)?.classList.add('on');
                 const needTime = t === 'n' || t === 'nt';
                 document.getElementById('tfields').style.display = needTime ? 'block' : 'none';
                 document.getElementById('nf-row').style.display = t === 'nt' ? 'block' : 'none';
                 uprev();
             }
-            window.setT = setT;
-
             function uprev() {
                 const box = document.getElementById('pvb');
-                if (eT === 'o') {
-                    box.innerHTML =
-                        '⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme, geht auf Überstundenkonto)';
-                    return;
-                }
-                if (INTERN_TYPES.includes(eT)) {
-                    box.innerHTML =
-                        `${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong> (keine Stundenberechnung)`;
-                    return;
-                }
-                const a = document.getElementById('fs').value,
-                    b = document.getElementById('fe').value,
-                    p = parseInt(document.getElementById('fp').value) || 0;
+                if (eT === 'o') { box.innerHTML = '⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme, geht auf Überstundenkonto)'; return; }
+                if (INTERN_TYPES.includes(eT)) { box.innerHTML = `${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong> (keine Stundenberechnung)`; return; }
+                const a = document.getElementById('fs').value, b = document.getElementById('fe').value, p = parseInt(document.getElementById('fp').value) || 0;
                 if (!a || !b) { box.innerHTML = 'Netto: <strong>–</strong>'; return }
                 if (eT === 'nt') {
-                    const f = parseFloat(document.getElementById('nf').value) || 2;
-                    const r = nightAdj(a, b, p, f);
-                    box.innerHTML =
-                        `Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:10px;color:#a1a1aa">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
+                    const f = parseFloat(document.getElementById('nf').value) || 2, r = nightAdj(a,b,p,f);
+                    box.innerHTML = `Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:10px;color:#a1a1aa">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
                 } else {
                     box.innerHTML = `Netto: <strong>${fmt(Math.max(0,span(a,b)-p))}</strong>`;
                 }
             }
-            window.uprev = uprev;
-
             function saveE() {
-                const date = document.getElementById('fd').value,
-                    note = document.getElementById('fn').value.trim();
+                const date = document.getElementById('fd').value, note = document.getElementById('fn').value.trim();
                 if (!date) return alert('Bitte Datum ausfüllen.');
                 const warns = [];
-                const dd = new Date(date + 'T12:00:00'),
-                    dow = dd.getDay();
-                if (dow === 0 || dow === 6) warns.push(
-                    `📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
+                const dd = new Date(date + 'T12:00:00'), dow = dd.getDay();
+                if (dow === 0 || dow === 6) warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
                 if (D[date] && date !== editK) warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
                 if (dd > new Date() && date !== editK) warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
-                if (warns.length && !confirm(warns.join('\n\n') + '\n\nSpeichern?')) return;
+                if (warns.length && !confirm(warns.join('\n\n')+'\n\nSpeichern?')) return;
                 let e;
                 if (eT === 'n') {
-                    const a = document.getElementById('fs').value,
-                        b = document.getElementById('fe').value,
-                        p = parseInt(document.getElementById('fp').value) || 0;
+                    const a = document.getElementById('fs').value, b = document.getElementById('fe').value, p = parseInt(document.getElementById('fp').value) || 0;
                     if (!a || !b) return alert('Bitte Von und Bis ausfüllen.');
-                    if (span(a, b) > 14 * 60 && !confirm('Schicht über 14h — stimmt das?')) return;
-                    e = { type: 'n', start: a, end: b, pause: p, net: Math.max(0, span(a, b) - p), note };
+                    if (span(a,b) > 14*60 && !confirm('Schicht über 14h — stimmt das?')) return;
+                    e = { type:'n', start:a, end:b, pause:p, net: Math.max(0,span(a,b)-p), note };
                 } else if (eT === 'nt') {
-                    const a = document.getElementById('fs').value,
-                        b = document.getElementById('fe').value,
-                        p = parseInt(document.getElementById('fp').value) || 0;
+                    const a = document.getElementById('fs').value, b = document.getElementById('fe').value, p = parseInt(document.getElementById('fp').value) || 0;
                     if (!a || !b) return alert('Bitte Von und Bis ausfüllen.');
-                    const f = parseFloat(document.getElementById('nf').value) || 2,
-                        r = nightAdj(a, b, p, f);
-                    e = { type: 'nt', start: a, end: b, pause: p, net: r.net, nMin: r.nMin, dMin: r.dMin, factor: f,
-                        note };
+                    const f = parseFloat(document.getElementById('nf').value) || 2, r = nightAdj(a,b,p,f);
+                    e = { type:'nt', start:a, end:b, pause:p, net:r.net, nMin:r.nMin, dMin:r.dMin, factor:f, note };
                 } else if (eT === 'o') {
-                    e = { type: 'o', net: OT_MINS, note };
+                    e = { type:'o', net:OT_MINS, note };
                 } else {
-                    e = { type: eT, net: 0, note };
+                    e = { type:eT, net:0, note };
                 }
-                D[date] = e;
-                saveD();
-                editK = null;
-                resetF();
-                upd();
-                checkApsFull();
-                go('k');
+                D[date] = e; saveD(); editK = null; resetF(); upd(); checkApsFull(); go('k');
             }
-            window.saveE = saveE;
-
             function checkApsFull() {
                 if (S.apsFull) return;
                 const ot = calcOT();
-                if (ot.aps >= APS_MAX) {
-                    S.apsFull = true;
-                    S.apsFullDate = iso(new Date());
-                    st.s(SS, JSON.stringify(S));
-                    setTimeout(() => {
-                        alert('✅ APS-Konto voll (8h erreicht)! Ab jetzt gehen alle Überstunden an Fussenegger.');
-                    }, 200);
-                }
+                if (ot.aps >= APS_MAX) { S.apsFull = true; S.apsFullDate = iso(new Date()); st.s(SS, JSON.stringify(S)); setTimeout(() => { alert('✅ APS-Konto voll (8h erreicht)! Ab jetzt gehen alle Überstunden an Fussenegger.'); }, 200); }
             }
-
-            function cancelE() { editK = null;
-                resetF() }
-
+            function cancelE() { editK = null; resetF() }
             function resetF() {
                 document.getElementById('fd').value = iso(new Date());
-                document.getElementById('fs').value = '07:00';
-                document.getElementById('fe').value = '15:30';
-                document.getElementById('fp').value = '30';
-                document.getElementById('fn').value = '';
+                document.getElementById('fs').value = '07:00'; document.getElementById('fe').value = '15:30';
+                document.getElementById('fp').value = '30'; document.getElementById('fn').value = '';
                 document.getElementById('nf').value = '2';
                 document.getElementById('ftit').textContent = 'Neuer Eintrag';
                 document.getElementById('sbtn').textContent = 'Speichern';
                 document.getElementById('cbtn').style.display = 'none';
                 setT('n');
             }
-            window.cancelE = cancelE;
-
             function startEdit(k) {
-                const e = D[k];
-                editK = k;
-                document.getElementById('fd').value = k;
-                document.getElementById('fn').value = e.note || '';
-                if (e.type === 'n') { document.getElementById('fs').value = e.start;
-                    document.getElementById('fe').value = e.end;
-                    document.getElementById('fp').value = e.pause;
-                    setT('n') } else if (e.type === 'nt') { document.getElementById('fs').value = e.start;
-                    document.getElementById('fe').value = e.end;
-                    document.getElementById('fp').value = e.pause;
-                    document.getElementById('nf').value = String(e.factor || 2);
-                    setT('nt') } else setT(e.type);
+                const e = D[k]; editK = k;
+                document.getElementById('fd').value = k; document.getElementById('fn').value = e.note || '';
+                if (e.type === 'n') { document.getElementById('fs').value = e.start; document.getElementById('fe').value = e.end; document.getElementById('fp').value = e.pause; setT('n') }
+                else if (e.type === 'nt') { document.getElementById('fs').value = e.start; document.getElementById('fe').value = e.end; document.getElementById('fp').value = e.pause; document.getElementById('nf').value = String(e.factor||2); setT('nt') }
+                else setT(e.type);
                 document.getElementById('ftit').textContent = 'Bearbeiten';
                 document.getElementById('sbtn').textContent = 'Aktualisieren';
                 document.getElementById('cbtn').style.display = 'block';
-                uprev();
-                go('e');
-                window.scrollTo(0, 0);
+                uprev(); go('e'); window.scrollTo(0,0);
             }
-            window.startEdit = startEdit;
-
-            function delE(k) { if (!confirm(`${ddisp(k)} löschen?`)) return; delete D[k];
-                saveD();
-                upd();
-                rkonten() }
-            window.delE = delE;
-
+            function delE(k) { if (!confirm(`${ddisp(k)} löschen?`)) return; delete D[k]; saveD(); upd(); rkonten() }
             function upd() { document.getElementById('ecnt').textContent = `${Object.keys(D).length} Einträge` }
 
-            // ════════════════════════════════════════════════════════
-            // KONTEN
-            // ════════════════════════════════════════════════════════
             function rkonten() {
-                const ot = calcOT(),
-                    url = calcUrl(),
-                    soll = S.soll * 60;
-                // APS-Konto
-                const apsKonto = document.getElementById('aps-konto');
-                const apsLabel = document.getElementById('aps-label');
+                const ot = calcOT(), url = calcUrl(), soll = S.soll*60;
+                const apsKonto = document.getElementById('aps-konto'), apsLabel = document.getElementById('aps-label');
                 if (S.apsFull) {
-                    apsKonto.className = 'konto k-aps grau';
-                    apsLabel.className = 'kl grau';
-                    apsLabel.textContent = 'APS – Überstundenkonto (abgeschlossen)';
-                    document.getElementById('aps-h').textContent = '0h';
-                    document.getElementById('aps-h').className = 'kh grau';
-                    document.getElementById('aps-sub').textContent =
-                        `Voll seit ${S.apsFullDate||'—'} · alles → Fussenegger`;
+                    apsKonto.className = 'konto k-aps grau'; apsLabel.className = 'kl grau'; apsLabel.textContent = 'APS – Überstundenkonto (abgeschlossen)';
+                    document.getElementById('aps-h').textContent = '0h'; document.getElementById('aps-h').className = 'kh grau';
+                    document.getElementById('aps-sub').textContent = `Voll seit ${S.apsFullDate||'—'} · alles → Fussenegger`;
                     document.getElementById('aps-bar').style.width = '0%';
                 } else {
-                    apsKonto.className = 'konto k-aps';
-                    apsLabel.className = 'kl aps';
-                    apsLabel.textContent = 'APS – Überstundenkonto';
-                    document.getElementById('aps-h').textContent = fmt(ot.aps);
-                    document.getElementById('aps-h').className = 'kh aps';
-                    const pct = Math.round(ot.aps / APS_MAX * 100);
-                    document.getElementById('aps-sub').textContent = `von max. 8h (${pct}%)`;
-                    document.getElementById('aps-bar').style.width = Math.min(100, pct) + '%';
+                    apsKonto.className = 'konto k-aps'; apsLabel.className = 'kl aps'; apsLabel.textContent = 'APS – Überstundenkonto';
+                    document.getElementById('aps-h').textContent = fmt(ot.aps); document.getElementById('aps-h').className = 'kh aps';
+                    document.getElementById('aps-sub').textContent = `von max. 8h (${Math.round(ot.aps/APS_MAX*100)}%)`;
+                    document.getElementById('aps-bar').style.width = Math.min(100, ot.aps/APS_MAX*100) + '%';
                 }
-                // Fussenegger
                 document.getElementById('fus-h').textContent = fmt(ot.fus);
-                // Urlaub
                 document.getElementById('url-h').textContent = `${Math.max(0,url.saldo)} Tage`;
-                document.getElementById('url-sub').textContent =
-                    `${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
-                // Diese Woche
-                const today = new Date(),
-                    tdi = iso(today);
-                const mon = new Date(today);
-                mon.setDate(today.getDate() - ((today.getDay() + 6) % 7));
-                const dks = [];
-                for (let i = 0; i < 7; i++) { const d = new Date(mon);
-                    d.setDate(mon.getDate() + i);
-                    dks.push(iso(d)) }
-                const wIst = dks.reduce((s, k) => { const e = D[k]; if (!e) return s; if (e.type === 'o') return s +
-                        OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (e.net || 0); return s }, 0);
+                document.getElementById('url-sub').textContent = `${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
+                const today = new Date(), mon = new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+                const dks = []; for (let i=0;i<7;i++) { const d = new Date(mon); d.setDate(mon.getDate()+i); dks.push(iso(d)) }
+                const wIst = dks.reduce((s,k) => { const e = D[k]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
                 const diff = wIst - soll;
                 document.getElementById('k-week').innerHTML = `
-            <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
-            <div class="otrow"><div class="otl">Soll</div><span class="otv">${fmt(soll)}</span></div>
-            <div class="otrow"><div class="otl">Differenz</div><span class="otv ${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${fmt(diff)}</span></div>`;
+                    <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
+                    <div class="otrow"><div class="otl">Soll</div><span class="otv">${fmt(soll)}</span></div>
+                    <div class="otrow"><div class="otl">Differenz</div><span class="otv ${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${fmt(diff)}</span></div>`;
                 document.getElementById('soll').value = S.soll;
                 document.getElementById('url-start').value = S.urlStart;
-                document.getElementById('url-from').value = S.urlFrom || '';
+                document.getElementById('url-from').value = S.urlFrom||'';
                 document.getElementById('aps-start-val').value = S.apsStart;
             }
-            window.rkonten = rkonten;
 
-            // ════════════════════════════════════════════════════════
-            // WOCHENANSICHT (volle Woche Mo–So)
-            // ════════════════════════════════════════════════════════
             function rwv() {
-                const today = new Date(),
-                    tdi = iso(today);
-                const mon = new Date(today);
-                mon.setDate(today.getDate() - ((today.getDay() + 6) % 7) + wOff * 7);
-                const sun = new Date(mon);
-                sun.setDate(mon.getDate() + 6);
-                const wk = isoWk(iso(mon)),
-                    wn = parseInt(wk.split('-W')[1]);
-                document.getElementById('wnl').textContent =
-                    `KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
-                let h = '<div class="wbox"><div class="wkhr"><span class="wkkw">KW ' + wn + '</span></div>';
-                for (let i = 0; i < 7; i++) {
-                    const d = new Date(mon);
-                    d.setDate(mon.getDate() + i);
-                    const dk = iso(d),
-                        e = D[dk],
-                        isWe = i >= 5,
-                        isT = dk === tdi;
-                    const ti = e ? TINFO[e.type] : null;
-                    let dotCls = 'dot-x',
-                        hStr = '–',
-                        hCls = 'e',
-                        meta = '';
-                    if (e) {
-                        dotCls = ti.dot;
-                        hCls = ti.col;
-                        if (e.type === 'n' || e.type === 'nt') hStr = fmt(e.net);
-                        else if (e.type === 'o') hStr = '8h';
+                const today = new Date(), tdi = iso(today);
+                const mon = new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7) + wOff*7);
+                const sun = new Date(mon); sun.setDate(mon.getDate()+6);
+                const wk = isoWk(iso(mon)), wn = parseInt(wk.split('-W')[1]);
+                document.getElementById('wnl').textContent = `KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
+                let h = '<div class="wbox"><div class="wkhr"><span class="wkkw">KW '+wn+'</span></div>';
+                for (let i=0;i<7;i++) {
+                    const d = new Date(mon); d.setDate(mon.getDate()+i);
+                    const dk = iso(d), e = D[dk], isWe = i>=5, isT = dk===tdi;
+                    const ti = e?TINFO[e.type]:null;
+                    let dotCls='dot-x', hStr='–', hCls='e', meta='';
+                    if(e) {
+                        dotCls = ti.dot; hCls = ti.col;
+                        if(e.type==='n'||e.type==='nt') hStr = fmt(e.net);
+                        else if(e.type==='o') hStr = '8h';
                         else hStr = ti.lbl;
-                        if (e.type === 'n' || e.type === 'nt') meta =
-                            `<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
+                        if(e.type==='n'||e.type==='nt') meta = `<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
                     }
                     h += `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
-            <div class="wdl"><div class="dot ${dotCls}"></div>
-              <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}. ${DMS[d.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px">
-              <span class="wdh ${hCls}">${hStr}</span>
-              ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
-            </div></div>`;
+                        <div class="wdl"><div class="dot ${dotCls}"></div>
+                        <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}. ${DMS[d.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px">
+                        <span class="wdh ${hCls}">${hStr}</span>
+                        ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+                        </div></div>`;
                 }
-                h += '</div>';
-                document.getElementById('wbox').innerHTML = h;
+                h += '</div>'; document.getElementById('wbox').innerHTML = h;
             }
-            window.rwv = rwv;
 
-            // ════════════════════════════════════════════════════════
-            // MONATSANSICHT (NUR Tage 1.–letzter des Monats)
-            // ════════════════════════════════════════════════════════
             function rmonth() {
-                const now = new Date(),
-                    y = now.getFullYear(),
-                    mo = now.getMonth() + mOff;
-                const d1 = new Date(y, mo, 1);
-                const yr = d1.getFullYear(),
-                    mr = d1.getMonth();
+                const now = new Date(), y = now.getFullYear(), mo = now.getMonth() + mOff;
+                const d1 = new Date(y, mo, 1); const yr = d1.getFullYear(), mr = d1.getMonth();
                 document.getElementById('mnl').textContent = `${DML[mr]} ${yr}`;
-                const daysInMonth = new Date(yr, mr + 1, 0).getDate();
-                // Nur Tage dieses Monats gruppiert nach KW
+                const daysInMonth = new Date(yr, mr+1, 0).getDate();
                 const byWk = {};
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dk = `${yr}-${pad(mr+1)}-${pad(day)}`;
-                    const wk = isoWk(dk);
-                    if (!byWk[wk]) byWk[wk] = [];
-                    byWk[wk].push(dk);
+                for (let day=1; day<=daysInMonth; day++) {
+                    const dk = `${yr}-${pad(mr+1)}-${pad(day)}`; const wk = isoWk(dk);
+                    if (!byWk[wk]) byWk[wk] = []; byWk[wk].push(dk);
                 }
                 let html = '';
-                const wks = Object.keys(byWk).sort();
-                if (wks.length === 0) {
-                    html = '<div class="empty">Keine Tage in diesem Monat.</div>';
-                } else {
-                    wks.forEach(wk => {
-                        const dks = byWk[wk];
-                        const wIst = dks.reduce((s, k) => { const e = D[k]; if (!e) return s; if (e.type ===
-                                'o') return s + OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (
-                                e.net || 0); return s }, 0);
-                        const wn = parseInt(wk.split('-W')[1]);
-                        html +=
-                            `<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn} · ${wkLabel(wk)}</span><span class="wktb">${fmt(wIst)}</span></div>`;
-                        dks.forEach(dk => {
-                            const e = D[dk];
-                            const d = new Date(dk + 'T12:00:00');
-                            const dn = DY[d.getDay()];
-                            const isWe = d.getDay() === 0 || d.getDay() === 6;
-                            const isT = dk === iso(new Date());
-                            const ti = e ? TINFO[e.type] : null;
-                            let dotCls = 'dot-x',
-                                hStr = '–',
-                                hCls = 'e',
-                                meta = '';
-                            if (e) {
-                                dotCls = ti.dot;
-                                hCls = ti.col;
-                                if (e.type === 'n' || e.type === 'nt') hStr = fmt(e.net);
-                                else if (e.type === 'o') hStr = '8h';
-                                else hStr = ti.lbl;
-                                if (e.type === 'n' || e.type === 'nt') meta =
-                                    `<div class="wdm">${e.start}–${e.end}</div>`;
-                            }
-                            html +=
-                                `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
-            <div class="wdl"><div class="dot ${dotCls}"></div>
-              <div><div class="wdn">${dn}<span class="wddt">${d.getDate()}.</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px">
-              <span class="wdh ${hCls}">${hStr}</span>
-              ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
-            </div></div>`;
-                        });
-                        html += '</div>';
+                Object.keys(byWk).sort().forEach(wk => {
+                    const dks = byWk[wk];
+                    const wIst = dks.reduce((s,k) => { const e = D[k]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
+                    const wn = parseInt(wk.split('-W')[1]);
+                    html += `<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn} · ${wkLabel(wk)}</span><span class="wktb">${fmt(wIst)}</span></div>`;
+                    dks.forEach(dk => {
+                        const e = D[dk]; const d = new Date(dk+'T12:00:00'); const dn = DY[d.getDay()];
+                        const isWe = d.getDay()===0||d.getDay()===6; const isT = dk===iso(new Date());
+                        const ti = e?TINFO[e.type]:null;
+                        let dotCls='dot-x', hStr='–', hCls='e', meta='';
+                        if(e) {
+                            dotCls = ti.dot; hCls = ti.col;
+                            if(e.type==='n'||e.type==='nt') hStr = fmt(e.net);
+                            else if(e.type==='o') hStr = '8h';
+                            else hStr = ti.lbl;
+                            if(e.type==='n'||e.type==='nt') meta = `<div class="wdm">${e.start}–${e.end}</div>`;
+                        }
+                        html += `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
+                            <div class="wdl"><div class="dot ${dotCls}"></div>
+                            <div><div class="wdn">${dn}<span class="wddt">${d.getDate()}.</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px">
+                            <span class="wdh ${hCls}">${hStr}</span>
+                            ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+                            </div></div>`;
                     });
-                }
-                document.getElementById('mbox').innerHTML = html;
+                    html += '</div>';
+                });
+                document.getElementById('mbox').innerHTML = html || '<div class="empty">Keine Tage in diesem Monat.</div>';
             }
-            window.rmonth = rmonth;
 
-            // ════════════════════════════════════════════════════════
-            // AUSDRUCK (Screenshot-Ansicht, nur Tage des Monats)
-            // ════════════════════════════════════════════════════════
-            function setXV(v) {
-                xView = v;
-                document.getElementById('xv-aps').classList.toggle('on', v === 'aps');
-                document.getElementById('xv-fus').classList.toggle('on', v === 'fus');
-                rxp();
-            }
-            window.setXV = setXV;
-
+            function setXV(v) { xView=v; document.getElementById('xv-aps').classList.toggle('on',v==='aps'); document.getElementById('xv-fus').classList.toggle('on',v==='fus'); rxp(); }
             function rxsel() {
-                const sel = document.getElementById('xmon');
-                const cur = sel.value;
-                const months = [...new Set(keys().map(k => k.slice(0, 7)))].sort((a, b) => b.localeCompare(a));
+                const sel = document.getElementById('xmon'); const cur = sel.value;
+                const months = [...new Set(keys().map(k=>k.slice(0,7)))].sort((a,b)=>b.localeCompare(a));
                 sel.innerHTML = '<option value="">Alle</option>';
                 months.forEach(m => {
-                    const [y, mo] = m.split('-');
-                    const op = document.createElement('option');
-                    op.value = m;
-                    op.textContent = `${DML[parseInt(mo)-1]} ${y}`;
-                    if (m === cur) op.selected = true;
-                    sel.appendChild(op);
+                    const [y,mo] = m.split('-'); const op = document.createElement('option');
+                    op.value = m; op.textContent = `${DML[parseInt(mo)-1]} ${y}`; if(m===cur) op.selected=true; sel.appendChild(op);
                 });
                 rxp();
             }
-            window.rxsel = rxsel;
-
             function rxp() {
-                const el = document.getElementById('xview');
-                const monFilter = document.getElementById('xmon').value;
-                if (!monFilter) { el.innerHTML = '<div class="empty">Bitte Monat auswählen.</div>'; return }
-                const [y, mo] = monFilter.split('-').map(Number);
-                const daysInMonth = new Date(y, mo, 0).getDate();
-                const monDays = [];
-                for (let day = 1; day <= daysInMonth; day++) monDays.push(`${monFilter}-${pad(day)}`);
-                const byWk = {};
-                monDays.forEach(dk => { const wk = isoWk(dk); if (!byWk[wk]) byWk[wk] = [];
-                    byWk[wk].push(dk) });
-                const soll = S.soll * 60;
-                let h = '';
-                if (xView === 'aps') {
-                    // APS: max 39h/Woche, Stunden gleichmäßig auf Arbeitstage verteilen
-                    let totalAps = 0;
+                const el = document.getElementById('xview'); const monFilter = document.getElementById('xmon').value;
+                if (!monFilter) { el.innerHTML='<div class="empty">Bitte Monat auswählen.</div>'; return; }
+                const [y,mo] = monFilter.split('-').map(Number); const daysInMonth = new Date(y,mo,0).getDate();
+                const monDays = []; for (let day=1;day<=daysInMonth;day++) monDays.push(`${monFilter}-${pad(day)}`);
+                const byWk = {}; monDays.forEach(dk => { const wk = isoWk(dk); if(!byWk[wk]) byWk[wk]=[]; byWk[wk].push(dk); });
+                const soll = S.soll*60; let h='';
+                if (xView==='aps') {
+                    let totalAps=0;
                     Object.keys(byWk).sort().forEach(wk => {
-                        const dks = byWk[wk];
-                        const wn = parseInt(wk.split('-W')[1]);
-                        const wIst = dks.reduce((s, dk) => { const e = D[dk]; if (!e) return s; if (e.type ===
-                                'o') return s + OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (
-                                e.net || 0); return s }, 0);
-                        const arbTage = dks.filter(dk => { const e = D[dk]; return e && (e.type === 'n' || e
-                                .type === 'nt' || e.type === 'o') });
-                        const internTage = dks.filter(dk => { const e = D[dk]; return e && INTERN_TYPES
-                            .includes(e.type) });
-                        const leereTage = dks.filter(dk => !D[dk]);
-                        if (wIst === 0 && internTage.length === 0 && leereTage.length === dks.length) return;
-                        const ziel = Math.min(wIst, APS_WEEK_CAP);
-                        totalAps += ziel;
-                        const nArb = arbTage.length || 1;
-                        const proTag = Math.floor(ziel / nArb / 15) * 15;
-                        let rest = ziel - proTag * nArb;
-                        const tagH = {};
-                        arbTage.forEach(dk => { tagH[dk] = proTag + (rest >= 15 ? (rest -= 15, 15) : 0) });
-                        h +=
-                            `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:11px;font-weight:700;color:#f97316">KW ${wn} · ${wkLabel(wk)}</span>
-            <span style="font-size:14px;font-weight:800;color:#f97316">${fmt(ziel)}</span></div>`;
+                        const dks = byWk[wk]; const wn = parseInt(wk.split('-W')[1]);
+                        const wIst = dks.reduce((s,dk)=>{ const e=D[dk]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
+                        const arbTage = dks.filter(dk=>{ const e=D[dk]; return e&&(e.type==='n'||e.type==='nt'||e.type==='o'); });
+                        const internTage = dks.filter(dk=>{ const e=D[dk]; return e&&INTERN_TYPES.includes(e.type); });
+                        const leereTage = dks.filter(dk=>!D[dk]);
+                        if (wIst===0 && internTage.length===0 && leereTage.length===dks.length) return;
+                        const ziel = Math.min(wIst, APS_WEEK_CAP); totalAps += ziel;
+                        const nArb = arbTage.length||1; const proTag = Math.floor(ziel/nArb/15)*15; let rest = ziel - proTag*nArb;
+                        const tagH = {}; arbTage.forEach(dk => { tagH[dk] = proTag + (rest>=15?(rest-=15,15):0); });
+                        h += `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                            <span style="font-size:11px;font-weight:700;color:#f97316">KW ${wn} · ${wkLabel(wk)}</span>
+                            <span style="font-size:14px;font-weight:800;color:#f97316">${fmt(ziel)}</span></div>`;
                         dks.forEach(dk => {
-                            const e = D[dk];
-                            const d = new Date(dk + 'T12:00:00');
-                            const dn = DY[d.getDay()];
-                            if (!e) {
-                                h +=
-                                    `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
-                            } else if (INTERN_TYPES.includes(e.type)) {
-                                const ti = TINFO[e.type];
-                                h +=
-                                    `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`;
-                            } else {
-                                h +=
-                                    `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700;color:#e4e4e7">${fmt(tagH[dk])}</span></div>`;
-                            }
+                            const e = D[dk]; const d = new Date(dk+'T12:00:00'); const dn = DY[d.getDay()];
+                            if (!e) h += `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
+                            else if (INTERN_TYPES.includes(e.type)) { const ti = TINFO[e.type]; h += `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`; }
+                            else h += `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700;color:#e4e4e7">${fmt(tagH[dk])}</span></div>`;
                         });
                         h += '</div>';
                     });
-                    h +=
-                        `<div class="card" style="background:rgba(249,115,22,.06);border-color:rgba(249,115,22,.25)">
-            <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
-              <span>Gesamt APS</span><span style="color:#f97316">${fmt(totalAps)}</span></div>
-            <div style="font-size:10px;color:#a1a1aa;margin-top:4px">Max. 39h/Woche · ${S.apsFull?'✅ APS-Konto voll':'⏳ APS-Konto noch offen'}</div></div>`;
+                    h += `<div class="card" style="background:rgba(249,115,22,.06);border-color:rgba(249,115,22,.25)"><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800"><span>Gesamt APS</span><span style="color:#f97316">${fmt(totalAps)}</span></div><div style="font-size:10px;color:#a1a1aa;margin-top:4px">Max. 39h/Woche · ${S.apsFull?'✅ APS-Konto voll':'⏳ APS-Konto noch offen'}</div></div>`;
                 } else {
-                    // Fussenegger: alle echten Stunden
                     Object.keys(byWk).sort().forEach(wk => {
-                        const dks = byWk[wk];
-                        const wn = parseInt(wk.split('-W')[1]);
-                        const wIst = dks.reduce((s, dk) => { const e = D[dk]; if (!e) return s; if (e.type ===
-                                'o') return s + OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (
-                                e.net || 0); return s }, 0);
-                        h +=
-                            `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:11px;font-weight:700;color:#3b82f6">KW ${wn} · ${wkLabel(wk)}</span>
-            <span style="font-size:14px;font-weight:800;color:#3b82f6">${fmt(wIst)}</span></div>`;
+                        const dks = byWk[wk]; const wn = parseInt(wk.split('-W')[1]);
+                        const wIst = dks.reduce((s,dk)=>{ const e=D[dk]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
+                        h += `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#3b82f6">KW ${wn} · ${wkLabel(wk)}</span><span style="font-size:14px;font-weight:800;color:#3b82f6">${fmt(wIst)}</span></div>`;
                         dks.forEach(dk => {
-                            const e = D[dk];
-                            const d = new Date(dk + 'T12:00:00');
-                            const dn = DY[d.getDay()];
-                            if (!e) {
-                                h +=
-                                    `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
-                            } else if (INTERN_TYPES.includes(e.type)) {
-                                const ti = TINFO[e.type];
-                                h +=
-                                    `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`;
-                            } else {
-                                const hrs = e.type === 'o' ? OT_MINS : (e.net || 0);
-                                const detail = e.type === 'o' ? 'Überstunden-Tag' : (e.type === 'nt' ?
-                                    `${e.start}–${e.end} 🌙×${e.factor}` :
-                                    `${e.start}–${e.end} · Pause ${e.pause}min`);
-                                h +=
-                                    `<div class="xview-entry">
-              <div><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span>
-              <div style="font-size:9px;color:#52525b">${detail}</div></div>
-              <span style="font-weight:700;color:#e4e4e7">${fmt(hrs)}</span></div>`;
+                            const e = D[dk]; const d = new Date(dk+'T12:00:00'); const dn = DY[d.getDay()];
+                            if (!e) h += `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
+                            else if (INTERN_TYPES.includes(e.type)) { const ti = TINFO[e.type]; h += `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`; }
+                            else {
+                                const hrs = e.type==='o'?OT_MINS:(e.net||0); const detail = e.type==='o'?'Überstunden-Tag':(e.type==='nt'?`${e.start}–${e.end} 🌙×${e.factor}`:`${e.start}–${e.end} · Pause ${e.pause}min`);
+                                h += `<div class="xview-entry"><div><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><div style="font-size:9px;color:#52525b">${detail}</div></div><span style="font-weight:700;color:#e4e4e7">${fmt(hrs)}</span></div>`;
                             }
                         });
                         h += '</div>';
                     });
-                    const totalFus = Object.keys(byWk).reduce((s, wk) => s + byWk[wk].reduce((ws, dk) => { const e = D[
-                        dk]; if (!e) return ws; if (e.type === 'o') return ws + OT_MINS; if (e.type === 'n' || e
-                            .type === 'nt') return ws + (e.net || 0); return ws }, 0), 0);
+                    const totalFus = Object.keys(byWk).reduce((s,wk)=>s+byWk[wk].reduce((ws,dk)=>{ const e=D[dk]; if(!e) return ws; if(e.type==='o') return ws+OT_MINS; if(e.type==='n'||e.type==='nt') return ws+(e.net||0); return ws },0),0);
                     const ot = calcOT();
-                    h +=
-                        `<div class="card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.18)">
-            <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
-              <span>Gesamt</span><span style="color:#3b82f6">${fmt(totalFus)}</span></div>
-            <div style="height:1px;background:#27272a;margin:8px 0"></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>→ APS</span><span style="color:#f97316;font-weight:700">${S.apsFull?'Abgeschlossen':fmt(ot.aps)}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:12px"><span>→ Fussenegger</span><span style="color:#3b82f6;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
+                    h += `<div class="card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.18)"><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800"><span>Gesamt</span><span style="color:#3b82f6">${fmt(totalFus)}</span></div><div style="height:1px;background:#27272a;margin:8px 0"></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>→ APS</span><span style="color:#f97316;font-weight:700">${S.apsFull?'Abgeschlossen':fmt(ot.aps)}</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span>→ Fussenegger</span><span style="color:#3b82f6;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
                 }
                 el.innerHTML = h || '<div class="empty">Keine Einträge für diesen Monat.</div>';
             }
+            function doExp() { const b = new Blob([JSON.stringify(D,null,2)],{type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `arbeitszeiten_${iso(new Date())}.json`; a.click(); }
+
+            // Navigation buttons exposed globally
+            window.prevWeek = function() { wOff--; rwv(); };
+            window.nextWeek = function() { wOff++; rwv(); };
+            window.prevMonth = function() { mOff--; rmonth(); };
+            window.nextMonth = function() { mOff++; rmonth(); };
+
+            // Expose other needed functions
+            window.go = go;
+            window.setT = setT;
+            window.uprev = uprev;
+            window.saveE = saveE;
+            window.cancelE = cancelE;
+            window.startEdit = startEdit;
+            window.delE = delE;
+            window.setNow = setNow;
+            window.rkonten = rkonten;
+            window.rwv = rwv;
+            window.rmonth = rmonth;
+            window.setXV = setXV;
+            window.rxsel = rxsel;
             window.rxp = rxp;
-
-            function doExp() {
-                const b = new Blob([JSON.stringify(D, null, 2)], { type: 'application/json' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(b);
-                a.download = `arbeitszeiten_${iso(new Date())}.json`;
-                a.click();
-            }
             window.doExp = doExp;
+            window.saveSett = saveSett;
 
-            // ════════════════════════════════════════════════════════
-            // INIT
-            // ════════════════════════════════════════════════════════
-            loadD();
-            loadS();
-            upd();
-            resetF();
-            tick();
-            setInterval(tick, 10000);
-            // Expose für onclick im HTML
-            window.wOff = wOff;
-            window.mOff = mOff;
+            loadD(); loadS(); upd(); resetF(); tick(); setInterval(tick, 10000);
         })();
     </script>
 </body>
