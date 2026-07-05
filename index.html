@@ -1,832 +1,1515 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="mobile-web-app-capable" content="yes">
-<title>⏱ Zeiterfassung</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#111;color:#F2F2F7;font-family:-apple-system,system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
-#app{max-width:480px;margin:0 auto;padding-bottom:90px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>⏱ Zeiterfassung</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #0d0d0f;
+            color: #e4e4e7;
+            font-family: -apple-system, system-ui, sans-serif;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+        #app {
+            max-width: 500px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+        }
 
-/* NAV */
-.hdr{background:#1C1C1E;border-bottom:1px solid #2C2C2E;padding:18px 16px 12px;position:sticky;top:0;z-index:100}
-.hdr-row{display:flex;justify-content:space-between;align-items:baseline}
-.hdr h1{font-size:20px;font-weight:700;color:#FF6B35}
-.hdr-sub{font-size:12px;color:#636366}
-.tabs{display:flex;background:#1C1C1E;border-bottom:1px solid #2C2C2E;position:sticky;top:58px;z-index:99}
-.tb{flex:1;padding:11px 2px;background:none;border:none;border-bottom:2px solid transparent;color:#636366;font-size:12px;font-weight:500;cursor:pointer}
-.tb.on{color:#FF6B35;border-bottom-color:#FF6B35;font-weight:700}
-.sec{padding:14px 14px 0;display:none}.sec.on{display:block}
+        /* HEADER */
+        .hdr {
+            background: #18181b;
+            border-bottom: 1px solid #27272a;
+            padding: 14px 16px 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .hdr h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f97316;
+            letter-spacing: -0.3px;
+        }
+        .hdr-sub {
+            font-size: 11px;
+            color: #71717a;
+            margin-top: 2px;
+        }
 
-/* CARDS */
-.card{background:#1C1C1E;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #2C2C2E}
-.card-sm{background:#1C1C1E;border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1px solid #2C2C2E}
-.ct{font-size:14px;font-weight:600;margin-bottom:10px;color:#F2F2F7}
-.ct-sm{font-size:12px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+        /* TABS */
+        .tabs {
+            display: flex;
+            background: #18181b;
+            border-bottom: 1px solid #27272a;
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+            overflow-x: auto;
+            gap: 2px;
+            padding: 0 4px;
+        }
+        .tb {
+            flex: 1;
+            min-width: 0;
+            padding: 11px 4px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #71717a;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            letter-spacing: 0.2px;
+            transition: all 0.15s;
+        }
+        .tb.on {
+            color: #f97316;
+            border-bottom-color: #f97316;
+            font-weight: 700;
+        }
 
-/* FORM */
-.lbl{display:block;font-size:11px;color:#8E8E93;margin-bottom:3px;font-weight:500}
-input,select,textarea{width:100%;background:#2C2C2E;border:1px solid #3A3A3C;border-radius:9px;color:#F2F2F7;font-size:15px;padding:9px 11px;outline:none;-webkit-appearance:none}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%238E8E93' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.field{margin-bottom:8px}
+        /* SECTIONS */
+        .sec {
+            padding: 12px 12px 0;
+            display: none;
+        }
+        .sec.on {
+            display: block;
+        }
 
-/* SEGMENTED */
-.seg{display:flex;background:#2C2C2E;border-radius:9px;padding:2px;gap:2px;margin-bottom:10px}
-.sg{flex:1;background:none;border:none;color:#8E8E93;font-size:12px;font-weight:600;padding:8px 4px;border-radius:7px;cursor:pointer}
-.sg.on{color:#fff}
-.sg.on.cl-o{background:#FF6B35}
-.sg.on.cl-v{background:#30D158}
-.sg.on.cl-n{background:#5E5CE6}
-.sg.on.cl-g{background:#FF9F0A}
+        /* CARDS */
+        .card {
+            background: #18181b;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid #27272a;
+        }
+        .card-sm {
+            background: #18181b;
+            border-radius: 12px;
+            padding: 11px 13px;
+            margin-bottom: 8px;
+            border: 1px solid #27272a;
+        }
+        .ct {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: -0.2px;
+        }
+        .ct-sm {
+            font-size: 10px;
+            font-weight: 700;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
 
-/* BUTTONS */
-.btn{display:block;width:100%;border:none;border-radius:11px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
-.btn-o{background:#FF6B35;color:#fff}
-.btn-s{background:#2C2C2E;color:#F2F2F7}
-.btn-g{background:#30D158;color:#fff}
-.btn-sm{background:#2C2C2E;color:#F2F2F7;border:none;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
+        /* FORM */
+        .lbl {
+            display: block;
+            font-size: 10px;
+            color: #a1a1aa;
+            margin-bottom: 3px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        input,
+        select {
+            width: 100%;
+            background: #27272a;
+            border: 1px solid #3f3f46;
+            border-radius: 9px;
+            color: #e4e4e7;
+            font-size: 15px;
+            padding: 9px 11px;
+            outline: none;
+            -webkit-appearance: none;
+            font-family: inherit;
+        }
+        input:focus,
+        select:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%23a1a1aa' d='M5 7L0 0h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+        .row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .field {
+            margin-bottom: 8px;
+        }
 
-/* CLOCK */
-.clk{background:linear-gradient(135deg,#1C1C1E,#2C2C2E);border-radius:14px;padding:14px 16px;margin-bottom:12px;border:1px solid #2C2C2E;display:flex;justify-content:space-between;align-items:center}
-.clk-t{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-1px}
-.clk-d{font-size:12px;color:#8E8E93;text-align:right;margin-bottom:5px}
+        /* SEGMENTED CONTROL */
+        .seg {
+            display: flex;
+            background: #27272a;
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .sg {
+            flex: 1;
+            min-width: calc(33% - 2px);
+            background: none;
+            border: none;
+            color: #a1a1aa;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 8px 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+            letter-spacing: -0.1px;
+        }
+        .sg.on.cn {
+            background: #f97316;
+            color: #fff;
+        }
+        .sg.on.cn2 {
+            background: #8b5cf6;
+            color: #fff;
+        }
+        .sg.on.cu {
+            background: #22c55e;
+            color: #fff;
+        }
+        .sg.on.co {
+            background: #eab308;
+            color: #111;
+        }
+        .sg.on.cs {
+            background: #636366;
+            color: #fff;
+        }
+        .sg.on.ch {
+            background: #ef4444;
+            color: #fff;
+        }
+        .sg.on.cf {
+            background: #3b82f6;
+            color: #fff;
+        }
 
-/* PREVIEW */
-.pvb{background:#2C2C2E;border-radius:9px;padding:9px 12px;margin-bottom:8px;font-size:13px;line-height:1.7}
-.pvb strong{color:#FF6B35}
-.pvb .s2{font-size:11px;color:#8E8E93}
-.hint-box{font-size:12px;color:#B8B6FF;background:rgba(94,92,230,.1);border:1px solid rgba(94,92,230,.25);border-radius:9px;padding:8px 11px;margin-bottom:8px}
+        /* BUTTONS */
+        .btn {
+            display: block;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+            letter-spacing: -0.2px;
+            transition: all 0.15s;
+        }
+        .btn-o {
+            background: #f97316;
+            color: #fff;
+        }
+        .btn-o:active {
+            background: #ea580c;
+        }
+        .btn-s {
+            background: #27272a;
+            color: #e4e4e7;
+        }
+        .btn-sm {
+            background: #27272a;
+            color: #e4e4e7;
+            border: 1px solid #3f3f46;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-sm:active {
+            background: #3f3f46;
+        }
 
-/* KONTO CARDS */
-.konto{border-radius:14px;padding:14px;margin-bottom:10px}
-.konto-aps{background:linear-gradient(135deg,rgba(255,107,53,.12),rgba(255,107,53,.04));border:1px solid rgba(255,107,53,.3)}
-.konto-fus{background:linear-gradient(135deg,rgba(100,210,255,.1),rgba(100,210,255,.03));border:1px solid rgba(100,210,255,.25)}
-.konto-url{background:linear-gradient(135deg,rgba(48,209,88,.1),rgba(48,209,88,.03));border:1px solid rgba(48,209,88,.25)}
-.konto-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.konto-label.aps{color:#FF6B35}.konto-label.fus{color:#64D2FF}.konto-label.url{color:#30D158}
-.konto-h{font-size:28px;font-weight:800;letter-spacing:-1px}
-.konto-h.aps{color:#FF6B35}.konto-h.fus{color:#64D2FF}.konto-h.url{color:#30D158}
-.konto-sub{font-size:11px;color:#8E8E93;margin-top:2px}
-.konto-bar{height:5px;border-radius:3px;background:#2C2C2E;margin-top:8px;overflow:hidden}
-.konto-fill{height:100%;border-radius:3px;background:#FF6B35;transition:width .4s}
+        /* CLOCK */
+        .clk {
+            background: linear-gradient(135deg, #18181b, #1f1f23);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #27272a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .clk-t {
+            font-size: 32px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
+            color: #f97316;
+        }
+        .pvb {
+            background: #1f1f23;
+            border-radius: 9px;
+            padding: 9px 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            border: 1px solid #27272a;
+        }
+        .pvb strong {
+            color: #f97316;
+        }
 
-/* WEEK/MONTH VIEW */
-.wnav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.wnb{background:#1C1C1E;border:1px solid #2C2C2E;color:#F2F2F7;font-size:18px;width:38px;height:38px;border-radius:9px;cursor:pointer;flex-shrink:0}
-.wnl{font-size:13px;font-weight:700;text-align:center;flex:1;color:#F2F2F7}
-.wbox{background:#1C1C1E;border-radius:14px;border:1px solid #2C2C2E;overflow:hidden}
-.wkhr{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 10px;border-bottom:1px solid #2C2C2E}
-.wkkw{font-size:12px;font-weight:700;color:#FF6B35;text-transform:uppercase;letter-spacing:.5px}
-.wktb{background:#FF6B35;color:#fff;font-size:14px;font-weight:800;padding:3px 12px;border-radius:16px}
-.wd{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #1A1A1A}
-.wd:last-child{border-bottom:none}
-.wd.td{background:rgba(255,107,53,.06)}
-.wd.we .wdn{color:#48484A}
-.wdl{display:flex;align-items:center;gap:9px}
-.dot{width:7px;height:7px;border-radius:50%;background:#2C2C2E;flex-shrink:0}
-.dot.dw{background:#FF6B35}.dot.du{background:#30D158}.dot.dn{background:#5E5CE6}.dot.dok{background:#FF9F0A}
-.wdn{font-size:14px;font-weight:600}
-.wddt{font-size:11px;color:#636366}
-.wdm{font-size:11px;color:#48484A;margin-top:1px}
-.wdh{font-size:15px;font-weight:700;text-align:right;min-width:50px}
-.wdh.e{color:#3A3A3C;font-size:13px;font-weight:400}
-.wdh.u{color:#30D158}.wdh.n{color:#B8B6FF}.wdh.ok{color:#FF9F0A}
-.wk-sep{background:#2C2C2E;padding:8px 14px;display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#8E8E93;border-bottom:1px solid #1A1A1A}
-.wk-sep span:last-child{color:#FF6B35}
-.otrow{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid #2C2C2E}
-.otrow:last-child{border-bottom:none}
-.otl{font-size:13px;color:#F2F2F7}.otl small{font-size:11px;color:#636366;display:block}
-.otv{font-size:15px;font-weight:700}
-.pos{color:#30D158}.neg{color:#FF453A}.col-o{color:#FF6B35}.col-f{color:#64D2FF}
-.del{background:none;border:none;color:#FF453A;font-size:19px;cursor:pointer;padding:0 3px;line-height:1}
-.etag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:5px;vertical-align:middle;text-transform:uppercase}
-.etag.n{background:rgba(94,92,230,.2);color:#B8B6FF}
-.etag.u{background:rgba(48,209,88,.2);color:#6FE39A}
-.etag.f{background:rgba(255,159,10,.2);color:#FF9F0A}
-.empty{text-align:center;padding:36px 16px;color:#48484A;font-size:14px;line-height:1.8}
-#print-area{display:none}
-@media print{body{background:#fff!important;color:#000!important}#app{display:none!important}#print-area{display:block!important}}
-</style>
+        /* KONTEN */
+        .konto {
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        .k-aps {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.10), rgba(249, 115, 22, 0.03));
+            border: 1px solid rgba(249, 115, 22, 0.25);
+        }
+        .k-aps.grau {
+            background: rgba(30, 30, 35, 0.6);
+            border-color: #27272a;
+            opacity: 0.55;
+            filter: grayscale(0.5);
+        }
+        .k-fus {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .k-url {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.02));
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .kl {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 5px;
+        }
+        .kl.aps {
+            color: #f97316;
+        }
+        .kl.fus {
+            color: #3b82f6;
+        }
+        .kl.url {
+            color: #22c55e;
+        }
+        .kl.grau {
+            color: #52525b;
+        }
+        .kh {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        .kh.aps {
+            color: #f97316;
+        }
+        .kh.fus {
+            color: #3b82f6;
+        }
+        .kh.url {
+            color: #22c55e;
+        }
+        .kh.grau {
+            color: #52525b;
+        }
+        .ksub {
+            font-size: 10px;
+            color: #71717a;
+            margin-top: 2px;
+        }
+        .kbar {
+            height: 4px;
+            border-radius: 3px;
+            background: #27272a;
+            margin-top: 8px;
+        }
+        .kfill {
+            height: 100%;
+            border-radius: 3px;
+            background: #f97316;
+            transition: width 0.4s;
+        }
+
+        /* WOCHE / MONAT */
+        .wnav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .wnb {
+            background: #18181b;
+            border: 1px solid #27272a;
+            color: #e4e4e7;
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .wnb:active {
+            background: #27272a;
+        }
+        .wnl {
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            flex: 1;
+            letter-spacing: -0.2px;
+        }
+        .wbox {
+            background: #18181b;
+            border-radius: 14px;
+            border: 1px solid #27272a;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .wkhr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 13px 8px;
+            border-bottom: 1px solid #27272a;
+        }
+        .wkkw {
+            font-size: 10px;
+            font-weight: 700;
+            color: #f97316;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .wktb {
+            font-size: 13px;
+            font-weight: 800;
+            color: #f97316;
+        }
+        .wktb.fus {
+            color: #3b82f6;
+        }
+        .wd {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 13px;
+            border-bottom: 1px solid #1a1a1d;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .wd:last-child {
+            border-bottom: none;
+        }
+        .wd:active {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .wd.we .wdn {
+            color: #52525b;
+        }
+        .wd.td {
+            background: rgba(249, 115, 22, 0.04);
+            border-left: 3px solid #f97316;
+        }
+        .wdl {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-n {
+            background: #f97316;
+        }
+        .dot-nt {
+            background: #8b5cf6;
+        }
+        .dot-u {
+            background: #22c55e;
+        }
+        .dot-o {
+            background: #eab308;
+        }
+        .dot-s {
+            background: #636366;
+        }
+        .dot-h {
+            background: #ef4444;
+        }
+        .dot-f {
+            background: #3b82f6;
+        }
+        .dot-x {
+            background: #3f3f46;
+        }
+        .wdn {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+        .wddt {
+            font-size: 10px;
+            color: #71717a;
+            font-weight: 400;
+            margin-left: 3px;
+        }
+        .wdm {
+            font-size: 10px;
+            color: #52525b;
+            margin-top: 1px;
+        }
+        .wdh {
+            font-size: 14px;
+            font-weight: 700;
+            text-align: right;
+            min-width: 44px;
+            letter-spacing: -0.3px;
+        }
+        .wdh.e {
+            color: #3f3f46;
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .wdh.col-n {
+            color: #e4e4e7;
+        }
+        .wdh.col-nt {
+            color: #c4b5fd;
+        }
+        .wdh.col-u {
+            color: #22c55e;
+        }
+        .wdh.col-o {
+            color: #eab308;
+        }
+        .wdh.col-s {
+            color: #a1a1aa;
+        }
+        .wdh.col-h {
+            color: #ef4444;
+        }
+        .wdh.col-f {
+            color: #3b82f6;
+        }
+        .del {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 2px;
+            line-height: 1;
+            flex-shrink: 0;
+            opacity: 0.7;
+            transition: opacity 0.15s;
+        }
+        .del:hover {
+            opacity: 1;
+        }
+        .etag {
+            display: inline-block;
+            font-size: 8px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 4px;
+            margin-left: 4px;
+            vertical-align: middle;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .et-n {
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+        }
+        .et-nt {
+            background: rgba(139, 92, 246, 0.2);
+            color: #c4b5fd;
+        }
+        .et-u {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+        .et-o {
+            background: rgba(234, 179, 8, 0.2);
+            color: #facc15;
+        }
+        .et-s {
+            background: rgba(99, 99, 102, 0.2);
+            color: #a1a1aa;
+        }
+        .et-h {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+        .et-f {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        /* AUSDRUCK */
+        .xview-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-top: 1px solid #27272a;
+            font-size: 12px;
+            align-items: center;
+        }
+        .xview-entry:first-child {
+            border-top: none;
+        }
+        .otrow {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 1px solid #27272a;
+        }
+        .otrow:last-child {
+            border-bottom: none;
+        }
+        .otl {
+            font-size: 13px;
+        }
+        .otl small {
+            font-size: 10px;
+            color: #71717a;
+            display: block;
+        }
+        .otv {
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .pos {
+            color: #22c55e;
+        }
+        .neg {
+            color: #ef4444;
+        }
+        .col-o {
+            color: #f97316;
+        }
+        .col-f {
+            color: #3b82f6;
+        }
+        .empty {
+            text-align: center;
+            padding: 32px;
+            color: #52525b;
+            font-size: 13px;
+        }
+
+        /* PRINT */
+        #print-area {
+            display: none;
+        }
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+            }
+            #app {
+                display: none !important;
+            }
+            #print-area {
+                display: block !important;
+            }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+    </style>
 </head>
 <body>
-<div id="app">
-<div class="hdr">
-  <div class="hdr-row"><h1>⏱ Zeiterfassung</h1><span class="hdr-sub" id="ecnt"></span></div>
-</div>
-<div class="tabs">
-  <button class="tb on" onclick="go('e')">Eintragen</button>
-  <button class="tb" onclick="go('k')">Konten</button>
-  <button class="tb" onclick="go('w')">Woche</button>
-  <button class="tb" onclick="go('m')">Monat</button>
-  <button class="tb" onclick="go('x')">Ausdruck</button>
-</div>
-
-<!-- ═══ EINTRAGEN ═══ -->
-<div class="sec on" id="sec-e">
-  <div class="clk">
-    <div><div style="font-size:10px;color:#636366;letter-spacing:.5px;margin-bottom:2px">JETZT</div><div class="clk-t" id="clkt">--:--</div></div>
-    <div><div class="clk-d" id="clkd"></div><button class="btn-sm" onclick="setNow()">← Als Ende</button></div>
-  </div>
-  <div class="card">
-    <div class="ct" id="ftit">Neuer Eintrag</div>
-    <div class="seg" style="flex-wrap:wrap;gap:3px">
-      <button class="sg on cl-o" id="tb-n" onclick="setT('n')">☀️ Normal</button>
-      <button class="sg cl-n" id="tb-nt" onclick="setT('nt')">🌙 Nacht</button>
-      <button class="sg cl-v" id="tb-u" onclick="setT('u')">🏖️ Urlaub</button>
-      <button class="sg cl-g" id="tb-f" onclick="setT('f')">🎉 Feiertag</button>
-    </div>
-    <div class="field"><label class="lbl">Datum</label><input type="date" id="fd"></div>
-    <div id="tfields">
-      <div class="row2">
-        <div><label class="lbl">Von</label><input type="time" id="fs" value="07:00" oninput="uprev()"></div>
-        <div><label class="lbl">Bis</label><input type="time" id="fe" value="15:30" oninput="uprev()"></div>
-      </div>
-      <div class="field"><label class="lbl">Pause (min)</label><input type="number" id="fp" value="30" min="0" max="180" step="5" oninput="uprev()"></div>
-    </div>
-    <!-- Nachtschicht Faktor -->
-    <div id="nf-row" style="display:none" class="field">
-      <div class="hint-box">🌙 Stunden 20–05 Uhr werden mit Faktor multipliziert</div>
-      <label class="lbl">Nachtzuschlag-Faktor</label>
-      <select id="nf" onchange="uprev()"><option value="1.25">1,25×</option><option value="1.5">1,5×</option><option value="2" selected>2×</option></select>
-    </div>
-    <!-- Urlaub Quelle -->
-    <div id="url-row" style="display:none" class="field">
-      <label class="lbl">Urlaub verbuchen von</label>
-      <select id="url-src"><option value="u">Urlaubskonto</option><option value="ot">Überstunden (APS/Fussenegger)</option></select>
-    </div>
-    <div class="field"><label class="lbl">Bemerkung (optional)</label><input type="text" id="fn" placeholder="z.B. Baustelle Dornbirn"></div>
-    <div class="pvb" id="pvb">Netto: <strong>–</strong></div>
-    <button class="btn btn-o" id="sbtn" onclick="saveE()">Speichern</button>
-    <button class="btn btn-s" id="cbtn" onclick="cancelE()" style="display:none">Abbrechen</button>
-  </div>
-</div>
-
-<!-- ═══ KONTEN ═══ -->
-<div class="sec" id="sec-k">
-  <!-- APS -->
-  <div class="konto konto-aps">
-    <div class="konto-label aps">APS – Überstundenkonto</div>
-    <div class="konto-h aps" id="k-aps">0h</div>
-    <div class="konto-sub" id="k-aps-sub">max. 8h</div>
-    <div class="konto-bar"><div class="konto-fill" id="k-aps-bar" style="width:0%"></div></div>
-  </div>
-  <!-- Fussenegger -->
-  <div class="konto konto-fus">
-    <div class="konto-label fus">Fussenegger – Überstundenkonto</div>
-    <div class="konto-h fus" id="k-fus">0h</div>
-    <div class="konto-sub">alles über 8h APS</div>
-  </div>
-  <!-- Urlaub -->
-  <div class="konto konto-url">
-    <div class="konto-label url">Urlaubskonto</div>
-    <div class="konto-h url" id="k-url">0 Tage</div>
-    <div class="konto-sub" id="k-url-sub"></div>
-  </div>
-  <!-- Einstellungen -->
-  <div class="card" style="border-color:#3A3A3C">
-    <div class="ct-sm">⚙️ Einstellungen</div>
-    <div class="row2">
-      <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="1" max="80" step="0.5" oninput="saveSett()"></div>
-      <div><label class="lbl">Urlaubstage (aktuell)</label><input type="number" id="url-start" value="5" min="0" step="0.5" oninput="saveSett()"></div>
-    </div>
-    <div class="field" style="margin-bottom:0"><label class="lbl">Urlaubszählung ab Datum (+1 Tag/2 Wochen)</label><input type="date" id="url-from" oninput="saveSett()"></div>
-  </div>
-  <!-- Diese Woche -->
-  <div class="card">
-    <div class="ct-sm">Diese Woche</div>
-    <div id="k-week"></div>
-  </div>
-</div>
-
-<!-- ═══ WOCHE ═══ -->
-<div class="sec" id="sec-w">
-  <div class="wnav">
-    <button class="wnb" onclick="wOff--;rwv()">‹</button>
-    <div class="wnl" id="wnl"></div>
-    <button class="wnb" onclick="wOff++;rwv()">›</button>
-  </div>
-  <div class="wbox" id="wbox"></div>
-</div>
-
-<!-- ═══ MONAT ═══ -->
-<div class="sec" id="sec-m">
-  <div class="wnav">
-    <button class="wnb" onclick="mOff--;rmonth()">‹</button>
-    <div class="wnl" id="mnl"></div>
-    <button class="wnb" onclick="mOff++;rmonth()">›</button>
-  </div>
-  <div id="mbox"></div>
-</div>
-
-<!-- ═══ AUSDRUCK ═══ -->
-<div class="sec" id="sec-x">
-  <div class="card">
-    <div class="ct">Stundenzettel</div>
-    <div class="seg" style="margin-bottom:10px">
-      <button class="sg on cl-o" id="xm-m" onclick="setXM('m')">Monat</button>
-      <button class="sg cl-o" id="xm-k" onclick="setXM('k')">Kalenderwoche</button>
-    </div>
-    <div class="field"><label class="lbl" id="xsl">Monat</label>
-      <select id="xsm" onchange="rxp()"><option value="">Alle</option></select>
-      <select id="xsk" onchange="rxp()" style="display:none"><option value="">Alle</option></select>
-    </div>
-    <!-- Umschalter APS / Fussenegger -->
-    <div class="seg" style="margin-bottom:0">
-      <button class="sg on cl-o" id="xv-aps" onclick="setXV('aps')">🟠 APS (39h/Woche)</button>
-      <button class="sg cl-g" id="xv-fus" onclick="setXV('fus')">🔵 Fussenegger (Original)</button>
-    </div>
-  </div>
-  <!-- Anzeige -->
-  <div id="xview"></div>
-  <div class="card" style="border-color:#3A3A3C;margin-top:0">
-    <div class="ct-sm">Datensicherung</div>
-    <p style="font-size:12px;color:#636366;margin-bottom:10px">Einträge lokal gespeichert — regelmäßig exportieren!</p>
-    <button class="btn-sm" onclick="doExp()">💾 JSON exportieren</button>
-  </div>
-</div>
-</div>
-<div id="print-area"></div>
-
-<script>
-// ── Konstanten ──────────────────────────────────────────────────────────────
-const SK='zt_v4',SS='zt_s4';
-const DY=['So','Mo','Di','Mi','Do','Fr','Sa'];
-const DML=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-const DMS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-const APS_MAX=8*60, APS_START=7*60, URLAUB_H=8*60;
-
-// ── State ───────────────────────────────────────────────────────────────────
-let D={}, S={soll:40,urlStart:5,urlFrom:''},eT='n',wOff=0,mOff=0,xMode='m',editK=null;
-
-// ── Storage ─────────────────────────────────────────────────────────────────
-const mem={};
-const st={
-  g:k=>{try{return localStorage.getItem(k)}catch{return mem[k]??null}},
-  s:(k,v)=>{try{localStorage.setItem(k,v)}catch{}mem[k]=v}
-};
-function loadD(){try{D=JSON.parse(st.g(SK))||{}}catch{D={}}migAll()}
-function migAll(){
-  if(Object.keys(D).length>0)return; // schon Daten vorhanden
-  const oldKeys=['zeiterfassung_v3','zt_v3','zeiterfassung_v2'];
-  let found=null;
-  for(const k of oldKeys){
-    try{const v=st.g(k);if(v){const p=JSON.parse(v);if(p&&typeof p==='object'&&Object.keys(p).length>0){found=p;break}}}catch{}
-  }
-  if(!found)return;
-  let n=0;
-  Object.keys(found).forEach(date=>{
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return;
-    if(D[date])return;
-    const e=found[date];if(!e)return;
-    const t=e.type||'n';
-    if(t==='u'||t==='urlaub'){D[date]={type:'u',net:URLAUB_H,src:e.src||'u',note:e.note||''}}
-    else if(t==='nt'||t==='nacht'){D[date]={type:'nt',start:e.start,end:e.end,pause:e.pause||0,net:e.netMins||e.net||0,nMin:e.nMin||0,dMin:e.dMin||0,factor:e.factor||2,note:e.note||''}}
-    else{D[date]={type:'n',start:e.start,end:e.end,pause:e.pause||0,net:e.netMins||e.net||Math.max(0,span(e.start||'00:00',e.end||'00:00')-(e.pause||0)),note:e.note||''}}
-    n++;
-  });
-  if(n>0){saveD();setTimeout(()=>alert(`✅ ${n} Einträge wiederhergestellt!`),300)}
-}
-function saveD(){st.s(SK,JSON.stringify(D))}
-function loadS(){try{const s=JSON.parse(st.g(SS));if(s)Object.assign(S,s)}catch{}}
-function saveSett(){
-  S.soll=parseFloat(document.getElementById('soll').value)||40;
-  S.urlStart=parseFloat(document.getElementById('url-start').value)||0;
-  S.urlFrom=document.getElementById('url-from').value||'';
-  st.s(SS,JSON.stringify(S));
-  rkonten();
-}
-
-// ── Helpers ─────────────────────────────────────────────────────────────────
-const pad=n=>String(n).padStart(2,'0');
-const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-const toM=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
-const fmt=m=>{if(!m&&m!==0)return'–';const h=Math.floor(Math.abs(m)/60),mn=Math.round(Math.abs(m)%60);return(m<0?'−':'')+(mn?`${h}h ${mn}min`:`${h}h`)};
-const fmtD=n=>`${n} Tag${n===1?'':'e'}`;
-
-function ddisp(s){const d=new Date(s+'T12:00:00');return`${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}`}
-
-function span(a,b){let s=toM(a),e=toM(b);if(e<=s)e+=1440;return e-s}
-
-function nightAdj(a,b,p,f){
-  let s=toM(a),e=toM(b);if(e<=s)e+=1440;
-  const tot=e-s;if(!tot)return{net:0,nMin:0,dMin:0};
-  let nRaw=0;
-  for(let d=-1;d<=1;d++){const ws=d*1440+1200,we=d*1440+1740;nRaw+=Math.max(0,Math.min(e,we)-Math.max(s,ws))}
-  nRaw=Math.min(tot,nRaw);const dRaw=tot-nRaw;
-  const nNet=Math.max(0,nRaw-p*(nRaw/tot)),dNet=Math.max(0,dRaw-p*(dRaw/tot));
-  return{net:dNet+nNet*f,nMin:nNet,dMin:dNet};
-}
-
-function isoWk(s){
-  const d=new Date(s+'T12:00:00'),t=new Date(d);
-  t.setDate(d.getDate()-((d.getDay()+6)%7)+3);
-  const y=t.getFullYear(),j=new Date(y,0,1);
-  j.setDate(j.getDate()-((j.getDay()+6)%7)+3);
-  return`${y}-W${pad(1+Math.round((t-j)/604800000))}`;
-}
-function wkMon(y,w){
-  const j=new Date(y,0,1);j.setDate(j.getDate()-((j.getDay()+6)%7)+3);
-  const t=new Date(j);t.setDate(j.getDate()+(w-1)*7);t.setDate(t.getDate()-3);return t;
-}
-function wkLabel(k){
-  const[ys,ws]=k.split('-W');const w=parseInt(ws),y=parseInt(ys);
-  const m=wkMon(y,w),su=new Date(m);su.setDate(m.getDate()+6);
-  return m.getMonth()===su.getMonth()?`${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}`:`${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
-}
-
-const keys=()=>Object.keys(D).sort((a,b)=>b.localeCompare(a));
-const months=()=>[...new Set(keys().map(k=>k.slice(0,7)))].sort((a,b)=>b.localeCompare(a));
-const wks=()=>[...new Set(keys().map(k=>isoWk(k)))].sort((a,b)=>b.localeCompare(a));
-const sumM=ks=>ks.reduce((s,k)=>s+(D[k]?.net||0),0);
-const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-// ── Urlaubskonto berechnen ──────────────────────────────────────────────────
-function calcUrl(){
-  // Automatisch +0,5 alle 2 Wochen seit urlFrom
-  let auto=0;
-  if(S.urlFrom){
-    const from=new Date(S.urlFrom+'T12:00:00'),now=new Date();
-    const diffMs=now-from;
-    if(diffMs>0){const weeks=diffMs/(7*86400000);auto=Math.floor(weeks/2)*1}
-  }
-  // Verbrauchte Urlaubstage (aus Urlaubskonto, nicht aus Überstunden)
-  const used=keys().filter(k=>D[k]?.type==='u'&&D[k]?.src==='u').length;
-  return{saldo:S.urlStart+auto-used,auto,used,start:S.urlStart};
-}
-
-// ── Überstundenkonto berechnen ──────────────────────────────────────────────
-function calcOT(){
-  const soll=S.soll*60;
-  // Wochen-Ist (nur nicht-Urlaub-Einträge)
-  const byWk={};
-  keys().forEach(k=>{
-    const e=D[k];if(e.type==='u')return;
-    const w=isoWk(k);if(!byWk[w])byWk[w]=0;byWk[w]+=e.net||0;
-  });
-  // Gesamt-Überstunden (Summe aller positiven Wochendifferenzen)
-  let total=Object.values(byWk).reduce((s,ist)=>s+Math.max(0,ist-soll),0);
-  // APS startet bei 6,36h und geht max bis 8h
-  const aps=Math.min(total+APS_START,APS_MAX);
-  const fus=Math.max(0,total-(APS_MAX-APS_START));
-  return{total,aps,fus,byWk};
-}
-
-// ── Clock ───────────────────────────────────────────────────────────────────
-function tick(){
-  const n=new Date();
-  document.getElementById('clkt').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  document.getElementById('clkd').textContent=`${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
-}
-function setNow(){const n=new Date();document.getElementById('fe').value=`${pad(n.getHours())}:${pad(n.getMinutes())}`;uprev()}
-
-// ── Tabs ─────────────────────────────────────────────────────────────────────
-function go(t){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('sec-'+t).classList.add('on');
-  ['e','k','w','m','x'].forEach((id,i)=>{if(id===t)document.querySelectorAll('.tb')[i].classList.add('on')});
-  if(t==='k')rkonten();
-  if(t==='w')rwv();
-  if(t==='m')rmonth();
-  if(t==='x')rxsel();
-}
-
-// ── Eintragen ────────────────────────────────────────────────────────────────
-function setT(t){
-  eT=t;
-  ['n','nt','u','f'].forEach(x=>{const el=document.getElementById('tb-'+x);if(el)el.classList.remove('on')});
-  document.getElementById('tb-'+t).classList.add('on');
-  document.getElementById('tfields').style.display=(t==='u'||t==='f')?'none':'block';
-  document.getElementById('nf-row').style.display=t==='nt'?'block':'none';
-  document.getElementById('url-row').style.display=t==='u'?'block':'none';
-  uprev();
-}
-function uprev(){
-  const box=document.getElementById('pvb');
-  if(eT==='u'){box.innerHTML='🏖️ <strong>Urlaubstag</strong>';return}
-  if(eT==='f'){box.innerHTML='🎉 <strong>Feiertag</strong>';return}
-  const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
-  if(!a||!b){box.innerHTML='Netto: <strong>–</strong>';return}
-  if(eT==='nt'){
-    const f=parseFloat(document.getElementById('nf').value)||2;
-    const r=nightAdj(a,b,p,f);
-    box.innerHTML=`Netto: <strong>${fmt(r.net)}</strong><br><span class="s2">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
-  }else{
-    box.innerHTML=`Netto: <strong>${fmt(Math.max(0,span(a,b)-p))}</strong>`;
-  }
-}
-function saveE(){
-  const date=document.getElementById('fd').value,note=document.getElementById('fn').value.trim();
-  if(!date)return alert('Bitte Datum ausfüllen.');
-  let e;
-  if(eT==='f'){
-    e={type:'f',net:0,note};
-  }else if(eT==='u'){
-    const src=document.getElementById('url-src').value;
-    // Warnung: Urlaubskonto leer?
-    const url=calcUrl();
-    if(src==='u'&&url.saldo<=0){
-      if(!confirm(`⚠️ Dein Urlaubskonto ist leer (${url.saldo} Tage)!\nTrotzdem als Urlaubstag eintragen?`))return;
-    }
-    e={type:'u',net:0,src,note};
-  }else if(eT==='nt'){
-    const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
-    if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
-    const f=parseFloat(document.getElementById('nf').value)||2,r=nightAdj(a,b,p,f);
-    const warns=validateEntry(date,a,b,p,'nt',r.net);
-    if(warns&&!confirm(warns))return;
-    e={type:'nt',start:a,end:b,pause:p,net:r.net,nMin:r.nMin,dMin:r.dMin,factor:f,note};
-  }else{
-    const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
-    if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
-    const net=Math.max(0,span(a,b)-p);
-    const warns=validateEntry(date,a,b,p,'n',net);
-    if(warns&&!confirm(warns))return;
-    e={type:'n',start:a,end:b,pause:p,net,note};
-  }
-  D[date]=e;saveD();editK=null;resetF();upd();go('k');
-}
-
-// ── Smarte Validierung ────────────────────────────────────────────────────────
-function validateEntry(date,start,end,pause,type,net){
-  const warns=[];
-  const d=new Date(date+'T12:00:00');
-  const dow=d.getDay(); // 0=So, 6=Sa
-  const bruttoMin=span(start,end);
-
-  // Wochenende?
-  if(dow===0||dow===6){
-    warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — Wochenendarbeit?`);
-  }
-
-  // Bereits eingetragen?
-  if(D[date]&&!editK){
-    const alt=D[date];
-    const altInfo=alt.type==='u'?'Urlaubstag':`${alt.start}–${alt.end} (${fmt(alt.net)})`;
-    warns.push(`⚠️ Für diesen Tag existiert bereits ein Eintrag:\n${altInfo}\nMöchtest du ihn überschreiben?`);
-  }
-
-  // Sehr lange Schicht?
-  if(bruttoMin>12*60){
-    warns.push(`⏱️ Schicht über 12h (${fmt(bruttoMin)} brutto) — stimmt das?`);
-  }
-
-  // Zu wenig Pause bei langer Schicht?
-  if(bruttoMin>6*60&&pause<30&&type!=='nt'){
-    warns.push(`☕ Pause unter 30min bei einer Schicht über 6h — vergessen einzutragen?`);
-  }
-
-  // Nachtschicht aber Zeiten nicht im Nachtfenster?
-  if(type==='nt'){
-    const s=toM(start),e2=toM(end);
-    const inNight=(s>=20*60||s<5*60)||(e2>20*60||e2<=5*60);
-    if(!inNight){
-      warns.push(`🌙 Als Nachtschicht markiert, aber die Zeiten liegen komplett im Tagbereich (${start}–${end}) — korrekt?`);
-    }
-  }
-
-  // Wochenstunden nach diesem Eintrag prüfen
-  const wk=isoWk(date);
-  const wkKeys=keys().filter(k=>isoWk(k)===wk&&k!==date&&D[k].type!=='u');
-  const wkIst=wkKeys.reduce((s,k)=>s+(D[k].net||0),0)+net;
-  if(wkIst>60*60){
-    warns.push(`📊 Mit diesem Eintrag kommst du auf ${fmt(wkIst)} in KW ${parseInt(wk.split('-W')[1])} — über 60h, alles korrekt?`);
-  } else if(wkIst<35*60&&dow===5){
-    // Freitag und unter 35h → Woche fast vorbei, wenig Stunden
-    warns.push(`📊 Diese Woche erst ${fmt(wkIst)} — deutlich unter Soll (${S.soll}h). Fehlen noch Einträge?`);
-  }
-
-  // Eintr. in der Zukunft?
-  if(d>new Date()&&!editK){
-    warns.push(`🔮 ${ddisp(date)} liegt in der Zukunft — Vorab-Eintrag?`);
-  }
-
-  if(!warns.length)return null;
-  return warns.join('\n\n')+'\n\nTrotzdem speichern?';
-}
-function cancelE(){editK=null;resetF()}
-function resetF(){
-  document.getElementById('fd').value=iso(new Date());
-  ['fs','fe'].forEach((id,i)=>document.getElementById(id).value=i?'15:30':'07:00');
-  document.getElementById('fp').value='30';document.getElementById('fn').value='';
-  document.getElementById('ftit').textContent='Neuer Eintrag';
-  document.getElementById('sbtn').textContent='Speichern';
-  document.getElementById('cbtn').style.display='none';
-  setT('n');
-}
-function startEdit(k){
-  const e=D[k];editK=k;
-  document.getElementById('fd').value=k;document.getElementById('fn').value=e.note||'';
-  if(e.type==='f'){setT('f')}
-  else if(e.type==='u'){setT('u');document.getElementById('url-src').value=e.src||'u'}
-  else{
-    document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;
-    if(e.type==='nt'){document.getElementById('nf').value=String(e.factor||2);setT('nt')}else setT('n');
-  }
-  document.getElementById('ftit').textContent='Bearbeiten';
-  document.getElementById('sbtn').textContent='Aktualisieren';
-  document.getElementById('cbtn').style.display='block';
-  uprev();go('e');window.scrollTo(0,0);
-}
-function delE(k){if(!confirm(`${ddisp(k)} löschen?`))return;delete D[k];saveD();upd();go('k')}
-function upd(){document.getElementById('ecnt').textContent=`${Object.keys(D).length} Einträge`}
-
-// ── Konten ───────────────────────────────────────────────────────────────────
-function rkonten(){
-  const ot=calcOT(),url=calcUrl();
-  const soll=S.soll*60;
-  // APS
-  document.getElementById('k-aps').textContent=fmt(ot.aps);
-  document.getElementById('k-aps-sub').textContent=`von max. 8h (${Math.round(ot.aps/APS_MAX*100)}%)`;
-  document.getElementById('k-aps-bar').style.width=Math.min(100,ot.aps/APS_MAX*100)+'%';
-  // Fussenegger
-  document.getElementById('k-fus').textContent=fmt(ot.fus);
-  // Urlaub
-  document.getElementById('k-url').textContent=fmtD(Math.max(0,url.saldo));
-  document.getElementById('k-url-sub').textContent=`${url.start} Start + ${url.auto} auto − ${url.used} verbraucht`;
-  // Diese Woche
-  const td=new Date(),mon=new Date(td);mon.setDate(td.getDate()-((td.getDay()+6)%7));
-  const dks=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dks.push(iso(d))}
-  const wIst=dks.filter(k=>D[k]&&D[k].type!=='u').reduce((s,k)=>s+(D[k].net||0),0);
-  const diff=wIst-soll;
-  const dv=diff>=0?`<span class="pos">+${fmt(diff)}</span>`:`<span class="neg">−${fmt(Math.abs(diff))}</span>`;
-  document.getElementById('k-week').innerHTML=`
-    <div class="otrow"><div class="otl">Ist-Stunden<small>ohne Urlaub</small></div><span class="otv">${fmt(wIst)}</span></div>
-    <div class="otrow"><div class="otl">Soll<small>${S.soll}h/Woche</small></div><span class="otv">${fmt(soll)}</span></div>
-    <div class="otrow"><div class="otl">Differenz</div><span class="otv">${dv}</span></div>`;
-  // Einstellungen befüllen
-  document.getElementById('soll').value=S.soll;
-  document.getElementById('url-start').value=S.urlStart;
-  document.getElementById('url-from').value=S.urlFrom;
-}
-
-// ── Wochenansicht ─────────────────────────────────────────────────────────────
-function rwv(){
-  const td=new Date(),tdi=iso(td);
-  const mon=new Date(td);mon.setDate(td.getDate()-((td.getDay()+6)%7)+wOff*7);
-  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
-  const wk=isoWk(iso(mon)),wn=parseInt(wk.split('-W')[1]);
-  document.getElementById('wnl').textContent=`KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
-  const dks=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dks.push(iso(d))}
-  const wtot=sumM(dks.filter(k=>D[k]));
-  let h=`<div class="wkhr"><div class="wkkw">KW ${wn}</div><div class="wktb">${fmt(wtot)}</div></div>`;
-  const dn=['Mo','Di','Mi','Do','Fr','Sa','So'];
-  dks.forEach((k,i)=>{
-    const e=D[k],isT=k===tdi,isW=i>=5,t=e?.type||'';
-    let dot='',hcls='e',htxt='–',meta='';
-    if(e){
-      dot=t==='u'?(e.src==='ot'?'dok':'du'):t==='nt'?'dn':t==='f'?'dok':'dw';
-      hcls=t==='u'?(e.src==='ot'?'ok':'u'):t==='nt'?'n':t==='f'?'ok':'';
-      htxt=t==='u'?'Urlaub':t==='f'?'Feiertag':fmt(e.net);
-      meta=`<div class="wdm">${t==='u'?'Urlaubstag ('+(e.src==='ot'?'ÜS':'Konto')+')':t==='f'?'🎉 Feiertag'+(e.note?' · '+esc(e.note):''):t==='nt'?e.start+'–'+e.end+' 🌙':e.start+'–'+e.end}</div>`;
-    }
-    const dd=new Date(k+'T12:00:00');
-    h+=`<div class="wd${isT?' td':''}${isW?' we':''}" onclick="startEdit('${k}')">
-      <div class="wdl"><div class="dot ${dot}"></div>
-        <div><div class="wdn">${dn[i]} <span class="wddt">${dd.getDate()}. ${DMS[dd.getMonth()]}</span></div>${meta}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span class="wdh ${hcls}">${htxt}</span>
-        ${e?`<button class="del" onclick="event.stopPropagation();delE('${k}')">×</button>`:''}
-      </div></div>`;
-  });
-  document.getElementById('wbox').innerHTML=h;
-}
-
-// ── Monatsansicht ─────────────────────────────────────────────────────────────
-function rmonth(){
-  const now=new Date(),y=now.getFullYear(),mo=now.getMonth()+mOff;
-  const d=new Date(y,mo,1);
-  const yr=d.getFullYear(),mr=d.getMonth();
-  document.getElementById('mnl').textContent=`${DML[mr]} ${yr}`;
-  // Alle Tage des Monats
-  const monthKey=`${yr}-${pad(mr+1)}`;
-  const mKeys=keys().filter(k=>k.startsWith(monthKey));
-  // Nach Wochen gruppieren
-  const byWk={};
-  // Erzeuge alle Tage des Monats
-  const daysInMonth=new Date(yr,mr+1,0).getDate();
-  for(let day=1;day<=daysInMonth;day++){
-    const dk=`${yr}-${pad(mr+1)}-${pad(day)}`;
-    const wk=isoWk(dk);
-    if(!byWk[wk])byWk[wk]=[];
-    byWk[wk].push(dk);
-  }
-  // Monatsgesamt
-  const mTot=sumM(mKeys);
-  let h=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <span style="font-size:12px;color:#8E8E93">${mKeys.length} Einträge</span>
-    <span style="font-size:15px;font-weight:700;color:#FF6B35">${fmt(mTot)}</span></div>`;
-  const sortedWks=Object.keys(byWk).sort();
-  sortedWks.forEach(wk=>{
-    const dks=byWk[wk];
-    const wIst=sumM(dks.filter(k=>D[k]));
-    const wn=parseInt(wk.split('-W')[1]);
-    h+=`<div class="wbox" style="margin-bottom:10px">
-      <div class="wk-sep"><span>KW ${wn} · ${wkLabel(wk)}</span><span>${fmt(wIst)}</span></div>`;
-    dks.forEach(k=>{
-      const e=D[k],d=new Date(k+'T12:00:00'),dow=DY[d.getDay()];
-      const isWe=(d.getDay()===0||d.getDay()===6);
-      const t=e?.type||'';
-      let dot='',hcls='e',htxt='–',meta='';
-      if(e){
-        dot=t==='u'?(e.src==='ot'?'dok':'du'):t==='nt'?'dn':t==='f'?'dok':'dw';
-        hcls=t==='u'?(e.src==='ot'?'ok':'u'):t==='nt'?'n':t==='f'?'ok':'';
-        htxt=t==='u'?'Urlaub':t==='f'?'Feiertag':fmt(e.net);
-        meta=t==='u'?` <span class="etag u">${e.src==='ot'?'Zeitausgleich':'Urlaub'}</span>`:t==='nt'?` <span class="etag n">Nacht</span>`:t==='f'?` <span class="etag f">Feiertag</span>`:'';
-      }
-      h+=`<div class="wd${isWe?' we':''}" onclick="startEdit('${k}')">
-        <div class="wdl"><div class="dot ${dot}"></div>
-          <div><div class="wdn" style="font-size:13px">${dow} <span class="wddt">${d.getDate()}.</span>${meta}</div>
-          ${e&&t!=='u'&&t!=='f'?`<div class="wdm">${e.start}–${e.end}</div>`:''}
-          </div>
+    <div id="app">
+        <div class="hdr">
+            <h1>⏱ Zeiterfassung</h1>
+            <div class="hdr-sub" id="ecnt">0 Einträge</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="wdh ${hcls}" style="font-size:14px">${htxt}</span>
-          ${e?`<button class="del" onclick="event.stopPropagation();delE('${k}')">×</button>`:''}
-        </div></div>`;
-    });
-    h+='</div>';
-  });
-  if(!mKeys.length)h+='<div class="empty">Keine Einträge in diesem Monat.</div>';
-  document.getElementById('mbox').innerHTML=h;
-}
+        <div class="tabs">
+            <button class="tb on" onclick="go('e')">Eintragen</button>
+            <button class="tb" onclick="go('k')">Konten</button>
+            <button class="tb" onclick="go('w')">Woche</button>
+            <button class="tb" onclick="go('m')">Monat</button>
+            <button class="tb" onclick="go('x')">Ausdruck</button>
+        </div>
 
-// ── Ausdruck ─────────────────────────────────────────────────────────────────
-function setXM(m){
-  xMode=m;
-  document.getElementById('xm-m').classList.toggle('on',m==='m');
-  document.getElementById('xm-k').classList.toggle('on',m==='k');
-  document.getElementById('xsm').style.display=m==='m'?'block':'none';
-  document.getElementById('xsk').style.display=m==='k'?'block':'none';
-  document.getElementById('xsl').textContent=m==='m'?'Monat':'Kalenderwoche';
-  rxp();
-}
-function fillSel(id,opts){
-  const s=document.getElementById(id),v=s.value;
-  s.innerHTML='<option value="">Alle</option>';
-  opts.forEach(o=>{const op=document.createElement('option');op.value=o.v;op.textContent=o.t;if(o.v===v)op.selected=true;s.appendChild(op)});
-}
-function rxsel(){
-  const DML2=DML;
-  fillSel('xsm',months().map(m=>{const[y,mo]=m.split('-');return{v:m,t:`${DML2[parseInt(mo)-1]} ${y}`}}));
-  fillSel('xsk',wks().map(w=>({v:w,t:wkLabel(w)})));
-  rxp();
-}
-function xKeys(){
-  if(xMode==='k'){const f=document.getElementById('xsk').value;return keys().filter(k=>!f||isoWk(k)===f)}
-  const f=document.getElementById('xsm').value;return keys().filter(k=>!f||k.startsWith(f));
-}
-function xTitle(){
-  if(xMode==='k'){const v=document.getElementById('xsk').value;return v?wkLabel(v):'Alle Einträge'}
-  const v=document.getElementById('xsm').value;if(!v)return'Alle Einträge';
-  const[y,m]=v.split('-');return`${DML[parseInt(m)-1]} ${y}`;
-}
-let xView='aps';
-function setXV(v){xView=v;document.getElementById('xv-aps').classList.toggle('on',v==='aps');document.getElementById('xv-fus').classList.toggle('on',v==='fus');rxp()}
-function rxp(){
-  const ks=xKeys(),el=document.getElementById('xview');
-  if(!ks.length){el.innerHTML='<div class="empty">Keine Einträge.</div>';return}
+        <!-- EINTRAGEN -->
+        <div class="sec on" id="sec-e">
+            <div class="clk">
+                <div>
+                    <div style="font-size:9px;color:#71717a;letter-spacing:.5px;margin-bottom:2px">JETZT</div>
+                    <div class="clk-t" id="clkt">--:--</div>
+                </div>
+                <div style="text-align:right">
+                    <div style="font-size:11px;color:#71717a;margin-bottom:5px" id="clkd"></div>
+                    <button class="btn-sm" onclick="setNow()">← Als Ende</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="ct" id="ftit">Neuer Eintrag</div>
+                <div class="seg">
+                    <button class="sg on cn" id="tb-n" onclick="setT('n')">☀️ Normal</button>
+                    <button class="sg cn2" id="tb-nt" onclick="setT('nt')">🌙 Nacht</button>
+                    <button class="sg cu" id="tb-u" onclick="setT('u')">🏖️ Urlaub</button>
+                    <button class="sg co" id="tb-o" onclick="setT('o')">⚡ Überstunden</button>
+                    <button class="sg cs" id="tb-s" onclick="setT('s')">🌧️ Schlechtwetter</button>
+                    <button class="sg ch" id="tb-h" onclick="setT('h')">🌡️ Hitzefrei</button>
+                    <button class="sg cf" id="tb-f" onclick="setT('f')">🎉 Feiertag</button>
+                </div>
+                <div class="field"><label class="lbl">Datum</label><input type="date" id="fd"></div>
+                <div id="tfields">
+                    <div class="row2">
+                        <div><label class="lbl">Von</label><input type="time" id="fs" value="07:00" oninput="uprev()"></div>
+                        <div><label class="lbl">Bis</label><input type="time" id="fe" value="15:30" oninput="uprev()"></div>
+                    </div>
+                    <div class="field"><label class="lbl">Pause (min)</label><input type="number" id="fp" value="30" min="0" max="180" step="5" oninput="uprev()">
+                    </div>
+                    <div id="nf-row" style="display:none" class="field">
+                        <label class="lbl">Nachtzuschlag-Faktor (20–05 Uhr)</label>
+                        <select id="nf" onchange="uprev()">
+                            <option value="1.25">1,25×</option>
+                            <option value="1.5">1,5×</option>
+                            <option value="2" selected>2×</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pvb" id="pvb"></div>
+                <div class="field"><label class="lbl">Bemerkung (optional)</label><input type="text" id="fn"
+                        placeholder="z.B. Baustelle Dornbirn"></div>
+                <button class="btn btn-o" id="sbtn" onclick="saveE()">Speichern</button>
+                <button class="btn btn-s" id="cbtn" onclick="cancelE()" style="display:none">Abbrechen</button>
+            </div>
+        </div>
 
-  if(xView==='aps'){
-    const byWk={};
-    [...ks].sort().forEach(k=>{const w=isoWk(k);if(!byWk[w])byWk[w]=[];byWk[w].push(k)});
-    let apsVoll=S.apsFull||false;
-    let h='',totalAps=0;
+        <!-- KONTEN -->
+        <div class="sec" id="sec-k">
+            <div class="konto k-aps" id="aps-konto">
+                <div class="kl aps" id="aps-label">APS – Überstundenkonto</div>
+                <div class="kh aps" id="aps-h">7h</div>
+                <div class="ksub" id="aps-sub">von max. 8h</div>
+                <div class="kbar">
+                    <div class="kfill" id="aps-bar" style="width:87.5%"></div>
+                </div>
+            </div>
+            <div class="konto k-fus">
+                <div class="kl fus">Fussenegger – Überstundenkonto</div>
+                <div class="kh fus" id="fus-h">0h</div>
+                <div class="ksub">Alle Überstunden nach APS-Vollstand</div>
+            </div>
+            <div class="konto k-url">
+                <div class="kl url">Urlaubskonto</div>
+                <div class="kh url" id="url-h">5 Tage</div>
+                <div class="ksub" id="url-sub"></div>
+            </div>
+            <div class="card">
+                <div class="ct-sm">⚙️ Einstellungen</div>
+                <div class="row2">
+                    <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="20"
+                            max="60" step="0.5" oninput="saveSett();rkonten()"></div>
+                    <div><label class="lbl">Urlaubstage (Start)</label><input type="number" id="url-start" value="5"
+                            min="0" step="0.5" oninput="saveSett();rkonten()"></div>
+                </div>
+                <div class="field"><label class="lbl">Urlaubszählung ab (+1 Tag / 2 Wochen)</label><input type="date"
+                        id="url-from" oninput="saveSett();rkonten()"></div>
+                <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsüberstunden (h)</label><input
+                        type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5"
+                        oninput="saveSett();rkonten()"></div>
+            </div>
+            <div class="card">
+                <div class="ct-sm">Diese Woche</div>
+                <div id="k-week"></div>
+            </div>
+        </div>
 
-    Object.keys(byWk).sort().forEach(wk=>{
-      const wKeys=byWk[wk];
-      const arbTage=wKeys.filter(k=>D[k].type!=='u'&&D[k].type!=='f');
-      const urlTage=wKeys.filter(k=>D[k].type==='u');
-      const feiTage=wKeys.filter(k=>D[k].type==='f');
-      const wIst=arbTage.reduce((s,k)=>s+(D[k].net||0),0);
-      const wn=parseInt(wk.split('-W')[1]);
+        <!-- WOCHE -->
+        <div class="sec" id="sec-w">
+            <div class="wnav">
+                <button class="wnb" onclick="wOff--;rwv()">‹</button>
+                <div class="wnl" id="wnl"></div>
+                <button class="wnb" onclick="wOff++;rwv()">›</button>
+            </div>
+            <div id="wbox"></div>
+        </div>
 
-      // Zielstunden bestimmen
-      let ziel;
-      if(!apsVoll&&wIst>39*60){
-        ziel=40*60;apsVoll=true;S.apsFull=true;st.s(SS,JSON.stringify(S));
-      } else {
-        ziel=Math.min(wIst,39*60);
-      }
-      totalAps+=ziel;
-      const istVierzig=ziel===40*60;
+        <!-- MONAT (nur Tage des Monats) -->
+        <div class="sec" id="sec-m">
+            <div class="wnav">
+                <button class="wnb" onclick="mOff--;rmonth()">‹</button>
+                <div class="wnl" id="mnl"></div>
+                <button class="wnb" onclick="mOff++;rmonth()">›</button>
+            </div>
+            <div id="mbox"></div>
+        </div>
 
-      // Mo–Fr aufbauen
-      const[ys,ws]=wk.split('-W');
-      const mon=wkMon(parseInt(ys),parseInt(ws));
-      const tagNamen=['Mo','Di','Mi','Do','Fr'];
-
-      // Welche Wochentage sind Urlaub/ZA oder Feiertag? (0=Mo ... 4=Fr)
-      const urlaubAnTag=new Set();
-      urlTage.forEach(k=>{
-        const d=new Date(k+'T12:00:00');
-        const dow=(d.getDay()+6)%7;
-        if(dow<5)urlaubAnTag.add(dow);
-      });
-      const feiAnTag=new Set();
-      feiTage.forEach(k=>{
-        const d=new Date(k+'T12:00:00');
-        const dow=(d.getDay()+6)%7;
-        if(dow<5)feiAnTag.add(dow);
-      });
-
-      h+=`<div class="card-sm">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn} · ${wkLabel(wk)}</span>
-          <span style="font-size:14px;font-weight:800;color:#FF6B35">${fmt(ziel)}${istVierzig?' ✓':''}</span>
-        </div>`;
-
-      tagNamen.forEach((tn,i)=>{
-        const d=new Date(mon);d.setDate(mon.getDate()+i);
-        if(urlaubAnTag.has(i)){
-          const uk=urlTage.find(k=>{const dd=new Date(k+'T12:00:00');return((dd.getDay()+6)%7)===i});
-          const isZA=uk&&D[uk]?.src==='ot';
-          const lbl=isZA?'Zeitausgleich':'Urlaub';
-          const col=isZA?'#FF6B35':'#30D158';
-          // Zeitausgleich: Mo–Do 8h, Fr 7h bei APS; Urlaubskonto: nur Kennzeichnung
-          const rechts=isZA?`<span style="font-weight:600;color:${col}">${fmt(istVierzig?8*60:(i<4?8*60:7*60))}</span>`
-            :`<span style="font-weight:600;color:${col}">${lbl}</span>`;
-          h+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
-            <span style="color:${col}">🏖️ ${tn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag u">${lbl}</span></span>
-            ${rechts}</div>`;
-        } else if(feiAnTag.has(i)){
-          h+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
-            <span style="color:#FF9F0A">🎉 ${tn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag f">Feiertag</span></span>
-            <span style="font-weight:600;color:#FF9F0A">Feiertag</span></div>`;
-        } else {
-          const h_tag=istVierzig?8*60:(i<4?8*60:7*60);
-          h+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
-            <span style="color:#8E8E93">${tn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span>
-            <span style="font-weight:600">${fmt(h_tag)}</span></div>`;
-        }
-      });
-
-      h+='</div>';
-    });
-
-    h+=`<div class="card" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.3)">
-      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
-        <span>Gesamt APS</span><span style="color:#FF6B35">${fmt(totalAps)}</span></div>
-      <div style="font-size:11px;color:#8E8E93;margin-top:6px">APS-Konto: ${apsVoll?'✅ 8h erreicht – ab jetzt alles → Fussenegger':'⏳ noch nicht erreicht'}</div>
+        <!-- AUSDRUCK -->
+        <div class="sec" id="sec-x">
+            <div class="card">
+                <div class="ct">Stundenzettel</div>
+                <div class="field"><label class="lbl">Monat</label>
+                    <select id="xmon" onchange="rxp()">
+                        <option value="">Alle</option>
+                    </select>
+                </div>
+                <div class="seg" style="margin-bottom:10px">
+                    <button class="sg on cn" id="xv-aps" onclick="setXV('aps')">🟠 APS</button>
+                    <button class="sg cf" id="xv-fus" onclick="setXV('fus')">🔵 Fussenegger</button>
+                </div>
+                <div id="xview"></div>
+            </div>
+            <div class="card" style="border-color:#3f3f46">
+                <div class="ct-sm">Datensicherung</div>
+                <p style="font-size:11px;color:#71717a;margin-bottom:10px">Einträge lokal gespeichert — regelmäßig
+                    exportieren!</p>
+                <button class="btn-sm" onclick="doExp()">💾 JSON exportieren</button>
+            </div>
+        </div>
     </div>
-    <div class="card-sm" style="border-color:#3A3A3C">
-      <div style="font-size:11px;color:#636366;margin-bottom:6px">APS-Status zurücksetzen (falls Fehler)</div>
-      <button class="btn-sm" onclick="resetApsFull()">Zurücksetzen</button>
-    </div>`;
-    el.innerHTML=h;
+    <div id="print-area"></div>
 
-  } else {
-    // Fussenegger: originale Stunden
-    const byWk={};
-    [...ks].sort().forEach(k=>{const w=isoWk(k);if(!byWk[w])byWk[w]=[];byWk[w].push(k)});
-    const ot=calcOT();
-    let h='';
-    Object.keys(byWk).sort().forEach(wk=>{
-      const wKeys=byWk[wk],wIst=sumM(wKeys),wn=parseInt(wk.split('-W')[1]);
-      h+=`<div class="card-sm">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:12px;font-weight:700;color:#64D2FF">KW ${wn} · ${wkLabel(wk)}</span>
-          <span style="font-size:14px;font-weight:800;color:#64D2FF">${fmt(wIst)}</span>
-        </div>`;
-      wKeys.forEach(k=>{
-        const e=D[k],t=e.type;
-        const isZA=t==='u'&&e.src==='ot';
-        const tag=t==='u'?`<span class="etag u">${isZA?'Zeitausgleich':'Urlaub'}</span>`:t==='nt'?'<span class="etag n">Nacht</span>':t==='f'?'<span class="etag f">Feiertag</span>':'';
-        const detail=t==='u'?`Urlaubstag (${isZA?'aus Überstunden':'aus Urlaubskonto'})`:t==='f'?`Feiertag${e.note?' · '+esc(e.note):''}`:`${e.start}–${e.end} · Pause ${e.pause}min`;
-        // Fussenegger: Zeitausgleich=8h, Urlaubskonto/Feiertag=nur Kennzeichnung
-        const rechts=isZA?`<span style="font-weight:600;flex-shrink:0;margin-left:8px">${fmt(8*60)}</span>`
-          :(t==='u'||t==='f')?`<span style="flex-shrink:0;margin-left:8px;font-size:12px;color:#636366">${t==='f'?'Feiertag':'Urlaub'}</span>`
-          :`<span style="font-weight:600;flex-shrink:0;margin-left:8px">${fmt(e.net)}</span>`;
-        h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px">
-          <div><span style="color:#8E8E93">${ddisp(k)}${tag}</span><div style="font-size:11px;color:#48484A">${detail}</div></div>
-          ${rechts}</div>`;
-      });
-      h+='</div>';
-    });
-    h+=`<div class="card" style="background:rgba(100,210,255,.06);border-color:rgba(100,210,255,.2)">
-      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
-        <span>Gesamt</span><span style="color:#64D2FF">${fmt(sumM(ks))}</span></div>
-      <div style="height:1px;background:#2C2C2E;margin:10px 0"></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-        <span>→ APS (max. 8h)</span><span style="color:#FF6B35;font-weight:700">${fmt(ot.aps)}</span></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px">
-        <span>→ Fussenegger</span><span style="color:#64D2FF;font-weight:700">${fmt(ot.fus)}</span></div>
-    </div>`;
-    el.innerHTML=h;
-  }
-}
-function resetApsFull(){if(!confirm('APS-Status zurücksetzen?'))return;S.apsFull=false;st.s(SS,JSON.stringify(S));rxp()}
-function doExp(){
-  const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`arbeitszeiten_${iso(new Date())}.json`;a.click();
-}
+    <script>
+        (function() {
+            // ════════════════════════════════════════════════════════
+            // KONSTANTEN
+            // ════════════════════════════════════════════════════════
+            const SK = 'zt_v6';
+            const SS = 'zt_s6';
+            const DY = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            const DMS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+            const DML = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober',
+                'November', 'Dezember'
+            ];
+            const INTERN_TYPES = ['u', 's', 'h', 'f']; // Urlaub, Schlechtwetter, Hitzefrei, Feiertag
+            const OT_MINS = 8 * 60; // Überstunden-Tag: 8h
+            const APS_MAX = 8 * 60; // APS-Maximum: 8h
+            const APS_WEEK_CAP = 39 * 60; // APS-Wochencap: 39h
 
-// ── Init ─────────────────────────────────────────────────────────────────────
-loadD();loadS();upd();resetF();tick();setInterval(tick,10000);
-</script>
+            const TINFO = {
+                n: { dot: 'dot-n', col: 'col-n', tag: 'et-n', lbl: 'Normal' },
+                nt: { dot: 'dot-nt', col: 'col-nt', tag: 'et-nt', lbl: 'Nacht' },
+                u: { dot: 'dot-u', col: 'col-u', tag: 'et-u', lbl: 'Urlaub' },
+                o: { dot: 'dot-o', col: 'col-o', tag: 'et-o', lbl: 'Überstunden' },
+                s: { dot: 'dot-s', col: 'col-s', tag: 'et-s', lbl: 'Schlechtwetter' },
+                h: { dot: 'dot-h', col: 'col-h', tag: 'et-h', lbl: 'Hitzefrei' },
+                f: { dot: 'dot-f', col: 'col-f', tag: 'et-f', lbl: 'Feiertag' },
+            };
+
+            // ════════════════════════════════════════════════════════
+            // STATE
+            // ════════════════════════════════════════════════════════
+            let D = {}; // { 'YYYY-MM-DD': { type, start, end, pause, net, ... } }
+            let S = {
+                soll: 40, // Sollstunden/Woche
+                urlStart: 5, // Urlaubstage Start
+                urlFrom: '', // Urlaubszählung ab
+                apsStart: 7, // APS-Anfangsüberstunden (in h)
+                apsFull: false, // APS-Konto voll?
+                apsFullDate: '' // Datum wann APS voll wurde
+            };
+            let eT = 'n'; // aktueller Eintragstyp
+            let wOff = 0; // Wochen-Offset
+            let mOff = 0; // Monats-Offset
+            let xView = 'aps'; // Ausdruck-Ansicht
+            let editK = null; // Schlüssel des zu bearbeitenden Eintrags
+
+            // ════════════════════════════════════════════════════════
+            // STORAGE
+            // ════════════════════════════════════════════════════════
+            const mem = {};
+            const st = {
+                g: k => { try { return localStorage.getItem(k) } catch { return mem[k] ?? null } },
+                s: (k, v) => { try { localStorage.setItem(k, v) } catch {} mem[k] = v }
+            };
+
+            function loadD() { try { D = JSON.parse(st.g(SK)) || {} } catch { D = {} } }
+            function saveD() { st.s(SK, JSON.stringify(D)) }
+
+            function loadS() {
+                try { const s = JSON.parse(st.g(SS)); if (s) Object.assign(S, s) } catch {}
+                document.getElementById('soll').value = S.soll;
+                document.getElementById('url-start').value = S.urlStart;
+                document.getElementById('url-from').value = S.urlFrom || '';
+                document.getElementById('aps-start-val').value = S.apsStart;
+            }
+
+            function saveSett() {
+                S.soll = parseFloat(document.getElementById('soll').value) || 40;
+                S.urlStart = parseFloat(document.getElementById('url-start').value) || 5;
+                S.urlFrom = document.getElementById('url-from').value || '';
+                S.apsStart = parseFloat(document.getElementById('aps-start-val').value) || 7;
+                st.s(SS, JSON.stringify(S));
+            }
+
+            // ════════════════════════════════════════════════════════
+            // HELPERS
+            // ════════════════════════════════════════════════════════
+            const pad = n => String(n).padStart(2, '0');
+            const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+            const toM = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m };
+            const fmt = m => {
+                if (!m && m !== 0) return '–';
+                const h = Math.floor(Math.abs(m) / 60),
+                    mn = Math.round(Math.abs(m) % 60);
+                return (m < 0 ? '−' : '') + (mn ? `${h}h ${mn}min` : `${h}h`);
+            };
+            const fmtDecimal = m => {
+                if (!m && m !== 0) return '–';
+                const h = Math.abs(m) / 60;
+                return (m < 0 ? '−' : '') + h.toFixed(1) + 'h';
+            };
+
+            function ddisp(s) {
+                const d = new Date(s + 'T12:00:00');
+                return `${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}`;
+            }
+
+            function span(a, b) { let s = toM(a),
+                    e = toM(b); if (e <= s) e += 1440; return e - s }
+
+            function nightAdj(a, b, p, f) {
+                let s = toM(a),
+                    e = toM(b); if (e <= s) e += 1440;
+                const tot = e - s; if (!tot) return { net: 0, nMin: 0, dMin: 0 };
+                let nRaw = 0;
+                for (let d = -1; d <= 1; d++) { const ws = d * 1440 + 1200,
+                        we = d * 1440 + 1740;
+                    nRaw += Math.max(0, Math.min(e, we) - Math.max(s, ws)) }
+                nRaw = Math.min(tot, nRaw);
+                const dRaw = tot - nRaw;
+                const nNet = Math.max(0, nRaw - p * (nRaw / tot)),
+                    dNet = Math.max(0, dRaw - p * (dRaw / tot));
+                return { net: dNet + nNet * f, nMin: nNet, dMin: dNet };
+            }
+
+            function isoWk(s) {
+                const d = new Date(s + 'T12:00:00'),
+                    t = new Date(d);
+                t.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+                const y = t.getFullYear(),
+                    j = new Date(y, 0, 1);
+                j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
+                return `${y}-W${pad(1+Math.round((t-j)/604800000))}`;
+            }
+
+            function wkMon(y, w) {
+                const j = new Date(y, 0, 1);
+                j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
+                const t = new Date(j);
+                t.setDate(j.getDate() + (w - 1) * 7);
+                t.setDate(t.getDate() - 3);
+                return t;
+            }
+
+            function wkLabel(k) {
+                const [ys, ws] = k.split('-W');
+                const w = parseInt(ws),
+                    y = parseInt(ys);
+                const m = wkMon(y, w),
+                    su = new Date(m);
+                su.setDate(m.getDate() + 6);
+                return m.getMonth() === su.getMonth() ?
+                    `${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}` :
+                    `${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
+            }
+            const keys = () => Object.keys(D).sort();
+
+            // ════════════════════════════════════════════════════════
+            // BERECHNUNGEN
+            // ════════════════════════════════════════════════════════
+            function calcOT() {
+                const soll = S.soll * 60;
+                const byWk = {};
+                keys().forEach(k => {
+                    const e = D[k];
+                    const wk = isoWk(k);
+                    if (!byWk[wk]) byWk[wk] = 0;
+                    if (e.type === 'o') byWk[wk] += OT_MINS;
+                    else if (e.type === 'n' || e.type === 'nt') byWk[wk] += (e.net || 0);
+                });
+                const totalOT = Object.values(byWk).reduce((s, wIst) => s + Math.max(0, wIst - soll), 0);
+                const apsStart = S.apsStart * 60;
+                const aps = S.apsFull ? APS_MAX : Math.min(apsStart + totalOT, APS_MAX);
+                const fus = S.apsFull ? (apsStart + totalOT) : Math.max(0, totalOT - (APS_MAX - apsStart));
+                return { totalOT, aps, fus, byWk };
+            }
+
+            function calcUrl() {
+                let auto = 0;
+                if (S.urlFrom) {
+                    const from = new Date(S.urlFrom + 'T12:00:00'),
+                        now = new Date();
+                    const diffMs = now - from;
+                    if (diffMs > 0) auto = Math.floor(diffMs / (14 * 86400000));
+                }
+                const used = keys().filter(k => D[k].type === 'u').length;
+                const otUsed = keys().filter(k => D[k].type === 'o').length;
+                return { saldo: S.urlStart + auto - used, auto, used, otUsed };
+            }
+
+            // ════════════════════════════════════════════════════════
+            // UHRZEIT
+            // ════════════════════════════════════════════════════════
+            function tick() {
+                const n = new Date();
+                document.getElementById('clkt').textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}`;
+                document.getElementById('clkd').textContent =
+                    `${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
+            }
+
+            function setNow() { const n = new Date();
+                document.getElementById('fe').value = `${pad(n.getHours())}:${pad(n.getMinutes())}`;
+                uprev() }
+
+            // ════════════════════════════════════════════════════════
+            // TABS
+            // ════════════════════════════════════════════════════════
+            function go(t) {
+                document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+                document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+                document.getElementById('sec-' + t).classList.add('on');
+                ['e', 'k', 'w', 'm', 'x'].forEach((id, i) => { if (id === t) document.querySelectorAll('.tb')[i]
+                        .classList.add('on') });
+                if (t === 'k') rkonten();
+                if (t === 'w') rwv();
+                if (t === 'm') rmonth();
+                if (t === 'x') rxsel();
+            }
+            window.go = go;
+
+            // ════════════════════════════════════════════════════════
+            // EINTRAGEN
+            // ════════════════════════════════════════════════════════
+            function setT(t) {
+                eT = t;
+                Object.keys(TINFO).forEach(x => { const el = document.getElementById('tb-' + x); if (el) el
+                        .classList.remove('on') });
+                document.getElementById('tb-' + t)?.classList.add('on');
+                const needTime = t === 'n' || t === 'nt';
+                document.getElementById('tfields').style.display = needTime ? 'block' : 'none';
+                document.getElementById('nf-row').style.display = t === 'nt' ? 'block' : 'none';
+                uprev();
+            }
+            window.setT = setT;
+
+            function uprev() {
+                const box = document.getElementById('pvb');
+                if (eT === 'o') {
+                    box.innerHTML =
+                        '⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme, geht auf Überstundenkonto)';
+                    return;
+                }
+                if (INTERN_TYPES.includes(eT)) {
+                    box.innerHTML =
+                        `${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong> (keine Stundenberechnung)`;
+                    return;
+                }
+                const a = document.getElementById('fs').value,
+                    b = document.getElementById('fe').value,
+                    p = parseInt(document.getElementById('fp').value) || 0;
+                if (!a || !b) { box.innerHTML = 'Netto: <strong>–</strong>'; return }
+                if (eT === 'nt') {
+                    const f = parseFloat(document.getElementById('nf').value) || 2;
+                    const r = nightAdj(a, b, p, f);
+                    box.innerHTML =
+                        `Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:10px;color:#a1a1aa">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
+                } else {
+                    box.innerHTML = `Netto: <strong>${fmt(Math.max(0,span(a,b)-p))}</strong>`;
+                }
+            }
+            window.uprev = uprev;
+
+            function saveE() {
+                const date = document.getElementById('fd').value,
+                    note = document.getElementById('fn').value.trim();
+                if (!date) return alert('Bitte Datum ausfüllen.');
+                const warns = [];
+                const dd = new Date(date + 'T12:00:00'),
+                    dow = dd.getDay();
+                if (dow === 0 || dow === 6) warns.push(
+                    `📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
+                if (D[date] && date !== editK) warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
+                if (dd > new Date() && date !== editK) warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
+                if (warns.length && !confirm(warns.join('\n\n') + '\n\nSpeichern?')) return;
+                let e;
+                if (eT === 'n') {
+                    const a = document.getElementById('fs').value,
+                        b = document.getElementById('fe').value,
+                        p = parseInt(document.getElementById('fp').value) || 0;
+                    if (!a || !b) return alert('Bitte Von und Bis ausfüllen.');
+                    if (span(a, b) > 14 * 60 && !confirm('Schicht über 14h — stimmt das?')) return;
+                    e = { type: 'n', start: a, end: b, pause: p, net: Math.max(0, span(a, b) - p), note };
+                } else if (eT === 'nt') {
+                    const a = document.getElementById('fs').value,
+                        b = document.getElementById('fe').value,
+                        p = parseInt(document.getElementById('fp').value) || 0;
+                    if (!a || !b) return alert('Bitte Von und Bis ausfüllen.');
+                    const f = parseFloat(document.getElementById('nf').value) || 2,
+                        r = nightAdj(a, b, p, f);
+                    e = { type: 'nt', start: a, end: b, pause: p, net: r.net, nMin: r.nMin, dMin: r.dMin, factor: f,
+                        note };
+                } else if (eT === 'o') {
+                    e = { type: 'o', net: OT_MINS, note };
+                } else {
+                    e = { type: eT, net: 0, note };
+                }
+                D[date] = e;
+                saveD();
+                editK = null;
+                resetF();
+                upd();
+                checkApsFull();
+                go('k');
+            }
+            window.saveE = saveE;
+
+            function checkApsFull() {
+                if (S.apsFull) return;
+                const ot = calcOT();
+                if (ot.aps >= APS_MAX) {
+                    S.apsFull = true;
+                    S.apsFullDate = iso(new Date());
+                    st.s(SS, JSON.stringify(S));
+                    setTimeout(() => {
+                        alert('✅ APS-Konto voll (8h erreicht)! Ab jetzt gehen alle Überstunden an Fussenegger.');
+                    }, 200);
+                }
+            }
+
+            function cancelE() { editK = null;
+                resetF() }
+
+            function resetF() {
+                document.getElementById('fd').value = iso(new Date());
+                document.getElementById('fs').value = '07:00';
+                document.getElementById('fe').value = '15:30';
+                document.getElementById('fp').value = '30';
+                document.getElementById('fn').value = '';
+                document.getElementById('nf').value = '2';
+                document.getElementById('ftit').textContent = 'Neuer Eintrag';
+                document.getElementById('sbtn').textContent = 'Speichern';
+                document.getElementById('cbtn').style.display = 'none';
+                setT('n');
+            }
+            window.cancelE = cancelE;
+
+            function startEdit(k) {
+                const e = D[k];
+                editK = k;
+                document.getElementById('fd').value = k;
+                document.getElementById('fn').value = e.note || '';
+                if (e.type === 'n') { document.getElementById('fs').value = e.start;
+                    document.getElementById('fe').value = e.end;
+                    document.getElementById('fp').value = e.pause;
+                    setT('n') } else if (e.type === 'nt') { document.getElementById('fs').value = e.start;
+                    document.getElementById('fe').value = e.end;
+                    document.getElementById('fp').value = e.pause;
+                    document.getElementById('nf').value = String(e.factor || 2);
+                    setT('nt') } else setT(e.type);
+                document.getElementById('ftit').textContent = 'Bearbeiten';
+                document.getElementById('sbtn').textContent = 'Aktualisieren';
+                document.getElementById('cbtn').style.display = 'block';
+                uprev();
+                go('e');
+                window.scrollTo(0, 0);
+            }
+            window.startEdit = startEdit;
+
+            function delE(k) { if (!confirm(`${ddisp(k)} löschen?`)) return; delete D[k];
+                saveD();
+                upd();
+                rkonten() }
+            window.delE = delE;
+
+            function upd() { document.getElementById('ecnt').textContent = `${Object.keys(D).length} Einträge` }
+
+            // ════════════════════════════════════════════════════════
+            // KONTEN
+            // ════════════════════════════════════════════════════════
+            function rkonten() {
+                const ot = calcOT(),
+                    url = calcUrl(),
+                    soll = S.soll * 60;
+                // APS-Konto
+                const apsKonto = document.getElementById('aps-konto');
+                const apsLabel = document.getElementById('aps-label');
+                if (S.apsFull) {
+                    apsKonto.className = 'konto k-aps grau';
+                    apsLabel.className = 'kl grau';
+                    apsLabel.textContent = 'APS – Überstundenkonto (abgeschlossen)';
+                    document.getElementById('aps-h').textContent = '0h';
+                    document.getElementById('aps-h').className = 'kh grau';
+                    document.getElementById('aps-sub').textContent =
+                        `Voll seit ${S.apsFullDate||'—'} · alles → Fussenegger`;
+                    document.getElementById('aps-bar').style.width = '0%';
+                } else {
+                    apsKonto.className = 'konto k-aps';
+                    apsLabel.className = 'kl aps';
+                    apsLabel.textContent = 'APS – Überstundenkonto';
+                    document.getElementById('aps-h').textContent = fmt(ot.aps);
+                    document.getElementById('aps-h').className = 'kh aps';
+                    const pct = Math.round(ot.aps / APS_MAX * 100);
+                    document.getElementById('aps-sub').textContent = `von max. 8h (${pct}%)`;
+                    document.getElementById('aps-bar').style.width = Math.min(100, pct) + '%';
+                }
+                // Fussenegger
+                document.getElementById('fus-h').textContent = fmt(ot.fus);
+                // Urlaub
+                document.getElementById('url-h').textContent = `${Math.max(0,url.saldo)} Tage`;
+                document.getElementById('url-sub').textContent =
+                    `${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
+                // Diese Woche
+                const today = new Date(),
+                    tdi = iso(today);
+                const mon = new Date(today);
+                mon.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+                const dks = [];
+                for (let i = 0; i < 7; i++) { const d = new Date(mon);
+                    d.setDate(mon.getDate() + i);
+                    dks.push(iso(d)) }
+                const wIst = dks.reduce((s, k) => { const e = D[k]; if (!e) return s; if (e.type === 'o') return s +
+                        OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (e.net || 0); return s }, 0);
+                const diff = wIst - soll;
+                document.getElementById('k-week').innerHTML = `
+            <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
+            <div class="otrow"><div class="otl">Soll</div><span class="otv">${fmt(soll)}</span></div>
+            <div class="otrow"><div class="otl">Differenz</div><span class="otv ${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${fmt(diff)}</span></div>`;
+                document.getElementById('soll').value = S.soll;
+                document.getElementById('url-start').value = S.urlStart;
+                document.getElementById('url-from').value = S.urlFrom || '';
+                document.getElementById('aps-start-val').value = S.apsStart;
+            }
+            window.rkonten = rkonten;
+
+            // ════════════════════════════════════════════════════════
+            // WOCHENANSICHT (volle Woche Mo–So)
+            // ════════════════════════════════════════════════════════
+            function rwv() {
+                const today = new Date(),
+                    tdi = iso(today);
+                const mon = new Date(today);
+                mon.setDate(today.getDate() - ((today.getDay() + 6) % 7) + wOff * 7);
+                const sun = new Date(mon);
+                sun.setDate(mon.getDate() + 6);
+                const wk = isoWk(iso(mon)),
+                    wn = parseInt(wk.split('-W')[1]);
+                document.getElementById('wnl').textContent =
+                    `KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
+                let h = '<div class="wbox"><div class="wkhr"><span class="wkkw">KW ' + wn + '</span></div>';
+                for (let i = 0; i < 7; i++) {
+                    const d = new Date(mon);
+                    d.setDate(mon.getDate() + i);
+                    const dk = iso(d),
+                        e = D[dk],
+                        isWe = i >= 5,
+                        isT = dk === tdi;
+                    const ti = e ? TINFO[e.type] : null;
+                    let dotCls = 'dot-x',
+                        hStr = '–',
+                        hCls = 'e',
+                        meta = '';
+                    if (e) {
+                        dotCls = ti.dot;
+                        hCls = ti.col;
+                        if (e.type === 'n' || e.type === 'nt') hStr = fmt(e.net);
+                        else if (e.type === 'o') hStr = '8h';
+                        else hStr = ti.lbl;
+                        if (e.type === 'n' || e.type === 'nt') meta =
+                            `<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
+                    }
+                    h += `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
+            <div class="wdl"><div class="dot ${dotCls}"></div>
+              <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}. ${DMS[d.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="wdh ${hCls}">${hStr}</span>
+              ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+            </div></div>`;
+                }
+                h += '</div>';
+                document.getElementById('wbox').innerHTML = h;
+            }
+            window.rwv = rwv;
+
+            // ════════════════════════════════════════════════════════
+            // MONATSANSICHT (NUR Tage 1.–letzter des Monats)
+            // ════════════════════════════════════════════════════════
+            function rmonth() {
+                const now = new Date(),
+                    y = now.getFullYear(),
+                    mo = now.getMonth() + mOff;
+                const d1 = new Date(y, mo, 1);
+                const yr = d1.getFullYear(),
+                    mr = d1.getMonth();
+                document.getElementById('mnl').textContent = `${DML[mr]} ${yr}`;
+                const daysInMonth = new Date(yr, mr + 1, 0).getDate();
+                // Nur Tage dieses Monats gruppiert nach KW
+                const byWk = {};
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dk = `${yr}-${pad(mr+1)}-${pad(day)}`;
+                    const wk = isoWk(dk);
+                    if (!byWk[wk]) byWk[wk] = [];
+                    byWk[wk].push(dk);
+                }
+                let html = '';
+                const wks = Object.keys(byWk).sort();
+                if (wks.length === 0) {
+                    html = '<div class="empty">Keine Tage in diesem Monat.</div>';
+                } else {
+                    wks.forEach(wk => {
+                        const dks = byWk[wk];
+                        const wIst = dks.reduce((s, k) => { const e = D[k]; if (!e) return s; if (e.type ===
+                                'o') return s + OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (
+                                e.net || 0); return s }, 0);
+                        const wn = parseInt(wk.split('-W')[1]);
+                        html +=
+                            `<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn} · ${wkLabel(wk)}</span><span class="wktb">${fmt(wIst)}</span></div>`;
+                        dks.forEach(dk => {
+                            const e = D[dk];
+                            const d = new Date(dk + 'T12:00:00');
+                            const dn = DY[d.getDay()];
+                            const isWe = d.getDay() === 0 || d.getDay() === 6;
+                            const isT = dk === iso(new Date());
+                            const ti = e ? TINFO[e.type] : null;
+                            let dotCls = 'dot-x',
+                                hStr = '–',
+                                hCls = 'e',
+                                meta = '';
+                            if (e) {
+                                dotCls = ti.dot;
+                                hCls = ti.col;
+                                if (e.type === 'n' || e.type === 'nt') hStr = fmt(e.net);
+                                else if (e.type === 'o') hStr = '8h';
+                                else hStr = ti.lbl;
+                                if (e.type === 'n' || e.type === 'nt') meta =
+                                    `<div class="wdm">${e.start}–${e.end}</div>`;
+                            }
+                            html +=
+                                `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
+            <div class="wdl"><div class="dot ${dotCls}"></div>
+              <div><div class="wdn">${dn}<span class="wddt">${d.getDate()}.</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="wdh ${hCls}">${hStr}</span>
+              ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+            </div></div>`;
+                        });
+                        html += '</div>';
+                    });
+                }
+                document.getElementById('mbox').innerHTML = html;
+            }
+            window.rmonth = rmonth;
+
+            // ════════════════════════════════════════════════════════
+            // AUSDRUCK (Screenshot-Ansicht, nur Tage des Monats)
+            // ════════════════════════════════════════════════════════
+            function setXV(v) {
+                xView = v;
+                document.getElementById('xv-aps').classList.toggle('on', v === 'aps');
+                document.getElementById('xv-fus').classList.toggle('on', v === 'fus');
+                rxp();
+            }
+            window.setXV = setXV;
+
+            function rxsel() {
+                const sel = document.getElementById('xmon');
+                const cur = sel.value;
+                const months = [...new Set(keys().map(k => k.slice(0, 7)))].sort((a, b) => b.localeCompare(a));
+                sel.innerHTML = '<option value="">Alle</option>';
+                months.forEach(m => {
+                    const [y, mo] = m.split('-');
+                    const op = document.createElement('option');
+                    op.value = m;
+                    op.textContent = `${DML[parseInt(mo)-1]} ${y}`;
+                    if (m === cur) op.selected = true;
+                    sel.appendChild(op);
+                });
+                rxp();
+            }
+            window.rxsel = rxsel;
+
+            function rxp() {
+                const el = document.getElementById('xview');
+                const monFilter = document.getElementById('xmon').value;
+                if (!monFilter) { el.innerHTML = '<div class="empty">Bitte Monat auswählen.</div>'; return }
+                const [y, mo] = monFilter.split('-').map(Number);
+                const daysInMonth = new Date(y, mo, 0).getDate();
+                const monDays = [];
+                for (let day = 1; day <= daysInMonth; day++) monDays.push(`${monFilter}-${pad(day)}`);
+                const byWk = {};
+                monDays.forEach(dk => { const wk = isoWk(dk); if (!byWk[wk]) byWk[wk] = [];
+                    byWk[wk].push(dk) });
+                const soll = S.soll * 60;
+                let h = '';
+                if (xView === 'aps') {
+                    // APS: max 39h/Woche, Stunden gleichmäßig auf Arbeitstage verteilen
+                    let totalAps = 0;
+                    Object.keys(byWk).sort().forEach(wk => {
+                        const dks = byWk[wk];
+                        const wn = parseInt(wk.split('-W')[1]);
+                        const wIst = dks.reduce((s, dk) => { const e = D[dk]; if (!e) return s; if (e.type ===
+                                'o') return s + OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (
+                                e.net || 0); return s }, 0);
+                        const arbTage = dks.filter(dk => { const e = D[dk]; return e && (e.type === 'n' || e
+                                .type === 'nt' || e.type === 'o') });
+                        const internTage = dks.filter(dk => { const e = D[dk]; return e && INTERN_TYPES
+                            .includes(e.type) });
+                        const leereTage = dks.filter(dk => !D[dk]);
+                        if (wIst === 0 && internTage.length === 0 && leereTage.length === dks.length) return;
+                        const ziel = Math.min(wIst, APS_WEEK_CAP);
+                        totalAps += ziel;
+                        const nArb = arbTage.length || 1;
+                        const proTag = Math.floor(ziel / nArb / 15) * 15;
+                        let rest = ziel - proTag * nArb;
+                        const tagH = {};
+                        arbTage.forEach(dk => { tagH[dk] = proTag + (rest >= 15 ? (rest -= 15, 15) : 0) });
+                        h +=
+                            `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:11px;font-weight:700;color:#f97316">KW ${wn} · ${wkLabel(wk)}</span>
+            <span style="font-size:14px;font-weight:800;color:#f97316">${fmt(ziel)}</span></div>`;
+                        dks.forEach(dk => {
+                            const e = D[dk];
+                            const d = new Date(dk + 'T12:00:00');
+                            const dn = DY[d.getDay()];
+                            if (!e) {
+                                h +=
+                                    `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
+                            } else if (INTERN_TYPES.includes(e.type)) {
+                                const ti = TINFO[e.type];
+                                h +=
+                                    `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`;
+                            } else {
+                                h +=
+                                    `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700;color:#e4e4e7">${fmt(tagH[dk])}</span></div>`;
+                            }
+                        });
+                        h += '</div>';
+                    });
+                    h +=
+                        `<div class="card" style="background:rgba(249,115,22,.06);border-color:rgba(249,115,22,.25)">
+            <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
+              <span>Gesamt APS</span><span style="color:#f97316">${fmt(totalAps)}</span></div>
+            <div style="font-size:10px;color:#a1a1aa;margin-top:4px">Max. 39h/Woche · ${S.apsFull?'✅ APS-Konto voll':'⏳ APS-Konto noch offen'}</div></div>`;
+                } else {
+                    // Fussenegger: alle echten Stunden
+                    Object.keys(byWk).sort().forEach(wk => {
+                        const dks = byWk[wk];
+                        const wn = parseInt(wk.split('-W')[1]);
+                        const wIst = dks.reduce((s, dk) => { const e = D[dk]; if (!e) return s; if (e.type ===
+                                'o') return s + OT_MINS; if (e.type === 'n' || e.type === 'nt') return s + (
+                                e.net || 0); return s }, 0);
+                        h +=
+                            `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:11px;font-weight:700;color:#3b82f6">KW ${wn} · ${wkLabel(wk)}</span>
+            <span style="font-size:14px;font-weight:800;color:#3b82f6">${fmt(wIst)}</span></div>`;
+                        dks.forEach(dk => {
+                            const e = D[dk];
+                            const d = new Date(dk + 'T12:00:00');
+                            const dn = DY[d.getDay()];
+                            if (!e) {
+                                h +=
+                                    `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
+                            } else if (INTERN_TYPES.includes(e.type)) {
+                                const ti = TINFO[e.type];
+                                h +=
+                                    `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`;
+                            } else {
+                                const hrs = e.type === 'o' ? OT_MINS : (e.net || 0);
+                                const detail = e.type === 'o' ? 'Überstunden-Tag' : (e.type === 'nt' ?
+                                    `${e.start}–${e.end} 🌙×${e.factor}` :
+                                    `${e.start}–${e.end} · Pause ${e.pause}min`);
+                                h +=
+                                    `<div class="xview-entry">
+              <div><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span>
+              <div style="font-size:9px;color:#52525b">${detail}</div></div>
+              <span style="font-weight:700;color:#e4e4e7">${fmt(hrs)}</span></div>`;
+                            }
+                        });
+                        h += '</div>';
+                    });
+                    const totalFus = Object.keys(byWk).reduce((s, wk) => s + byWk[wk].reduce((ws, dk) => { const e = D[
+                        dk]; if (!e) return ws; if (e.type === 'o') return ws + OT_MINS; if (e.type === 'n' || e
+                            .type === 'nt') return ws + (e.net || 0); return ws }, 0), 0);
+                    const ot = calcOT();
+                    h +=
+                        `<div class="card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.18)">
+            <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
+              <span>Gesamt</span><span style="color:#3b82f6">${fmt(totalFus)}</span></div>
+            <div style="height:1px;background:#27272a;margin:8px 0"></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>→ APS</span><span style="color:#f97316;font-weight:700">${S.apsFull?'Abgeschlossen':fmt(ot.aps)}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span>→ Fussenegger</span><span style="color:#3b82f6;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
+                }
+                el.innerHTML = h || '<div class="empty">Keine Einträge für diesen Monat.</div>';
+            }
+            window.rxp = rxp;
+
+            function doExp() {
+                const b = new Blob([JSON.stringify(D, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(b);
+                a.download = `arbeitszeiten_${iso(new Date())}.json`;
+                a.click();
+            }
+            window.doExp = doExp;
+
+            // ════════════════════════════════════════════════════════
+            // INIT
+            // ════════════════════════════════════════════════════════
+            loadD();
+            loadS();
+            upd();
+            resetF();
+            tick();
+            setInterval(tick, 10000);
+            // Expose für onclick im HTML
+            window.wOff = wOff;
+            window.mOff = mOff;
+        })();
+    </script>
 </body>
 </html>
