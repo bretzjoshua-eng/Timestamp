@@ -4,186 +4,107 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Zeiterfassung</title>
+<title>⏱ Zeiterfassung</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0A0A0F;--surface:#13131A;--surface2:#1C1C26;--border:#252532;--border2:#2E2E3E;
-  --orange:#FF6B35;--orange2:rgba(255,107,53,.12);--orange3:rgba(255,107,53,.06);
-  --blue:#64D2FF;--blue2:rgba(100,210,255,.1);
-  --green:#30D158;--green2:rgba(48,209,88,.1);
-  --purple:#B8B6FF;--purple2:rgba(94,92,230,.15);
-  --amber:#FF9F0A;--amber2:rgba(255,159,10,.15);
-  --red:#FF453A;--red2:rgba(255,69,58,.15);
-  --gray:#636366;--gray2:#3A3A4A;
-  --text:#F2F2F7;--text2:#8E8E93;--text3:#48484A;
-}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
-#app{max-width:480px;margin:0 auto;padding-bottom:100px}
-
-/* HEADER */
-.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 16px 10px;position:sticky;top:0;z-index:200;backdrop-filter:blur(12px)}
-.hdr-row{display:flex;justify-content:space-between;align-items:flex-start}
-.hdr h1{font-size:22px;font-weight:800;color:var(--orange);letter-spacing:-.5px}
-.hdr-sub{font-size:12px;color:var(--gray);margin-top:2px}
-.clk-mini{text-align:right}
-.clk-mini .t{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-1px;color:var(--text)}
-.clk-mini .d{font-size:10px;color:var(--gray)}
-
-/* TABS */
-.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:63px;z-index:199;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tb{flex:1;min-width:0;padding:10px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s}
-.tb.on{color:var(--orange);border-bottom-color:var(--orange)}
-
-/* SECTIONS */
+body{background:#111;color:#F2F2F7;font-family:-apple-system,system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+#app{max-width:480px;margin:0 auto;padding-bottom:90px}
+.hdr{background:#1C1C1E;border-bottom:1px solid #2C2C2E;padding:16px 16px 12px;position:sticky;top:0;z-index:100}
+.hdr h1{font-size:20px;font-weight:700;color:#FF6B35}
+.hdr-sub{font-size:12px;color:#636366;margin-top:2px}
+.tabs{display:flex;background:#1C1C1E;border-bottom:1px solid #2C2C2E;position:sticky;top:56px;z-index:99;overflow-x:auto}
+.tb{flex:1;min-width:0;padding:10px 2px;background:none;border:none;border-bottom:2px solid transparent;color:#636366;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.tb.on{color:#FF6B35;border-bottom-color:#FF6B35;font-weight:700}
 .sec{padding:12px 12px 0;display:none}.sec.on{display:block}
-
-/* CARDS */
-.card{background:var(--surface);border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
-.card-sm{background:var(--surface);border-radius:12px;padding:11px 13px;margin-bottom:8px;border:1px solid var(--border)}
-.ct{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)}
-.ct-sm{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px}
-
-/* FORM */
-.lbl{display:block;font-size:11px;color:var(--text2);margin-bottom:4px;font-weight:500}
-input,select{width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:15px;padding:9px 11px;outline:none;-webkit-appearance:none;transition:border-color .2s}
-input:focus,select:focus{border-color:var(--orange)}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%238E8E93' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+.card{background:#1C1C1E;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #2C2C2E}
+.card-sm{background:#1C1C1E;border-radius:12px;padding:11px 13px;margin-bottom:8px;border:1px solid #2C2C2E}
+.ct{font-size:14px;font-weight:600;margin-bottom:10px}
+.ct-sm{font-size:11px;font-weight:700;color:#8E8E93;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.lbl{display:block;font-size:11px;color:#8E8E93;margin-bottom:3px}
+input,select{width:100%;background:#2C2C2E;border:1px solid #3A3A3C;border-radius:9px;color:#F2F2F7;font-size:15px;padding:9px 11px;outline:none;-webkit-appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%238E8E93' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 .field{margin-bottom:8px}
-
-/* TYPE SELECTOR */
-.typegrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
-.tg{background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;padding:9px 8px;cursor:pointer;text-align:center;transition:all .2s}
-.tg .tgi{font-size:13px;font-weight:700;display:block;margin-bottom:1px}
-.tg .tgs{font-size:10px;color:var(--text2);font-weight:500}
-.tg.on-n{background:rgba(255,107,53,.15);border-color:var(--orange);color:var(--orange)}
-.tg.on-n .tgs{color:rgba(255,107,53,.7)}
-.tg.on-nt{background:var(--purple2);border-color:#5E5CE6;color:var(--purple)}
-.tg.on-nt .tgs{color:rgba(184,182,255,.6)}
-.tg.on-u{background:var(--green2);border-color:var(--green);color:var(--green)}
-.tg.on-u .tgs{color:rgba(48,209,88,.6)}
-.tg.on-o{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
-.tg.on-o .tgs{color:rgba(255,159,10,.6)}
-.tg.on-s{background:rgba(99,99,102,.15);border-color:#636366;color:var(--gray)}
-.tg.on-s .tgs{color:rgba(99,99,102,.7)}
-.tg.on-h{background:var(--red2);border-color:var(--red);color:var(--red)}
-.tg.on-h .tgs{color:rgba(255,69,58,.6)}
-.tg.on-f{background:var(--blue2);border-color:var(--blue);color:var(--blue)}
-.tg.on-f .tgs{color:rgba(100,210,255,.6)}
-
-/* PREVIEW BOX */
-.pvb{background:var(--surface2);border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:13px;line-height:1.8;border:1px solid var(--border)}
-.pvb strong{color:var(--orange)}
-
-/* BUTTONS */
-.btn{display:block;width:100%;border:none;border-radius:12px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:opacity .2s,transform .1s}
-.btn:active{transform:scale(.98)}
-.btn-o{background:var(--orange);color:#fff}
-.btn-s{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
-.btn-sm{background:var(--surface2);color:var(--text);border:1px solid var(--border2);border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
-
-/* LIVE CLOCK WIDGET */
-.now-bar{background:linear-gradient(135deg,var(--surface),var(--surface2));border-radius:14px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.now-t{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px}
-.now-r{text-align:right}
-.now-d{font-size:12px;color:var(--gray);margin-bottom:6px}
-
-/* KONTEN */
-.konto{border-radius:16px;padding:14px 16px;margin-bottom:10px;transition:all .4s}
-.k-aps{background:linear-gradient(135deg,rgba(255,107,53,.14),rgba(255,107,53,.04));border:1px solid rgba(255,107,53,.35)}
-.k-aps.done{background:rgba(40,40,50,.5);border-color:var(--border2);opacity:.55}
-.k-fus{background:linear-gradient(135deg,rgba(100,210,255,.1),rgba(100,210,255,.03));border:1px solid rgba(100,210,255,.28)}
-.k-url{background:linear-gradient(135deg,rgba(48,209,88,.1),rgba(48,209,88,.03));border:1px solid rgba(48,209,88,.28)}
-.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
-.kl.aps{color:var(--orange)}.kl.fus{color:var(--blue)}.kl.url{color:var(--green)}.kl.gr{color:var(--gray)}
-.kh{font-size:28px;font-weight:800;letter-spacing:-1.5px;line-height:1}
-.kh.aps{color:var(--orange)}.kh.fus{color:var(--blue)}.kh.url{color:var(--green)}.kh.gr{color:var(--text3)}
-.ksub{font-size:11px;color:var(--gray);margin-top:4px}
-.kbar{height:5px;border-radius:3px;background:var(--border2);margin-top:10px;overflow:hidden}
-.kfill{height:100%;border-radius:3px;background:var(--orange);transition:width .5s cubic-bezier(.4,0,.2,1)}
-.k-done-badge{display:inline-block;font-size:9px;font-weight:700;background:rgba(99,99,102,.25);color:var(--gray);border-radius:5px;padding:2px 7px;margin-left:6px;vertical-align:middle;text-transform:uppercase}
-
-/* WEEK/MONTH NAV */
+.seg{display:flex;background:#2C2C2E;border-radius:9px;padding:2px;gap:2px;margin-bottom:10px;flex-wrap:wrap}
+.sg{flex:1;min-width:calc(33% - 2px);background:none;border:none;color:#8E8E93;font-size:11px;font-weight:600;padding:7px 2px;border-radius:7px;cursor:pointer;text-align:center}
+.sg.on.cn{background:#FF6B35;color:#fff}
+.sg.on.cn2{background:#5E5CE6;color:#fff}
+.sg.on.cu{background:#30D158;color:#fff}
+.sg.on.co{background:#FF9F0A;color:#fff}
+.sg.on.cs{background:#636366;color:#fff}
+.sg.on.ch{background:#FF453A;color:#fff}
+.sg.on.cf{background:#64D2FF;color:#111}
+.btn{display:block;width:100%;border:none;border-radius:11px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
+.btn-o{background:#FF6B35;color:#fff}
+.btn-s{background:#2C2C2E;color:#F2F2F7}
+.btn-sm{background:#2C2C2E;color:#F2F2F7;border:none;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.clk{background:linear-gradient(135deg,#1C1C1E,#2C2C2E);border-radius:14px;padding:14px 16px;margin-bottom:12px;border:1px solid #2C2C2E;display:flex;justify-content:space-between;align-items:center}
+.clk-t{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.pvb{background:#2C2C2E;border-radius:9px;padding:9px 12px;margin-bottom:8px;font-size:13px;line-height:1.7}
+.pvb strong{color:#FF6B35}
+.konto{border-radius:14px;padding:14px;margin-bottom:10px}
+.k-aps{background:linear-gradient(135deg,rgba(255,107,53,.12),rgba(255,107,53,.04));border:1px solid rgba(255,107,53,.3)}
+.k-aps.grau{background:rgba(60,60,67,.3);border-color:#3A3A3C;opacity:.6}
+.k-fus{background:linear-gradient(135deg,rgba(100,210,255,.1),rgba(100,210,255,.03));border:1px solid rgba(100,210,255,.25)}
+.k-url{background:linear-gradient(135deg,rgba(48,209,88,.1),rgba(48,209,88,.03));border:1px solid rgba(48,209,88,.25)}
+.kl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.kl.aps{color:#FF6B35}.kl.fus{color:#64D2FF}.kl.url{color:#30D158}.kl.grau{color:#636366}
+.kh{font-size:26px;font-weight:800;letter-spacing:-1px}
+.kh.aps{color:#FF6B35}.kh.fus{color:#64D2FF}.kh.url{color:#30D158}.kh.grau{color:#636366}
+.ksub{font-size:11px;color:#636366;margin-top:2px}
+.kbar{height:5px;border-radius:3px;background:#2C2C2E;margin-top:8px}
+.kfill{height:100%;border-radius:3px;background:#FF6B35;transition:width .4s}
 .wnav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.wnb{background:var(--surface);border:1px solid var(--border2);color:var(--text);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .15s}
-.wnb:hover{background:var(--surface2)}
-.wnl{font-size:13px;font-weight:700;text-align:center;flex:1;color:var(--text)}
-.wnl small{font-size:10px;color:var(--text2);font-weight:500;display:block;margin-top:1px}
-
-/* WBOX */
-.wbox{background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:10px}
-.wkhr{display:flex;justify-content:space-between;align-items:center;padding:10px 13px 9px;border-bottom:1px solid var(--border);background:rgba(255,107,53,.04)}
-.wkkw{font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px}
-.wktb{font-size:13px;font-weight:800;color:var(--orange)}
-.wd{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;transition:background .15s}
+.wnb{background:#1C1C1E;border:1px solid #2C2C2E;color:#F2F2F7;font-size:18px;width:36px;height:36px;border-radius:9px;cursor:pointer}
+.wnl{font-size:13px;font-weight:700;text-align:center;flex:1}
+.wbox{background:#1C1C1E;border-radius:14px;border:1px solid #2C2C2E;overflow:hidden;margin-bottom:10px}
+.wkhr{display:flex;justify-content:space-between;align-items:center;padding:10px 13px 8px;border-bottom:1px solid #2C2C2E}
+.wkkw{font-size:11px;font-weight:700;color:#FF6B35;text-transform:uppercase;letter-spacing:.5px}
+.wktb{font-size:13px;font-weight:800;color:#FF6B35}
+.wd{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-bottom:1px solid #1A1A1A;cursor:pointer}
 .wd:last-child{border-bottom:none}
-.wd:active{background:rgba(255,255,255,.04)}
-.wd.we{opacity:.5}
-.wd.td{background:rgba(255,107,53,.06)}
-.wdl{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
+.wd.we .wdn{color:#48484A}
+.wd.td{background:rgba(255,107,53,.05)}
+.wdl{display:flex;align-items:center;gap:8px}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.dot-n{background:var(--orange)}.dot-nt{background:#5E5CE6}.dot-u{background:var(--green)}
-.dot-o{background:var(--amber)}.dot-s{background:var(--gray)}.dot-h{background:var(--red)}
-.dot-f{background:var(--blue)}.dot-x{background:var(--border2)}
-.wdname{font-size:14px;font-weight:600}
-.wddate{font-size:11px;color:var(--gray);font-weight:400;margin-left:3px}
-.wdmeta{font-size:10px;color:var(--text3);margin-top:1px}
-.wdright{display:flex;align-items:center;gap:5px;flex-shrink:0}
-.wdh{font-size:14px;font-weight:700;min-width:44px;text-align:right}
-.wdh.e{color:var(--text3);font-size:12px;font-weight:400}
-.wdh.col-n{color:var(--text)}.wdh.col-nt{color:var(--purple)}.wdh.col-u{color:var(--green)}
-.wdh.col-o{color:var(--amber)}.wdh.col-s{color:var(--gray)}.wdh.col-h{color:var(--red)}
-.wdh.col-f{color:var(--blue)}
-.del{background:none;border:none;color:var(--red);font-size:19px;cursor:pointer;padding:2px 3px;line-height:1;flex-shrink:0;opacity:.7}
-.del:active{opacity:1}
-.etag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:5px;vertical-align:middle;text-transform:uppercase}
-.et-n{background:rgba(255,107,53,.15);color:var(--orange)}
-.et-nt{background:rgba(94,92,230,.2);color:var(--purple)}
-.et-u{background:rgba(48,209,88,.2);color:var(--green)}
-.et-o{background:rgba(255,159,10,.18);color:var(--amber)}
-.et-s{background:rgba(99,99,102,.2);color:var(--gray)}
-.et-h{background:rgba(255,69,58,.18);color:var(--red)}
-.et-f{background:rgba(100,210,255,.18);color:var(--blue)}
-
-/* STATS ROW */
-.otrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--border)}
+.dot-n{background:#FF6B35}.dot-nt{background:#5E5CE6}.dot-u{background:#30D158}
+.dot-o{background:#FF9F0A}.dot-s{background:#636366}.dot-h{background:#FF453A}
+.dot-f{background:#64D2FF}.dot-x{background:#2C2C2E}
+.wdn{font-size:14px;font-weight:600}
+.wddt{font-size:11px;color:#636366;font-weight:400;margin-left:3px}
+.wdm{font-size:11px;color:#48484A;margin-top:1px}
+.wdh{font-size:14px;font-weight:700;text-align:right;min-width:48px}
+.wdh.e{color:#3A3A3C;font-size:12px;font-weight:400}
+.wdh.col-n{color:#F2F2F7}.wdh.col-nt{color:#B8B6FF}.wdh.col-u{color:#30D158}
+.wdh.col-o{color:#FF9F0A}.wdh.col-s{color:#8E8E93}.wdh.col-h{color:#FF453A}
+.wdh.col-f{color:#64D2FF}
+.del{background:none;border:none;color:#FF453A;font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0}
+.etag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:middle;text-transform:uppercase}
+.et-n{background:rgba(255,107,53,.15);color:#FF6B35}
+.et-nt{background:rgba(94,92,230,.2);color:#B8B6FF}
+.et-u{background:rgba(48,209,88,.2);color:#6FE39A}
+.et-o{background:rgba(255,159,10,.2);color:#FF9F0A}
+.et-s{background:rgba(99,99,102,.2);color:#8E8E93}
+.et-h{background:rgba(255,69,58,.2);color:#FF453A}
+.et-f{background:rgba(100,210,255,.2);color:#64D2FF}
+.otrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid #2C2C2E}
 .otrow:last-child{border-bottom:none}
-.otl{font-size:13px}.otl small{font-size:11px;color:var(--gray);display:block}
+.otl{font-size:13px}.otl small{font-size:11px;color:#636366;display:block}
 .otv{font-size:14px;font-weight:700}
-.pos{color:var(--green)}.neg{color:var(--red)}
-
-/* AUSDRUCK */
-.xentry{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-top:1px solid var(--border);font-size:13px}
-.xentry-l{color:var(--text2)}
-.xentry-v{font-weight:700;white-space:nowrap;margin-left:8px}
-.xentry.empty-day .xentry-l{color:var(--text3)}
-.xentry.empty-day .xentry-v{color:var(--text3)}
-
-/* EMPTY */
-.empty{text-align:center;padding:36px 16px;color:var(--text3);font-size:14px}
-.empty-icon{font-size:32px;display:block;margin-bottom:8px;opacity:.4}
+.pos{color:#30D158}.neg{color:#FF453A}.col-o{color:#FF6B35}.col-f{color:#64D2FF}
+.empty{text-align:center;padding:32px;color:#48484A;font-size:14px}
+.xview-entry{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px}
+.xview-entry.empty-day{opacity:.5}
+#print-area{display:none}
+@media print{body{background:#fff!important;color:#000!important}#app{display:none!important}#print-area{display:block!important}}
 </style>
 </head>
 <body>
 <div id="app">
-
-<!-- HEADER -->
 <div class="hdr">
-  <div class="hdr-row">
-    <div>
-      <h1>Zeiterfassung</h1>
-      <div class="hdr-sub" id="ecnt">0 Eintraege</div>
-    </div>
-    <div class="clk-mini">
-      <div class="t" id="clkt">--:--</div>
-      <div class="d" id="clkd"></div>
-    </div>
-  </div>
+  <h1>⏱ Zeiterfassung</h1>
+  <div class="hdr-sub" id="ecnt">0 Einträge</div>
 </div>
-
-<!-- TABS -->
 <div class="tabs">
   <button class="tb on" onclick="go('e')">Eintragen</button>
   <button class="tb" onclick="go('k')">Konten</button>
@@ -194,75 +115,39 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 
 <!-- EINTRAGEN -->
 <div class="sec on" id="sec-e">
-  <div class="now-bar">
-    <div>
-      <div style="font-size:9px;color:var(--gray);letter-spacing:.7px;margin-bottom:3px;text-transform:uppercase">Aktuelle Uhrzeit</div>
-      <div class="now-t" id="nbt">--:--</div>
-    </div>
-    <div class="now-r">
-      <div class="now-d" id="nbd"></div>
-      <button class="btn-sm" onclick="setNow()">Als Endzeit setzen</button>
+  <div class="clk">
+    <div><div style="font-size:10px;color:#636366;letter-spacing:.5px;margin-bottom:2px">JETZT</div>
+    <div class="clk-t" id="clkt">--:--</div></div>
+    <div style="text-align:right">
+      <div style="font-size:12px;color:#636366;margin-bottom:5px" id="clkd"></div>
+      <button class="btn-sm" onclick="setNow()">← Als Ende</button>
     </div>
   </div>
-
   <div class="card">
     <div class="ct" id="ftit">Neuer Eintrag</div>
-
-    <!-- TYPE GRID -->
-    <div class="typegrid" id="typegrid">
-      <div class="tg on-n" id="tg-n" onclick="setT('n')">
-        <span class="tgi">Normal</span>
-        <span class="tgs">Regulaere Schicht</span>
-      </div>
-      <div class="tg" id="tg-nt" onclick="setT('nt')">
-        <span class="tgi">Nachtschicht</span>
-        <span class="tgs">Mit Nachtzuschlag</span>
-      </div>
-      <div class="tg" id="tg-o" onclick="setT('o')">
-        <span class="tgi">Ueberstunden</span>
-        <span class="tgs">8h fix / Woche</span>
-      </div>
-      <div class="tg" id="tg-u" onclick="setT('u')">
-        <span class="tgi">Urlaub</span>
-        <span class="tgs">Firmenintern</span>
-      </div>
-      <div class="tg" id="tg-s" onclick="setT('s')">
-        <span class="tgi">Schlechtwetter</span>
-        <span class="tgs">Firmenintern</span>
-      </div>
-      <div class="tg" id="tg-h" onclick="setT('h')">
-        <span class="tgi">Hitzefrei</span>
-        <span class="tgs">Firmenintern</span>
-      </div>
-      <div class="tg" id="tg-f" onclick="setT('f')">
-        <span class="tgi">Feiertag</span>
-        <span class="tgs">Firmenintern</span>
-      </div>
+    <div class="seg">
+      <button class="sg on cn"  id="tb-n"  onclick="setT('n')">☀️ Normal</button>
+      <button class="sg cn2"    id="tb-nt" onclick="setT('nt')">🌙 Nacht</button>
+      <button class="sg cu"     id="tb-u"  onclick="setT('u')">🏖️ Urlaub</button>
+      <button class="sg co"     id="tb-o"  onclick="setT('o')">⚡ Überstunden</button>
+      <button class="sg cs"     id="tb-s"  onclick="setT('s')">🌧️ Schlechtwetter</button>
+      <button class="sg ch"     id="tb-h"  onclick="setT('h')">🌡️ Hitzefrei</button>
+      <button class="sg cf"     id="tb-f"  onclick="setT('f')">🎉 Feiertag</button>
     </div>
-
     <div class="field"><label class="lbl">Datum</label><input type="date" id="fd"></div>
-
     <div id="tfields">
       <div class="row2">
         <div><label class="lbl">Von</label><input type="time" id="fs" value="07:00" oninput="uprev()"></div>
         <div><label class="lbl">Bis</label><input type="time" id="fe" value="15:30" oninput="uprev()"></div>
       </div>
-      <div class="field"><label class="lbl">Pause (Minuten)</label><input type="number" id="fp" value="30" min="0" max="180" step="5" oninput="uprev()"></div>
+      <div class="field"><label class="lbl">Pause (min)</label><input type="number" id="fp" value="30" min="0" max="180" step="5" oninput="uprev()"></div>
       <div id="nf-row" style="display:none" class="field">
         <label class="lbl">Nachtzuschlag-Faktor (20–05 Uhr)</label>
-        <select id="nf" onchange="uprev()">
-          <option value="1.25">1,25x</option>
-          <option value="1.5">1,5x</option>
-          <option value="2" selected>2x</option>
-        </select>
+        <select id="nf" onchange="uprev()"><option value="1.25">1,25×</option><option value="1.5">1,5×</option><option value="2" selected>2×</option></select>
       </div>
     </div>
-
     <div class="pvb" id="pvb"></div>
-
-    <div class="field"><label class="lbl">Bemerkung (optional)</label>
-      <input type="text" id="fn" placeholder="z.B. Baustelle Dornbirn"></div>
-
+    <div class="field"><label class="lbl">Bemerkung (optional)</label><input type="text" id="fn" placeholder="z.B. Baustelle Dornbirn"></div>
     <button class="btn btn-o" id="sbtn" onclick="saveE()">Speichern</button>
     <button class="btn btn-s" id="cbtn" onclick="cancelE()" style="display:none">Abbrechen</button>
   </div>
@@ -271,50 +156,42 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <!-- KONTEN -->
 <div class="sec" id="sec-k">
   <div class="konto k-aps" id="aps-konto">
-    <div class="kl aps" id="aps-label">APS - Ueberstundenkonto</div>
+    <div class="kl aps" id="aps-label">APS – Überstundenkonto</div>
     <div class="kh aps" id="aps-h">7h</div>
     <div class="ksub" id="aps-sub">von max. 8h</div>
     <div class="kbar"><div class="kfill" id="aps-bar" style="width:87.5%"></div></div>
   </div>
-
   <div class="konto k-fus">
-    <div class="kl fus">Fussenegger - Ueberstundenkonto</div>
+    <div class="kl fus">Fussenegger – Überstundenkonto</div>
     <div class="kh fus" id="fus-h">0h</div>
-    <div class="ksub" id="fus-sub">Alle Ueberstunden nach APS-Abschluss</div>
+    <div class="ksub">Alle Überstunden nach APS-Vollstand</div>
   </div>
-
   <div class="konto k-url">
     <div class="kl url">Urlaubskonto</div>
     <div class="kh url" id="url-h">5 Tage</div>
     <div class="ksub" id="url-sub"></div>
   </div>
-
+  <div class="card">
+    <div class="ct-sm">⚙️ Einstellungen</div>
+    <div class="row2">
+      <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="20" max="60" step="0.5" oninput="saveSett();rkonten()"></div>
+      <div><label class="lbl">Urlaubstage (Start)</label><input type="number" id="url-start" value="5" min="0" step="0.5" oninput="saveSett();rkonten()"></div>
+    </div>
+    <div class="field"><label class="lbl">Urlaubszählung ab (+1 Tag / 2 Wochen)</label><input type="date" id="url-from" oninput="saveSett();rkonten()"></div>
+    <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsüberstunden (h)</label><input type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5" oninput="saveSett();rkonten()"></div>
+  </div>
   <div class="card">
     <div class="ct-sm">Diese Woche</div>
     <div id="k-week"></div>
-  </div>
-
-  <div class="card">
-    <div class="ct-sm">Einstellungen</div>
-    <div class="row2">
-      <div><label class="lbl">Sollstunden/Woche</label>
-        <input type="number" id="soll" value="40" min="20" max="60" step="0.5" oninput="saveSett();rkonten()"></div>
-      <div><label class="lbl">Urlaub Starttage</label>
-        <input type="number" id="url-start" value="5" min="0" step="0.5" oninput="saveSett();rkonten()"></div>
-    </div>
-    <div class="field"><label class="lbl">Urlaubszaehlung ab (+1 Tag / 2 Wochen)</label>
-      <input type="date" id="url-from" oninput="saveSett();rkonten()"></div>
-    <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsueberstunden (h)</label>
-      <input type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5" oninput="saveSett();rkonten()"></div>
   </div>
 </div>
 
 <!-- WOCHE -->
 <div class="sec" id="sec-w">
   <div class="wnav">
-    <button class="wnb" onclick="wOff--;rwv()">&#8249;</button>
-    <div class="wnl" id="wnl">-</div>
-    <button class="wnb" onclick="wOff++;rwv()">&#8250;</button>
+    <button class="wnb" onclick="wOff--;rwv()">‹</button>
+    <div class="wnl" id="wnl"></div>
+    <button class="wnb" onclick="wOff++;rwv()">›</button>
   </div>
   <div id="wbox"></div>
 </div>
@@ -322,9 +199,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <!-- MONAT -->
 <div class="sec" id="sec-m">
   <div class="wnav">
-    <button class="wnb" onclick="mOff--;rmonth()">&#8249;</button>
-    <div class="wnl" id="mnl">-</div>
-    <button class="wnb" onclick="mOff++;rmonth()">&#8250;</button>
+    <button class="wnb" onclick="mOff--;rmonth()">‹</button>
+    <div class="wnl" id="mnl"></div>
+    <button class="wnb" onclick="mOff++;rmonth()">›</button>
   </div>
   <div id="mbox"></div>
 </div>
@@ -333,59 +210,45 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <div class="sec" id="sec-x">
   <div class="card">
     <div class="ct">Stundenzettel</div>
-    <div class="field" style="margin-bottom:10px">
-      <label class="lbl">Monat auswaehlen</label>
-      <select id="xmon" onchange="rxp()"><option value="">-- Monat waehlen --</option></select>
+    <div class="field"><label class="lbl">Monat</label>
+      <select id="xmon" onchange="rxp()"><option value="">Bitte wählen</option></select>
     </div>
-    <div class="typegrid" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
-      <div class="tg on-n" id="xv-aps" onclick="setXV('aps')">
-        <span class="tgi" style="color:inherit">APS</span>
-        <span class="tgs" style="color:inherit">Max. 39h/Woche</span>
-      </div>
-      <div class="tg" id="xv-fus" onclick="setXV('fus')">
-        <span class="tgi">Fussenegger</span>
-        <span class="tgs">Echte Stunden</span>
-      </div>
+    <div class="seg" style="margin-bottom:10px">
+      <button class="sg on cn" id="xv-aps" onclick="setXV('aps')">🟠 APS</button>
+      <button class="sg cf"    id="xv-fus" onclick="setXV('fus')">🔵 Fussenegger</button>
     </div>
     <div id="xview"></div>
   </div>
-  <div class="card">
+  <div class="card" style="border-color:#3A3A3C">
     <div class="ct-sm">Datensicherung</div>
-    <p style="font-size:12px;color:var(--gray);margin-bottom:10px;line-height:1.5">
-      Alle Eintraege werden lokal im Browser gespeichert.<br>Regelmaessig exportieren!</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-sm" onclick="doExp()">JSON exportieren</button>
-      <button class="btn-sm" onclick="doImp()">JSON importieren</button>
-    </div>
-    <input type="file" id="imp-file" accept=".json" style="display:none" onchange="handleImp(this)">
+    <p style="font-size:12px;color:#636366;margin-bottom:10px">Einträge lokal gespeichert — regelmäßig exportieren!</p>
+    <button class="btn-sm" onclick="doExp()">💾 JSON exportieren</button>
   </div>
 </div>
-
-</div><!-- /app -->
+</div>
+<div id="print-area"></div>
 
 <script>
-// ═══════════════════════════════════════════
-// KONSTANTEN & STATE
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// KONSTANTEN
+// ════════════════════════════════════════════════════════
 const SK='zt_v6', SS='zt_s6';
 const DY=['So','Mo','Di','Mi','Do','Fr','Sa'];
 const DMS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 const DML=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-const INTERN=['u','s','h','f'];
-const OT_MINS=8*60, APS_MAX=8*60, APS_DRUCKMAX=39*60;
+const INTERN_TYPES=['u','s','h','f'];
+const OT_MINS=8*60;
+const APS_MAX=8*60;
 
-let D={}, S={
-  soll:40, urlStart:5, urlFrom:'',
-  apsStart:7,
-  // APS-Status: 'active' | 'full' | 'cleared'
-  apsStatus:'active',
-  apsFullDate:'', apsClearedDate:''
-};
+// ════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════
+let D={}, S={soll:40, urlStart:5, urlFrom:'', apsStart:7, apsStatus:'active', apsFullDate:'', apsClearedDate:''};
 let eT='n', wOff=0, mOff=0, xView='aps', editK=null;
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // STORAGE
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 const mem={};
 const st={
   g:k=>{try{return localStorage.getItem(k)}catch{return mem[k]??null}},
@@ -394,7 +257,7 @@ const st={
 function loadD(){try{D=JSON.parse(st.g(SK))||{}}catch{D={}}}
 function saveD(){st.s(SK,JSON.stringify(D))}
 function loadS(){
-  try{const s=JSON.parse(st.g(SS));if(s&&typeof s==='object')Object.assign(S,s)}catch{}
+  try{const s=JSON.parse(st.g(SS));if(s)Object.assign(S,s)}catch{}
   document.getElementById('soll').value=S.soll;
   document.getElementById('url-start').value=S.urlStart;
   document.getElementById('url-from').value=S.urlFrom||'';
@@ -408,35 +271,24 @@ function saveSett(){
   st.s(SS,JSON.stringify(S));
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 const pad=n=>String(n).padStart(2,'0');
 const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-const toM=t=>{if(!t)return 0;const[h,m]=t.split(':').map(Number);return h*60+m};
-const fmt=m=>{
-  if(m===null||m===undefined)return'–';
-  if(m===0)return'0h';
-  const h=Math.floor(Math.abs(m)/60),mn=Math.round(Math.abs(m)%60);
-  return(m<0?'−':'')+(mn?`${h}h ${mn}min`:`${h}h`);
-};
+const toM=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
+const fmt=m=>{if(!m&&m!==0)return'–';const h=Math.floor(Math.abs(m)/60),mn=Math.round(Math.abs(m)%60);return(m<0?'−':'')+(mn?`${h}h ${mn}min`:`${h}h`)};
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function ddisp(s){const d=new Date(s+'T12:00:00');return`${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}`}
-function spanMin(a,b){let s=toM(a),e=toM(b);if(e<=s)e+=1440;return e-s}
+function span(a,b){let s=toM(a),e=toM(b);if(e<=s)e+=1440;return e-s}
 function nightAdj(a,b,p,f){
   let s=toM(a),e=toM(b);if(e<=s)e+=1440;
   const tot=e-s;if(!tot)return{net:0,nMin:0,dMin:0};
-  // Nacht: 20:00 (1200) bis 05:00 nächster Tag (1740 = 29*60)
   let nRaw=0;
-  for(let dd=-1;dd<=1;dd++){
-    const ws=dd*1440+20*60,we=dd*1440+29*60;
-    nRaw+=Math.max(0,Math.min(e,we)-Math.max(s,ws));
-  }
-  nRaw=Math.min(tot,nRaw);
-  const dRaw=tot-nRaw;
-  const nNet=Math.max(0,nRaw-p*(nRaw/tot));
-  const dNet=Math.max(0,dRaw-p*(dRaw/tot));
-  return{net:Math.round(dNet+nNet*f),nMin:Math.round(nNet),dMin:Math.round(dNet)};
+  for(let d=-1;d<=1;d++){const ws=d*1440+1200,we=d*1440+1740;nRaw+=Math.max(0,Math.min(e,we)-Math.max(s,ws))}
+  nRaw=Math.min(tot,nRaw);const dRaw=tot-nRaw;
+  const nNet=Math.max(0,nRaw-p*(nRaw/tot)),dNet=Math.max(0,dRaw-p*(dRaw/tot));
+  return{net:dNet+nNet*f,nMin:nNet,dMin:dNet};
 }
 function isoWk(s){
   const d=new Date(s+'T12:00:00'),t=new Date(d);
@@ -446,403 +298,283 @@ function isoWk(s){
   return`${y}-W${pad(1+Math.round((t-j)/604800000))}`;
 }
 function wkMon(y,w){
-  const j=new Date(y,0,1);
-  j.setDate(j.getDate()-((j.getDay()+6)%7)+3);
-  const t=new Date(j);t.setDate(j.getDate()+(w-1)*7);t.setDate(t.getDate()-3);
-  return t;
+  const j=new Date(y,0,1);j.setDate(j.getDate()-((j.getDay()+6)%7)+3);
+  const t=new Date(j);t.setDate(j.getDate()+(w-1)*7);t.setDate(t.getDate()-3);return t;
 }
-function wkLabel(wk){
-  const[ys,ws]=wk.split('-W');
-  const m=wkMon(parseInt(ys),parseInt(ws)),su=new Date(m);su.setDate(m.getDate()+6);
-  if(m.getMonth()===su.getMonth())return`${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}`;
-  return`${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
+function wkLabel(k){
+  const[ys,ws]=k.split('-W');const w=parseInt(ws),y=parseInt(ys);
+  const m=wkMon(y,w),su=new Date(m);su.setDate(m.getDate()+6);
+  return m.getMonth()===su.getMonth()?`${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}`:`${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
 }
-const sortedKeys=()=>Object.keys(D).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+const keys=()=>Object.keys(D).sort();
 
 const TINFO={
   n: {dot:'dot-n',col:'col-n',tag:'et-n',lbl:'Normal'},
   nt:{dot:'dot-nt',col:'col-nt',tag:'et-nt',lbl:'Nacht'},
   u: {dot:'dot-u',col:'col-u',tag:'et-u',lbl:'Urlaub'},
-  o: {dot:'dot-o',col:'col-o',tag:'et-o',lbl:'Ueberstunden'},
+  o: {dot:'dot-o',col:'col-o',tag:'et-o',lbl:'Überstunden'},
   s: {dot:'dot-s',col:'col-s',tag:'et-s',lbl:'Schlechtwetter'},
   h: {dot:'dot-h',col:'col-h',tag:'et-h',lbl:'Hitzefrei'},
   f: {dot:'dot-f',col:'col-f',tag:'et-f',lbl:'Feiertag'},
 };
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // BERECHNUNGEN
-// ═══════════════════════════════════════════
-function getEntryMins(e){
-  if(!e)return 0;
-  if(e.type==='o')return OT_MINS;
-  if(e.type==='n'||e.type==='nt')return e.net||0;
-  return 0;
-}
-
-function calcWeekMins(dks){
-  return dks.reduce((s,k)=>s+getEntryMins(D[k]),0);
-}
-
+// ════════════════════════════════════════════════════════
 function calcOT(){
-  // Berechnet gesamte Überstunden (alles über Soll/Woche)
   const soll=S.soll*60;
   const byWk={};
-  sortedKeys().forEach(k=>{
+  keys().forEach(k=>{
+    const e=D[k];
     const wk=isoWk(k);
     if(!byWk[wk])byWk[wk]=0;
-    byWk[wk]+=getEntryMins(D[k]);
+    if(e.type==='o')byWk[wk]+=OT_MINS;
+    else if(e.type==='n'||e.type==='nt')byWk[wk]+=e.net||0;
   });
   const totalOT=Object.values(byWk).reduce((s,wIst)=>s+Math.max(0,wIst-soll),0);
-  const apsStartMins=S.apsStart*60;
-
-  let apsVal=0, fusVal=0;
-  if(S.apsStatus==='active'){
-    apsVal=Math.min(apsStartMins+totalOT, APS_MAX);
-    fusVal=Math.max(0, totalOT-(APS_MAX-apsStartMins));
-  } else if(S.apsStatus==='full'){
-    // APS voll aber noch nicht abgegolten – zeigt 8h
-    apsVal=APS_MAX;
-    fusVal=totalOT;
-  } else {
-    // cleared: APS=0, alles Fussenegger
-    apsVal=0;
-    fusVal=apsStartMins+totalOT;
+  const apsStart=S.apsStart*60;
+  
+  if(S.apsStatus==='cleared'){
+    return{totalOT,aps:0,fus:apsStart+totalOT};
+  }else if(S.apsStatus==='full'){
+    const aps=APS_MAX;
+    const fus=Math.max(0,totalOT-(APS_MAX-apsStart));
+    return{totalOT,aps,fus};
+  }else{
+    const aps=Math.min(apsStart+totalOT,APS_MAX);
+    const fus=Math.max(0,totalOT-(APS_MAX-apsStart));
+    return{totalOT,aps,fus};
   }
-  return{totalOT,apsVal,fusVal};
 }
-
 function calcUrl(){
   let auto=0;
   if(S.urlFrom){
     const from=new Date(S.urlFrom+'T12:00:00'),now=new Date();
-    const diff=now-from;
-    if(diff>0)auto=Math.floor(diff/(14*86400000));
+    const diffMs=now-from;
+    if(diffMs>0)auto=Math.floor(diffMs/(14*86400000));
   }
-  const used=sortedKeys().filter(k=>D[k].type==='u').length;
-  return{saldo:Math.max(0,S.urlStart+auto-used),auto,used};
+  const used=keys().filter(k=>D[k].type==='u').length;
+  return{saldo:S.urlStart+auto-used,auto,used};
 }
 
-// ═══════════════════════════════════════════
-// APS-STATUS PRÜFEN
-// ═══════════════════════════════════════════
-function checkApsStatus(){
-  if(S.apsStatus==='cleared')return;
-  const ot=calcOT();
-
-  if(S.apsStatus==='active'){
-    if(ot.apsVal>=APS_MAX){
-      S.apsStatus='full';
-      S.apsFullDate=iso(new Date());
-      saveSett2();
-      alert('APS-Konto voll (8h erreicht)!\nDer naechste Urlaubstag mit Ueberstunden schliesst das Konto ab.');
-    }
-  } else if(S.apsStatus==='full'){
-    // Prüfen: gibt es einen Urlaub-Eintrag NACH dem Vollstand-Datum?
-    const urlAfterFull=sortedKeys().filter(k=>{
-      return D[k].type==='u' && k>=S.apsFullDate;
-    });
-    if(urlAfterFull.length>0){
-      S.apsStatus='cleared';
-      S.apsClearedDate=iso(new Date());
-      saveSett2();
-      alert('APS-Konto wurde abgegolten und auf 0 gesetzt.\nAlle weiteren Ueberstunden gehen an Fussenegger.');
-    }
-  }
-}
-function saveSett2(){st.s(SS,JSON.stringify(S))}
-
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // UHRZEIT
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function tick(){
-  const n=new Date(),ts=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  document.getElementById('clkt').textContent=ts;
-  document.getElementById('nbt').textContent=ts;
-  document.getElementById('clkd').textContent=`${DY[n.getDay()]} ${n.getDate()}. ${DMS[n.getMonth()]}`;
-  document.getElementById('nbd').textContent=`${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
-}
-function setNow(){
   const n=new Date();
-  document.getElementById('fe').value=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
-  uprev();
+  document.getElementById('clkt').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
+  document.getElementById('clkd').textContent=`${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
 }
+function setNow(){const n=new Date();document.getElementById('fe').value=`${pad(n.getHours())}:${pad(n.getMinutes())}`;uprev()}
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // TABS
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function go(t){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
   document.getElementById('sec-'+t).classList.add('on');
-  const tabIds=['e','k','w','m','x'];
-  tabIds.forEach((id,i)=>{if(id===t)document.querySelectorAll('.tb')[i].classList.add('on')});
+  ['e','k','w','m','x'].forEach((id,i)=>{if(id===t)document.querySelectorAll('.tb')[i].classList.add('on')});
   if(t==='k')rkonten();
   if(t==='w')rwv();
   if(t==='m')rmonth();
   if(t==='x')rxsel();
 }
 
-// ═══════════════════════════════════════════
-// EINTRAGEN FORMULAR
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// EINTRAGEN
+// ════════════════════════════════════════════════════════
 function setT(t){
   eT=t;
-  // Alle type buttons zurücksetzen
-  ['n','nt','o','u','s','h','f'].forEach(x=>{
-    const el=document.getElementById('tg-'+x);
-    if(!el)return;
-    el.className='tg';
-  });
-  const el=document.getElementById('tg-'+t);
-  if(el)el.className=`tg on-${t}`;
-
-  const needTime=(t==='n'||t==='nt');
+  Object.keys(TINFO).forEach(x=>{const el=document.getElementById('tb-'+x);if(el)el.classList.remove('on')});
+  document.getElementById('tb-'+t)?.classList.add('on');
+  const needTime=t==='n'||t==='nt';
   document.getElementById('tfields').style.display=needTime?'block':'none';
-  document.getElementById('nf-row').style.display=(t==='nt')?'block':'none';
+  document.getElementById('nf-row').style.display=t==='nt'?'block':'none';
   uprev();
 }
-
 function uprev(){
   const box=document.getElementById('pvb');
-  if(eT==='o'){
-    box.innerHTML='<strong>Ueberstunden-Tag:</strong> 8h werden zur Wochensumme gezaehlt.';
-    return;
-  }
-  if(INTERN.includes(eT)){
-    box.innerHTML=`<strong>${TINFO[eT].lbl}:</strong> Wird firmenintern verrechnet – keine eigene Stundenzahl.`;
-    return;
-  }
-  const a=document.getElementById('fs').value;
-  const b=document.getElementById('fe').value;
-  const p=parseInt(document.getElementById('fp').value)||0;
+  if(eT==='o'){box.innerHTML='⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme)';return}
+  if(INTERN_TYPES.includes(eT)){box.innerHTML=`${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong>`;return}
+  const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
   if(!a||!b){box.innerHTML='Netto: <strong>–</strong>';return}
   if(eT==='nt'){
     const f=parseFloat(document.getElementById('nf').value)||2;
     const r=nightAdj(a,b,p,f);
-    box.innerHTML=`Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:11px;color:var(--text2)">Tag ${fmt(r.dMin)} + Nacht ${fmt(r.nMin)} x${f}</span>`;
-  } else {
-    const net=Math.max(0,spanMin(a,b)-p);
-    box.innerHTML=`Netto: <strong>${fmt(net)}</strong> <span style="font-size:11px;color:var(--text2)">(${a}–${b}, ${p}min Pause)</span>`;
+    box.innerHTML=`Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:11px;color:#8E8E93">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
+  }else{
+    box.innerHTML=`Netto: <strong>${fmt(Math.max(0,span(a,b)-p))}</strong>`;
   }
 }
-
 function saveE(){
-  const date=document.getElementById('fd').value;
-  const note=document.getElementById('fn').value.trim();
-  if(!date)return alert('Bitte Datum auswaehlen.');
-
-  // Warnungen
-  const w=[];
+  const date=document.getElementById('fd').value,note=document.getElementById('fn').value.trim();
+  if(!date)return alert('Bitte Datum ausfüllen.');
+  
+  const warns=[];
   const dd=new Date(date+'T12:00:00'),dow=dd.getDay();
-  if(dow===0||dow===6)w.push(`${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'}. Trotzdem eintragen?`);
-  if(D[date]&&date!==editK)w.push(`Fuer diesen Tag gibt es bereits einen Eintrag. Ueberschreiben?`);
-  if(dd>new Date()&&date!==editK)w.push(`Dieses Datum liegt in der Zukunft.`);
-  if(w.length&&!confirm(w.join('\n\n')+'\n\nSpeichern?'))return;
-
+  if(dow===0||dow===6)warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
+  if(D[date]&&date!==editK)warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
+  if(dd>new Date()&&date!==editK)warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
+  if(warns.length&&!confirm(warns.join('\n\n')+'\n\nSpeichern?'))return;
+  
   let e;
   if(eT==='n'){
-    const a=document.getElementById('fs').value,b=document.getElementById('fe').value;
-    const p=parseInt(document.getElementById('fp').value)||0;
-    if(!a||!b)return alert('Bitte Von und Bis ausfuellen.');
-    if(spanMin(a,b)>14*60&&!confirm('Schicht laenger als 14h – stimmt das?'))return;
-    e={type:'n',start:a,end:b,pause:p,net:Math.max(0,spanMin(a,b)-p),note};
-  } else if(eT==='nt'){
-    const a=document.getElementById('fs').value,b=document.getElementById('fe').value;
-    const p=parseInt(document.getElementById('fp').value)||0;
-    if(!a||!b)return alert('Bitte Von und Bis ausfuellen.');
-    const f=parseFloat(document.getElementById('nf').value)||2;
-    const r=nightAdj(a,b,p,f);
+    const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
+    if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
+    if(span(a,b)>14*60&&!confirm('Schicht über 14h — stimmt das?'))return;
+    e={type:'n',start:a,end:b,pause:p,net:Math.max(0,span(a,b)-p),note};
+  }else if(eT==='nt'){
+    const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
+    if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
+    const f=parseFloat(document.getElementById('nf').value)||2,r=nightAdj(a,b,p,f);
     e={type:'nt',start:a,end:b,pause:p,net:r.net,nMin:r.nMin,dMin:r.dMin,factor:f,note};
-  } else if(eT==='o'){
+  }else if(eT==='o'){
+    if(S.apsStatus==='full'&&!S.apsClearedDate){
+      S.apsClearedDate=date;
+      S.apsStatus='cleared';
+      st.s(SS,JSON.stringify(S));
+      alert('✅ APS-Konto auf 0 gesetzt! Alle Überstunden gehen ab jetzt an Fussenegger.');
+    }
     e={type:'o',net:OT_MINS,note};
-  } else {
+  }else{
     e={type:eT,net:0,note};
   }
-
-  D[date]=e;
-  saveD();
-  editK=null;
-  resetF();
-  updCount();
-  checkApsStatus();
+  
+  D[date]=e;saveD();editK=null;resetF();upd();
+  checkApsFull();
   go('k');
 }
-
+function checkApsFull(){
+  if(S.apsStatus!=='active')return;
+  const ot=calcOT();
+  if(ot.aps>=APS_MAX){
+    S.apsStatus='full';
+    S.apsFullDate=iso(new Date());
+    st.s(SS,JSON.stringify(S));
+    console.log('APS voll bei 8h erreicht am',S.apsFullDate);
+  }
+}
 function cancelE(){editK=null;resetF()}
-
 function resetF(){
   document.getElementById('fd').value=iso(new Date());
-  document.getElementById('fs').value='07:00';
-  document.getElementById('fe').value='15:30';
-  document.getElementById('fp').value='30';
-  document.getElementById('fn').value='';
+  document.getElementById('fs').value='07:00';document.getElementById('fe').value='15:30';
+  document.getElementById('fp').value='30';document.getElementById('fn').value='';
   document.getElementById('nf').value='2';
   document.getElementById('ftit').textContent='Neuer Eintrag';
   document.getElementById('sbtn').textContent='Speichern';
   document.getElementById('cbtn').style.display='none';
   setT('n');
 }
-
 function startEdit(k){
-  const e=D[k];if(!e)return;
-  editK=k;
-  document.getElementById('fd').value=k;
-  document.getElementById('fn').value=e.note||'';
-  if(e.type==='n'){
-    document.getElementById('fs').value=e.start||'07:00';
-    document.getElementById('fe').value=e.end||'15:30';
-    document.getElementById('fp').value=e.pause||0;
-    setT('n');
-  } else if(e.type==='nt'){
-    document.getElementById('fs').value=e.start||'07:00';
-    document.getElementById('fe').value=e.end||'15:30';
-    document.getElementById('fp').value=e.pause||0;
-    document.getElementById('nf').value=String(e.factor||2);
-    setT('nt');
-  } else {
-    setT(e.type);
-  }
-  document.getElementById('ftit').textContent='Eintrag bearbeiten';
+  const e=D[k];editK=k;
+  document.getElementById('fd').value=k;document.getElementById('fn').value=e.note||'';
+  if(e.type==='n'){document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;setT('n')}
+  else if(e.type==='nt'){document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;document.getElementById('nf').value=String(e.factor||2);setT('nt')}
+  else setT(e.type);
+  document.getElementById('ftit').textContent='Bearbeiten';
   document.getElementById('sbtn').textContent='Aktualisieren';
   document.getElementById('cbtn').style.display='block';
-  uprev();
-  go('e');
-  window.scrollTo(0,0);
+  uprev();go('e');window.scrollTo(0,0);
 }
+function delE(k){if(!confirm(`${ddisp(k)} löschen?`))return;delete D[k];saveD();upd();rkonten()}
+function upd(){document.getElementById('ecnt').textContent=`${Object.keys(D).length} Einträge`}
 
-function delE(k){
-  if(!confirm(`${ddisp(k)} loeschen?`))return;
-  delete D[k];saveD();updCount();
-  // APS-Status ggf. zurücksetzen wenn der Eintrag gelöscht wurde
-  if(S.apsStatus==='cleared'||S.apsStatus==='full'){
-    // neu berechnen ohne den gelöschten Eintrag
-    // (simpel: status bleibt, da er bereits geloggt wurde)
-  }
-  rkonten();
-  // Aktive Ansicht refreshen
-  const activeTab=document.querySelector('.tb.on');
-  if(activeTab){
-    const ti=['e','k','w','m','x'];
-    const idx=[...document.querySelectorAll('.tb')].indexOf(activeTab);
-    if(idx>=0&&ti[idx]!=='e'){go(ti[idx]);}
-  }
-}
-
-function updCount(){
-  document.getElementById('ecnt').textContent=`${Object.keys(D).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).length} Eintraege`;
-}
-
-// ═══════════════════════════════════════════
-// KONTEN ANZEIGE
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// KONTEN
+// ════════════════════════════════════════════════════════
 function rkonten(){
   const ot=calcOT(),url=calcUrl(),soll=S.soll*60;
-
-  // APS
-  const apsBox=document.getElementById('aps-konto');
-  const apsLbl=document.getElementById('aps-label');
-  const apsH=document.getElementById('aps-h');
-  const apsSub=document.getElementById('aps-sub');
-  const apsBar=document.getElementById('aps-bar');
-
+  
+  const apsKonto=document.getElementById('aps-konto');
+  const apsLabel=document.getElementById('aps-label');
+  
   if(S.apsStatus==='cleared'){
-    apsBox.className='konto k-aps done';
-    apsLbl.className='kl gr';
-    apsLbl.innerHTML='APS <span class="k-done-badge">Abgeschlossen</span>';
-    apsH.className='kh gr';
-    apsH.textContent='0h';
-    apsSub.textContent=`Abgegolten am ${S.apsClearedDate||'—'} · alles geht an Fussenegger`;
-    apsBar.style.width='0%';
-  } else if(S.apsStatus==='full'){
-    apsBox.className='konto k-aps';
-    apsLbl.className='kl aps';
-    apsLbl.innerHTML='APS <span class="k-done-badge" style="background:rgba(48,209,88,.2);color:#30D158">Voll – warte auf Urlaub</span>';
-    apsH.className='kh aps';
-    apsH.textContent=fmt(APS_MAX);
-    apsSub.textContent=`Voll seit ${S.apsFullDate} · naechster Urlaubstag schliesst Konto ab`;
-    apsBar.style.width='100%';
-  } else {
-    apsBox.className='konto k-aps';
-    apsLbl.className='kl aps';
-    apsLbl.textContent='APS - Ueberstundenkonto';
-    apsH.className='kh aps';
-    apsH.textContent=fmt(ot.apsVal);
-    apsSub.textContent=`von max. 8h (${Math.round(ot.apsVal/APS_MAX*100)}%)`;
-    apsBar.style.width=Math.min(100,ot.apsVal/APS_MAX*100)+'%';
+    apsKonto.className='konto k-aps grau';
+    apsLabel.className='kl grau';
+    apsLabel.textContent='APS – Überstundenkonto (abgeschlossen)';
+    document.getElementById('aps-h').textContent='0h';
+    document.getElementById('aps-h').className='kh grau';
+    document.getElementById('aps-sub').textContent=`Auf 0 gesetzt am ${S.apsClearedDate||'—'} · alles → Fussenegger`;
+    document.getElementById('aps-bar').style.width='0%';
+  }else if(S.apsStatus==='full'){
+    apsKonto.className='konto k-aps grau';
+    apsLabel.className='kl grau';
+    apsLabel.textContent='APS – Überstundenkonto (voll)';
+    document.getElementById('aps-h').textContent='8h';
+    document.getElementById('aps-h').className='kh grau';
+    document.getElementById('aps-sub').textContent=`Voll seit ${S.apsFullDate||'—'} · beim nächsten Urlaubstag → auf 0`;
+    document.getElementById('aps-bar').style.width='100%';
+  }else{
+    apsKonto.className='konto k-aps';
+    apsLabel.className='kl aps';
+    apsLabel.textContent='APS – Überstundenkonto';
+    document.getElementById('aps-h').textContent=fmt(ot.aps);
+    document.getElementById('aps-h').className='kh aps';
+    document.getElementById('aps-sub').textContent=`von max. 8h (${Math.round(ot.aps/APS_MAX*100)}%)`;
+    document.getElementById('aps-bar').style.width=Math.min(100,ot.aps/APS_MAX*100)+'%';
   }
-
-  // Fussenegger
-  document.getElementById('fus-h').textContent=fmt(ot.fusVal);
-  document.getElementById('fus-sub').textContent=
-    S.apsStatus==='active'
-      ? 'Ueberstunden nach APS-Abschluss'
-      : S.apsStatus==='full'
-        ? 'Noch keine – warte auf APS-Abschluss'
-        : `Alle Ueberstunden seit APS-Abschluss`;
-
-  // Urlaub
-  document.getElementById('url-h').textContent=`${url.saldo} Tage`;
-  document.getElementById('url-sub').textContent=`${url.used} verbraucht · +${url.auto} automatisch hinzugekommen`;
-
-  // Diese Woche
-  const today=new Date();
-  const monDate=new Date(today);monDate.setDate(today.getDate()-((today.getDay()+6)%7));
-  const wDks=[];for(let i=0;i<7;i++){const d2=new Date(monDate);d2.setDate(monDate.getDate()+i);wDks.push(iso(d2))}
-  const wIst=calcWeekMins(wDks);
+  
+  document.getElementById('fus-h').textContent=fmt(ot.fus);
+  document.getElementById('url-h').textContent=`${Math.max(0,url.saldo)} Tage`;
+  document.getElementById('url-sub').textContent=`${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
+  
+  const today=new Date(),tdi=iso(today);
+  const mon=new Date(today);mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  const dks=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dks.push(iso(d))}
+  const wIst=dks.reduce((s,k)=>{const e=D[k];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s},0);
   const diff=wIst-soll;
   document.getElementById('k-week').innerHTML=`
-    <div class="otrow"><div class="otl">Ist<small>inkl. Ueberstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
+    <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
     <div class="otrow"><div class="otl">Soll</div><span class="otv">${fmt(soll)}</span></div>
     <div class="otrow"><div class="otl">Differenz</div><span class="otv ${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${fmt(diff)}</span></div>`;
-
-  // Settings sync
-  document.getElementById('soll').value=S.soll;
-  document.getElementById('url-start').value=S.urlStart;
-  document.getElementById('url-from').value=S.urlFrom||'';
-  document.getElementById('aps-start-val').value=S.apsStart;
 }
 
-// ═══════════════════════════════════════════
-// WOCHENANSICHT – volle 7-Tage-Woche (Mo–So)
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// WOCHENANSICHT
+// ════════════════════════════════════════════════════════
 function rwv(){
   const today=new Date(),tdi=iso(today);
-  const mon=new Date(today);
-  mon.setDate(today.getDate()-((today.getDay()+6)%7)+wOff*7);
+  const mon=new Date(today);mon.setDate(today.getDate()-((today.getDay()+6)%7)+wOff*7);
   const sun=new Date(mon);sun.setDate(mon.getDate()+6);
   const wk=isoWk(iso(mon)),wn=parseInt(wk.split('-W')[1]);
-
-  const nl=document.getElementById('wnl');
-  nl.innerHTML=`KW ${wn}<small>${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}</small>`;
-
-  // Wochensumme
-  const dks=[];for(let i=0;i<7;i++){const d2=new Date(mon);d2.setDate(mon.getDate()+i);dks.push(iso(d2))}
-  const wIst=calcWeekMins(dks);
-
-  let h=`<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn}</span><span class="wktb">${fmt(wIst)}</span></div>`;
+  document.getElementById('wnl').textContent=`KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
+  let h='<div class="wbox"><div class="wkhr"><span class="wkkw">KW '+wn+'</span></div>';
   for(let i=0;i<7;i++){
-    const d2=new Date(mon);d2.setDate(mon.getDate()+i);
-    const dk=iso(d2),e=D[dk],isWe=i>=5,isT=dk===tdi;
-    h+=renderDayRow(dk,d2,i,e,isWe,isT);
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const dk=iso(d),e=D[dk],isWe=i>=5,isT=dk===tdi;
+    const ti=e?TINFO[e.type]:null;
+    let dotCls='dot-x',hStr='–',hCls='e',meta='';
+    if(e){
+      dotCls=ti.dot;hCls=ti.col;
+      if(e.type==='n'||e.type==='nt')hStr=fmt(e.net);
+      else if(e.type==='o')hStr='8h';
+      else hStr=ti.lbl;
+      if(e.type==='n'||e.type==='nt')meta=`<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
+    }
+    h+=`<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
+      <div class="wdl"><div class="dot ${dotCls}"></div>
+        <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}. ${DMS[d.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="wdh ${hCls}">${hStr}</span>
+        ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+      </div></div>`;
   }
   h+='</div>';
   document.getElementById('wbox').innerHTML=h;
 }
 
-// ═══════════════════════════════════════════
-// MONATSANSICHT – nach Wochen gruppiert
-// Zeigt nur Tage des aktuellen Monats,
-// aber die volle Woche Mo–So als Rahmen
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// MONATSANSICHT
+// ════════════════════════════════════════════════════════
 function rmonth(){
-  const now=new Date();
-  const baseDate=new Date(now.getFullYear(), now.getMonth()+mOff, 1);
-  const yr=baseDate.getFullYear(), mr=baseDate.getMonth();
-  document.getElementById('mnl').innerHTML=`${DML[mr]} ${yr}<small>${yr}</small>`;
-
+  const now=new Date(),y=now.getFullYear(),mo=now.getMonth()+mOff;
+  const d1=new Date(y,mo,1);
+  const yr=d1.getFullYear(),mr=d1.getMonth();
+  document.getElementById('mnl').textContent=`${DML[mr]} ${yr}`;
   const daysInMonth=new Date(yr,mr+1,0).getDate();
-
-  // Alle Tage des Monats in Wochengruppen
+  
   const byWk={};
   for(let day=1;day<=daysInMonth;day++){
     const dk=`${yr}-${pad(mr+1)}-${pad(day)}`;
@@ -850,289 +582,191 @@ function rmonth(){
     if(!byWk[wk])byWk[wk]=[];
     byWk[wk].push(dk);
   }
-
+  
   let html='';
   Object.keys(byWk).sort().forEach(wk=>{
     const dks=byWk[wk];
-    const wIst=calcWeekMins(dks);
+    const wIst=dks.reduce((s,k)=>{const e=D[k];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s},0);
     const wn=parseInt(wk.split('-W')[1]);
-    // Label: erste–letzte Tag des Monats in dieser Woche
-    const first=new Date(dks[0]+'T12:00:00'),last=new Date(dks[dks.length-1]+'T12:00:00');
-    const wLbl=dks.length>1?`${first.getDate()}.–${last.getDate()}. ${DMS[mr]} ${yr}`:`${first.getDate()}. ${DMS[mr]} ${yr}`;
-    html+=`<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn} · ${wLbl}</span><span class="wktb">${fmt(wIst)}</span></div>`;
-    dks.forEach(dk=>{
-      const d2=new Date(dk+'T12:00:00');
-      const e=D[dk];
-      const dow=d2.getDay();
-      const isWe=(dow===0||dow===6);
-      const isT=dk===iso(new Date());
-      const dayIdx=(dow+6)%7; // 0=Mo
-      html+=renderDayRow(dk,d2,dayIdx,e,isWe,isT);
-    });
+    html+=`<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn}</span><span class="wktb">${fmt(wIst)}</span></div>`;
+    
+    const[ys,ws]=wk.split('-W');
+    const mon=wkMon(parseInt(ys),parseInt(ws));
+    for(let i=0;i<7;i++){
+      const d=new Date(mon);d.setDate(mon.getDate()+i);
+      if(d.getMonth()!==mr)continue;
+      const dk=iso(d),e=D[dk],isWe=i>=5,isT=dk===iso(new Date());
+      const ti=e?TINFO[e.type]:null;
+      let dotCls='dot-x',hStr='–',hCls='e',meta='';
+      if(e){
+        dotCls=ti.dot;hCls=ti.col;
+        if(e.type==='n'||e.type==='nt')hStr=fmt(e.net);
+        else if(e.type==='o')hStr='8h';
+        else hStr=ti.lbl;
+        if(e.type==='n'||e.type==='nt')meta=`<div class="wdm">${e.start}–${e.end}</div>`;
+      }
+      html+=`<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
+        <div class="wdl"><div class="dot ${dotCls}"></div>
+          <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}.</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="wdh ${hCls}">${hStr}</span>
+          ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+        </div></div>`;
+    }
     html+='</div>';
   });
-
-  if(!html)html='<div class="empty"><span class="empty-icon">&#x1F4C5;</span>Keine Eintraege in diesem Monat.</div>';
+  if(!html)html='<div class="empty">Keine Einträge in diesem Monat.</div>';
   document.getElementById('mbox').innerHTML=html;
 }
 
-// Shared day row renderer
-function renderDayRow(dk,d2,dayIdx,e,isWe,isT){
-  const ti=e?TINFO[e.type]:null;
-  let dotCls='dot-x',hStr='–',hCls='e',meta='';
-  if(e){
-    dotCls=ti.dot;hCls=ti.col;
-    if(e.type==='n'||e.type==='nt')hStr=fmt(e.net);
-    else if(e.type==='o')hStr='8h';
-    else hStr=ti.lbl;
-    if((e.type==='n'||e.type==='nt')&&e.start)
-      meta=`<div class="wdmeta">${esc(e.start)}–${esc(e.end)} · Pause ${e.pause}min</div>`;
-    if(e.note)meta+=`<div class="wdmeta" style="color:var(--text2)">${esc(e.note)}</div>`;
-  }
-  const dyName=DY[(dayIdx+1)%7];
-  return `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
-    <div class="wdl">
-      <div class="dot ${dotCls}"></div>
-      <div>
-        <div class="wdname">${dyName}<span class="wddate">${d2.getDate()}. ${DMS[d2.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>
-        ${meta}
-      </div>
-    </div>
-    <div class="wdright">
-      <span class="wdh ${hCls}">${hStr}</span>
-      ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')" title="Loeschen">x</button>`:''}
-    </div>
-  </div>`;
-}
-
-// ═══════════════════════════════════════════
-// AUSDRUCK – nur 1. bis letzter Tag des Monats
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// AUSDRUCK
+// ════════════════════════════════════════════════════════
 function setXV(v){
   xView=v;
-  const apsEl=document.getElementById('xv-aps');
-  const fusEl=document.getElementById('xv-fus');
-  apsEl.className=v==='aps'?'tg on-n':'tg';
-  fusEl.className=v==='fus'?'tg on-f':'tg';
+  document.getElementById('xv-aps').classList.toggle('on',v==='aps');
+  document.getElementById('xv-fus').classList.toggle('on',v==='fus');
   rxp();
 }
-
 function rxsel(){
   const sel=document.getElementById('xmon');
   const cur=sel.value;
-  const months=[...new Set(sortedKeys().map(k=>k.slice(0,7)))].sort((a,b)=>b.localeCompare(a));
-  sel.innerHTML='<option value="">-- Monat waehlen --</option>';
+  const months=[...new Set(keys().map(k=>k.slice(0,7)))].sort((a,b)=>b.localeCompare(a));
+  sel.innerHTML='<option value="">Bitte wählen</option>';
   months.forEach(m=>{
     const[y,mo]=m.split('-');
     const op=document.createElement('option');
-    op.value=m;
-    op.textContent=`${DML[parseInt(mo)-1]} ${y}`;
+    op.value=m;op.textContent=`${DML[parseInt(mo)-1]} ${y}`;
     if(m===cur)op.selected=true;
     sel.appendChild(op);
   });
-  // Aktuellen Monat vorauswählen falls verfügbar
-  if(!cur){
-    const nowM=iso(new Date()).slice(0,7);
-    if(months.includes(nowM)){sel.value=nowM}
-  }
   rxp();
 }
-
 function rxp(){
   const el=document.getElementById('xview');
   const monFilter=document.getElementById('xmon').value;
-  if(!monFilter){el.innerHTML='<div class="empty">Bitte Monat auswaehlen.</div>';return}
-
+  if(!monFilter){el.innerHTML='<div class="empty">Bitte Monat auswählen.</div>';return}
   const[y,mo]=monFilter.split('-').map(Number);
   const daysInMonth=new Date(y,mo,0).getDate();
-
-  // Nur Tage 1.–letzter des Monats
+  
   const monDays=[];
   for(let day=1;day<=daysInMonth;day++)monDays.push(`${monFilter}-${pad(day)}`);
-
-  // Nach Wochen gruppieren (nur Monatstage!)
+  
   const byWk={};
-  monDays.forEach(dk=>{
-    const wk=isoWk(dk);
-    if(!byWk[wk])byWk[wk]=[];
-    byWk[wk].push(dk);
-  });
-
+  monDays.forEach(dk=>{const wk=isoWk(dk);if(!byWk[wk])byWk[wk]=[];byWk[wk].push(dk)});
+  
   let h='';
-
   if(xView==='aps'){
-    const soll=APS_DRUCKMAX;
-    let totalMon=0;
-
+    const soll=39*60;
     Object.keys(byWk).sort().forEach(wk=>{
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
-
-      // Wochenarbeitszeit (nur echte Arbeit + Überstunden-Tage)
-      const wIst=calcWeekMins(dks);
-      // APS-Ziel: max 39h
+      
+      const wIst=dks.reduce((s,dk)=>{
+        const e=D[dk];if(!e)return s;
+        if(e.type==='o')return s+OT_MINS;
+        if(e.type==='n'||e.type==='nt')return s+(e.net||0);
+        return s;
+      },0);
+      
+      // **NEUE LOGIK:** Verteile auf ALLE Mo-Fr Tage, auch ohne Eintrag
+      const allDays=dks.map(dk=>{
+        const d=new Date(dk+'T12:00:00');
+        const dow=d.getDay();
+        return{dk,dow,e:D[dk]};
+      });
+      
+      // Nur Mo–Fr + Arbeitstage am Wochenende
+      const verteilTage=allDays.filter(({dow,e})=>{
+        if(dow>=1&&dow<=5)return true; // Mo-Fr immer
+        if(e&&(e.type==='n'||e.type==='nt'||e.type==='o'))return true; // Sa/So nur wenn gearbeitet
+        return false;
+      });
+      
+      // Ausnahme: Tage mit Intern-Einträgen (u/s/h/f) nicht für Verteilung
+      const verteilbar=verteilTage.filter(({e})=>!e||!INTERN_TYPES.includes(e.type));
+      
+      if(wIst===0&&verteilbar.length===0)return;
+      
       const ziel=Math.min(wIst,soll);
-      totalMon+=ziel;
-
-      // Arbeitstage (n, nt, o) für Stundenverteilung
-      const arbDks=dks.filter(dk=>{const e=D[dk];return e&&(e.type==='n'||e.type==='nt'||e.type==='o')});
-
-      // Stunden gleichmäßig auf Arbeitstage verteilen (auf 15min gerundet)
+      const nVert=verteilbar.length||1;
+      const proTag=Math.floor(ziel/nVert/15)*15;
+      let rest=ziel-proTag*nVert;
       const tagH={};
-      if(arbDks.length>0&&ziel>0){
-        const n=arbDks.length;
-        const base=Math.floor(ziel/n/15)*15;
-        let rest=ziel-base*n;
-        arbDks.forEach(dk=>{
-          const add=(rest>=15)?(rest-=15,15):0;
-          tagH[dk]=base+add;
-        });
-      }
-
-      // Wochenlabel: erste–letzte Tag des Monats in dieser Woche
-      const first=new Date(dks[0]+'T12:00:00'),last=new Date(dks[dks.length-1]+'T12:00:00');
-      const wLbl=dks.length>1
-        ?`${first.getDate()}.–${last.getDate()}. ${DMS[mo-1]} ${y}`
-        :`${first.getDate()}. ${DMS[mo-1]} ${y}`;
-
-      h+=`<div class="card-sm">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:11px;font-weight:700;color:var(--orange)">KW ${wn} · ${wLbl}</span>
-          <span style="font-size:13px;font-weight:800;color:var(--orange)">${fmt(ziel)}</span>
-        </div>`;
-
+      verteilbar.forEach(({dk})=>{tagH[dk]=proTag+(rest>=15?(rest-=15,15):0)});
+      
+      h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
+        <span style="font-size:14px;font-weight:800;color:#FF6B35">${fmt(ziel)}</span></div>`;
+      
       dks.forEach(dk=>{
-        const e=D[dk];
-        const d2=new Date(dk+'T12:00:00');
-        const dn=DY[d2.getDay()];
-        if(!e){
-          h+=`<div class="xentry empty-day"><span class="xentry-l">${dn}, ${d2.getDate()}. ${DMS[mo-1]}</span><span class="xentry-v">–</span></div>`;
-        } else if(INTERN.includes(e.type)){
+        const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
+        if(INTERN_TYPES.includes(e?.type)){
           const ti=TINFO[e.type];
-          h+=`<div class="xentry"><span class="xentry-l">${dn}, ${d2.getDate()}. ${DMS[mo-1]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span class="xentry-v" style="color:var(--text2)">${ti.lbl}</span></div>`;
-        } else {
-          const h2=tagH[dk]||0;
-          h+=`<div class="xentry"><span class="xentry-l">${dn}, ${d2.getDate()}. ${DMS[mo-1]}</span><span class="xentry-v">${fmt(h2)}</span></div>`;
+          h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
+        }else if(tagH[dk]!==undefined){
+          h+=`<div class="xview-entry${!e?' empty-day':''}"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700">${fmt(tagH[dk])}</span></div>`;
         }
       });
       h+='</div>';
     });
-
-    h+=`<div class="card" style="background:rgba(255,107,53,.07);border-color:rgba(255,107,53,.3);margin-top:4px">
-      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;margin-bottom:4px">
-        <span>Gesamt APS</span><span style="color:var(--orange)">${fmt(totalMon)}</span>
-      </div>
-      <div style="font-size:11px;color:var(--text2)">
-        Max. 39h/Woche ·
-        ${S.apsStatus==='active'?'APS-Konto offen':S.apsStatus==='full'?'APS-Konto voll (warte auf Urlaub)':'APS-Konto abgeschlossen'}
-      </div>
-    </div>`;
-
+    
+    const totalMon=Object.keys(byWk).reduce((s,wk)=>{
+      return s+Math.min(byWk[wk].reduce((ws,dk)=>{const e=D[dk];if(!e)return ws;if(e.type==='o')return ws+OT_MINS;if(e.type==='n'||e.type==='nt')return ws+(e.net||0);return ws},0),soll);
+    },0);
+    h+=`<div class="card" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.3)">
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
+        <span>Gesamt APS</span><span style="color:#FF6B35">${fmt(totalMon)}</span></div>
+      <div style="font-size:11px;color:#8E8E93;margin-top:4px">Max. 39h/Woche · ${S.apsStatus==='cleared'?'✅ Abgeschlossen':'⏳ '+S.apsStatus}</div></div>`;
+      
   } else {
-    // FUSSENEGGER – echte Stunden, alle anzeigen
-    let totalFus=0;
-
+    // Fussenegger
     Object.keys(byWk).sort().forEach(wk=>{
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
-      const wIst=calcWeekMins(dks);
-      totalFus+=wIst;
-
-      const first=new Date(dks[0]+'T12:00:00'),last=new Date(dks[dks.length-1]+'T12:00:00');
-      const wLbl=dks.length>1
-        ?`${first.getDate()}.–${last.getDate()}. ${DMS[mo-1]} ${y}`
-        :`${first.getDate()}. ${DMS[mo-1]} ${y}`;
-
-      h+=`<div class="card-sm">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:11px;font-weight:700;color:var(--blue)">KW ${wn} · ${wLbl}</span>
-          <span style="font-size:13px;font-weight:800;color:var(--blue)">${fmt(wIst)}</span>
-        </div>`;
-
+      const wIst=dks.reduce((s,dk)=>{const e=D[dk];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s},0);
+      h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:700;color:#64D2FF">KW ${wn}</span>
+        <span style="font-size:14px;font-weight:800;color:#64D2FF">${fmt(wIst)}</span></div>`;
       dks.forEach(dk=>{
-        const e=D[dk];
-        const d2=new Date(dk+'T12:00:00');
-        const dn=DY[d2.getDay()];
+        const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
         if(!e){
-          h+=`<div class="xentry empty-day"><span class="xentry-l">${dn}, ${d2.getDate()}. ${DMS[mo-1]}</span><span class="xentry-v">–</span></div>`;
-        } else if(INTERN.includes(e.type)){
+          h+=`<div class="xview-entry"><span style="color:#3A3A3C">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3A3A3C">–</span></div>`;
+        }else if(INTERN_TYPES.includes(e.type)){
           const ti=TINFO[e.type];
-          h+=`<div class="xentry"><span class="xentry-l">${dn}, ${d2.getDate()}. ${DMS[mo-1]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span class="xentry-v" style="color:var(--text2)">${ti.lbl}</span></div>`;
-        } else {
-          const hrs=getEntryMins(e);
-          const detail=e.type==='o'?'Ueberstunden-Tag':(e.type==='nt'?`${e.start}–${e.end} Nacht x${e.factor}`:`${e.start}–${e.end} · Pause ${e.pause}min`);
-          h+=`<div class="xentry">
-            <div>
-              <span class="xentry-l">${dn}, ${d2.getDate()}. ${DMS[mo-1]}</span>
-              <div style="font-size:10px;color:var(--text3)">${detail}</div>
-            </div>
-            <span class="xentry-v">${fmt(hrs)}</span>
-          </div>`;
+          h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
+        }else{
+          const hrs=e.type==='o'?OT_MINS:e.net||0;
+          const detail=e.type==='o'?'Überstunden-Tag':(e.type==='nt'?`${e.start}–${e.end} 🌙×${e.factor}`:`${e.start}–${e.end} · Pause ${e.pause}min`);
+          h+=`<div class="xview-entry">
+            <div><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span>
+            <div style="font-size:10px;color:#48484A">${detail}</div></div>
+            <span style="font-weight:700">${fmt(hrs)}</span></div>`;
         }
       });
       h+='</div>';
     });
-
+    const totalFus=Object.keys(byWk).reduce((s,wk)=>s+byWk[wk].reduce((ws,dk)=>{const e=D[dk];if(!e)return ws;if(e.type==='o')return ws+OT_MINS;if(e.type==='n'||e.type==='nt')return ws+(e.net||0);return ws},0),0);
     const ot=calcOT();
-    h+=`<div class="card" style="background:var(--blue2);border-color:rgba(100,210,255,.25);margin-top:4px">
-      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;margin-bottom:6px">
-        <span>Gesamt Monat</span><span style="color:var(--blue)">${fmt(totalFus)}</span>
-      </div>
-      <div style="height:1px;background:var(--border);margin-bottom:8px"></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px">
-        <span>→ APS-Konto</span>
-        <span style="color:var(--orange);font-weight:700">${S.apsStatus==='cleared'?'Abgeschlossen (0h)':S.apsStatus==='full'?fmt(APS_MAX)+' (voll)':fmt(ot.apsVal)}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:13px">
-        <span>→ Fussenegger</span>
-        <span style="color:var(--blue);font-weight:700">${fmt(ot.fusVal)}</span>
-      </div>
-    </div>`;
+    h+=`<div class="card" style="background:rgba(100,210,255,.06);border-color:rgba(100,210,255,.2)">
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
+        <span>Gesamt</span><span style="color:#64D2FF">${fmt(totalFus)}</span></div>
+      <div style="height:1px;background:#2C2C2E;margin:8px 0"></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px"><span>→ APS</span><span style="color:#FF6B35;font-weight:700">${S.apsStatus==='cleared'?'0h':fmt(ot.aps)}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px"><span>→ Fussenegger</span><span style="color:#64D2FF;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
   }
-
-  el.innerHTML=h||'<div class="empty">Keine Eintraege fuer diesen Monat.</div>';
+  el.innerHTML=h||'<div class="empty">Keine Einträge für diesen Monat.</div>';
 }
-
-// ═══════════════════════════════════════════
-// EXPORT / IMPORT
-// ═══════════════════════════════════════════
 function doExp(){
-  const payload={entries:D,settings:S,exportedAt:new Date().toISOString()};
-  const b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(b);
-  a.download=`zeiterfassung_${iso(new Date())}.json`;
-  a.click();
-}
-function doImp(){document.getElementById('imp-file').click()}
-function handleImp(inp){
-  const f=inp.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{
-      const j=JSON.parse(ev.target.result);
-      if(j.entries&&typeof j.entries==='object'){
-        if(!confirm(`${Object.keys(j.entries).length} Eintraege importieren? Vorhandene Daten werden ersetzt.`))return;
-        D=j.entries;saveD();
-        if(j.settings)Object.assign(S,j.settings);saveSett2();
-        updCount();rkonten();
-        alert('Import erfolgreich!');
-      }else if(typeof j==='object'&&Object.keys(j).some(k=>/^\d{4}-\d{2}-\d{2}$/.test(k))){
-        if(!confirm(`${Object.keys(j).length} Eintraege importieren?`))return;
-        D=j;saveD();updCount();rkonten();
-        alert('Import erfolgreich!');
-      }else{alert('Unbekanntes Dateiformat.')}
-    }catch{alert('Fehler beim Lesen der Datei.')}
-  };
-  r.readAsText(f);
-  inp.value='';
+  const b=new Blob([JSON.stringify({data:D,settings:S},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`arbeitszeiten_${iso(new Date())}.json`;a.click();
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
-loadD();loadS();updCount();resetF();tick();
-setInterval(tick,15000);
+// ════════════════════════════════════════════════════════
+loadD();loadS();upd();resetF();tick();setInterval(tick,10000);
 </script>
 </body>
 </html>
