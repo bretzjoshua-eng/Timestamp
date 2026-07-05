@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <title>⏱ Zeiterfassung</title>
     <style>
@@ -24,7 +24,6 @@
             margin: 0 auto;
             padding-bottom: 100px;
         }
-
         .hdr {
             background: #18181b;
             border-bottom: 1px solid #27272a;
@@ -404,9 +403,6 @@
             font-weight: 800;
             color: #f97316;
         }
-        .wktb.fus {
-            color: #3b82f6;
-        }
         .wd {
             display: flex;
             justify-content: space-between;
@@ -607,12 +603,6 @@
         .neg {
             color: #ef4444;
         }
-        .col-o {
-            color: #f97316;
-        }
-        .col-f {
-            color: #3b82f6;
-        }
         .empty {
             text-align: center;
             padding: 32px;
@@ -647,14 +637,13 @@
             <div class="hdr-sub" id="ecnt">0 Einträge</div>
         </div>
         <div class="tabs">
-            <button class="tb on" onclick="go('e')">Eintragen</button>
-            <button class="tb" onclick="go('k')">Konten</button>
-            <button class="tb" onclick="go('w')">Woche</button>
-            <button class="tb" onclick="go('m')">Monat</button>
-            <button class="tb" onclick="go('x')">Ausdruck</button>
+            <button class="tb on" data-tab="e">Eintragen</button>
+            <button class="tb" data-tab="k">Konten</button>
+            <button class="tb" data-tab="w">Woche</button>
+            <button class="tb" data-tab="m">Monat</button>
+            <button class="tb" data-tab="x">Ausdruck</button>
         </div>
 
-        <!-- EINTRAGEN -->
         <div class="sec on" id="sec-e">
             <div class="clk">
                 <div>
@@ -663,31 +652,30 @@
                 </div>
                 <div style="text-align:right">
                     <div style="font-size:11px;color:#71717a;margin-bottom:5px" id="clkd"></div>
-                    <button class="btn-sm" onclick="setNow()">← Als Ende</button>
+                    <button class="btn-sm" id="setNowBtn">← Als Ende</button>
                 </div>
             </div>
             <div class="card">
                 <div class="ct" id="ftit">Neuer Eintrag</div>
-                <div class="seg">
-                    <button class="sg on cn" id="tb-n" onclick="setT('n')">☀️ Normal</button>
-                    <button class="sg cn2" id="tb-nt" onclick="setT('nt')">🌙 Nacht</button>
-                    <button class="sg cu" id="tb-u" onclick="setT('u')">🏖️ Urlaub</button>
-                    <button class="sg co" id="tb-o" onclick="setT('o')">⚡ Überstunden</button>
-                    <button class="sg cs" id="tb-s" onclick="setT('s')">🌧️ Schlechtwetter</button>
-                    <button class="sg ch" id="tb-h" onclick="setT('h')">🌡️ Hitzefrei</button>
-                    <button class="sg cf" id="tb-f" onclick="setT('f')">🎉 Feiertag</button>
+                <div class="seg" id="typeSeg">
+                    <button class="sg on cn" data-type="n">☀️ Normal</button>
+                    <button class="sg cn2" data-type="nt">🌙 Nacht</button>
+                    <button class="sg cu" data-type="u">🏖️ Urlaub</button>
+                    <button class="sg co" data-type="o">⚡ Überstunden</button>
+                    <button class="sg cs" data-type="s">🌧️ Schlechtwetter</button>
+                    <button class="sg ch" data-type="h">🌡️ Hitzefrei</button>
+                    <button class="sg cf" data-type="f">🎉 Feiertag</button>
                 </div>
                 <div class="field"><label class="lbl">Datum</label><input type="date" id="fd"></div>
                 <div id="tfields">
                     <div class="row2">
-                        <div><label class="lbl">Von</label><input type="time" id="fs" value="07:00" oninput="uprev()"></div>
-                        <div><label class="lbl">Bis</label><input type="time" id="fe" value="15:30" oninput="uprev()"></div>
+                        <div><label class="lbl">Von</label><input type="time" id="fs" value="07:00"></div>
+                        <div><label class="lbl">Bis</label><input type="time" id="fe" value="15:30"></div>
                     </div>
-                    <div class="field"><label class="lbl">Pause (min)</label><input type="number" id="fp" value="30" min="0" max="180" step="5" oninput="uprev()">
-                    </div>
+                    <div class="field"><label class="lbl">Pause (min)</label><input type="number" id="fp" value="30" min="0" max="180" step="5"></div>
                     <div id="nf-row" style="display:none" class="field">
                         <label class="lbl">Nachtzuschlag-Faktor (20–05 Uhr)</label>
-                        <select id="nf" onchange="uprev()">
+                        <select id="nf">
                             <option value="1.25">1,25×</option>
                             <option value="1.5">1,5×</option>
                             <option value="2" selected>2×</option>
@@ -696,12 +684,11 @@
                 </div>
                 <div class="pvb" id="pvb"></div>
                 <div class="field"><label class="lbl">Bemerkung (optional)</label><input type="text" id="fn" placeholder="z.B. Baustelle Dornbirn"></div>
-                <button class="btn btn-o" id="sbtn" onclick="saveE()">Speichern</button>
-                <button class="btn btn-s" id="cbtn" onclick="cancelE()" style="display:none">Abbrechen</button>
+                <button class="btn btn-o" id="sbtn">Speichern</button>
+                <button class="btn btn-s" id="cbtn" style="display:none">Abbrechen</button>
             </div>
         </div>
 
-        <!-- KONTEN -->
         <div class="sec" id="sec-k">
             <div class="konto k-aps" id="aps-konto">
                 <div class="kl aps" id="aps-label">APS – Überstundenkonto</div>
@@ -722,11 +709,11 @@
             <div class="card">
                 <div class="ct-sm">⚙️ Einstellungen</div>
                 <div class="row2">
-                    <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="20" max="60" step="0.5" oninput="saveSett();rkonten()"></div>
-                    <div><label class="lbl">Urlaubstage (Start)</label><input type="number" id="url-start" value="5" min="0" step="0.5" oninput="saveSett();rkonten()"></div>
+                    <div><label class="lbl">Sollstunden/Woche</label><input type="number" id="soll" value="40" min="20" max="60" step="0.5"></div>
+                    <div><label class="lbl">Urlaubstage (Start)</label><input type="number" id="url-start" value="5" min="0" step="0.5"></div>
                 </div>
-                <div class="field"><label class="lbl">Urlaubszählung ab (+1 Tag / 2 Wochen)</label><input type="date" id="url-from" oninput="saveSett();rkonten()"></div>
-                <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsüberstunden (h)</label><input type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5" oninput="saveSett();rkonten()"></div>
+                <div class="field"><label class="lbl">Urlaubszählung ab (+1 Tag / 2 Wochen)</label><input type="date" id="url-from"></div>
+                <div class="field" style="margin-bottom:0"><label class="lbl">APS-Anfangsüberstunden (h)</label><input type="number" id="aps-start-val" value="7" min="0" max="8" step="0.5"></div>
             </div>
             <div class="card">
                 <div class="ct-sm">Diese Woche</div>
@@ -734,456 +721,513 @@
             </div>
         </div>
 
-        <!-- WOCHE -->
         <div class="sec" id="sec-w">
             <div class="wnav">
-                <button class="wnb" onclick="prevWeek()">‹</button>
+                <button class="wnb" id="prevWeekBtn">‹</button>
                 <div class="wnl" id="wnl"></div>
-                <button class="wnb" onclick="nextWeek()">›</button>
+                <button class="wnb" id="nextWeekBtn">›</button>
             </div>
             <div id="wbox"></div>
         </div>
 
-        <!-- MONAT -->
         <div class="sec" id="sec-m">
             <div class="wnav">
-                <button class="wnb" onclick="prevMonth()">‹</button>
+                <button class="wnb" id="prevMonthBtn">‹</button>
                 <div class="wnl" id="mnl"></div>
-                <button class="wnb" onclick="nextMonth()">›</button>
+                <button class="wnb" id="nextMonthBtn">›</button>
             </div>
             <div id="mbox"></div>
         </div>
 
-        <!-- AUSDRUCK -->
         <div class="sec" id="sec-x">
             <div class="card">
                 <div class="ct">Stundenzettel</div>
                 <div class="field"><label class="lbl">Monat</label>
-                    <select id="xmon" onchange="rxp()"><option value="">Alle</option></select>
+                    <select id="xmon"><option value="">Alle</option></select>
                 </div>
-                <div class="seg" style="margin-bottom:10px">
-                    <button class="sg on cn" id="xv-aps" onclick="setXV('aps')">🟠 APS</button>
-                    <button class="sg cf" id="xv-fus" onclick="setXV('fus')">🔵 Fussenegger</button>
+                <div class="seg" style="margin-bottom:10px" id="xvSeg">
+                    <button class="sg on cn" data-xv="aps">🟠 APS</button>
+                    <button class="sg cf" data-xv="fus">🔵 Fussenegger</button>
                 </div>
                 <div id="xview"></div>
             </div>
             <div class="card" style="border-color:#3f3f46">
                 <div class="ct-sm">Datensicherung</div>
                 <p style="font-size:11px;color:#71717a;margin-bottom:10px">Einträge lokal gespeichert — regelmäßig exportieren!</p>
-                <button class="btn-sm" onclick="doExp()">💾 JSON exportieren</button>
+                <button class="btn-sm" id="exportBtn">💾 JSON exportieren</button>
             </div>
         </div>
     </div>
     <div id="print-area"></div>
 
     <script>
-        (function() {
-            const SK = 'zt_v6';
-            const SS = 'zt_s6';
-            const DY = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-            const DMS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-            const DML = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-            const INTERN_TYPES = ['u', 's', 'h', 'f'];
-            const OT_MINS = 8 * 60;
-            const APS_MAX = 8 * 60;
-            const APS_WEEK_CAP = 39 * 60;
+    (function() {
+        // ────────────────────────────────────────
+        // STORAGE & STATE
+        // ────────────────────────────────────────
+        const SK = 'zt_v7', SS = 'zt_s7';
+        let D = {};
+        let S = { soll: 40, urlStart: 5, urlFrom: '', apsStart: 7, apsFull: false, apsFullDate: '' };
+        let currentType = 'n';
+        let weekOffset = 0;
+        let monthOffset = 0;
+        let xView = 'aps';
+        let editingKey = null;
 
-            const TINFO = {
-                n: { dot: 'dot-n', col: 'col-n', tag: 'et-n', lbl: 'Normal' },
-                nt: { dot: 'dot-nt', col: 'col-nt', tag: 'et-nt', lbl: 'Nacht' },
-                u: { dot: 'dot-u', col: 'col-u', tag: 'et-u', lbl: 'Urlaub' },
-                o: { dot: 'dot-o', col: 'col-o', tag: 'et-o', lbl: 'Überstunden' },
-                s: { dot: 'dot-s', col: 'col-s', tag: 'et-s', lbl: 'Schlechtwetter' },
-                h: { dot: 'dot-h', col: 'col-h', tag: 'et-h', lbl: 'Hitzefrei' },
-                f: { dot: 'dot-f', col: 'col-f', tag: 'et-f', lbl: 'Feiertag' },
-            };
+        const mem = {};
+        const st = {
+            g: k => { try { return localStorage.getItem(k) } catch { return mem[k] ?? null; } },
+            s: (k, v) => { try { localStorage.setItem(k, v) } catch {} mem[k] = v; }
+        };
 
-            let D = {};
-            let S = { soll: 40, urlStart: 5, urlFrom: '', apsStart: 7, apsFull: false, apsFullDate: '' };
-            let eT = 'n';
-            let wOff = 0, mOff = 0;
-            let xView = 'aps';
-            let editK = null;
+        function loadD() { try { D = JSON.parse(st.g(SK)) || {}; } catch { D = {}; } }
+        function saveD() { st.s(SK, JSON.stringify(D)); }
+        function loadS() {
+            try { const s = JSON.parse(st.g(SS)); if (s) Object.assign(S, s); } catch {}
+            document.getElementById('soll').value = S.soll;
+            document.getElementById('url-start').value = S.urlStart;
+            document.getElementById('url-from').value = S.urlFrom || '';
+            document.getElementById('aps-start-val').value = S.apsStart;
+        }
+        function saveSett() {
+            S.soll = parseFloat(document.getElementById('soll').value) || 40;
+            S.urlStart = parseFloat(document.getElementById('url-start').value) || 5;
+            S.urlFrom = document.getElementById('url-from').value || '';
+            S.apsStart = parseFloat(document.getElementById('aps-start-val').value) || 7;
+            st.s(SS, JSON.stringify(S));
+        }
 
-            const mem = {};
-            const st = {
-                g: k => { try { return localStorage.getItem(k) } catch { return mem[k] ?? null } },
-                s: (k, v) => { try { localStorage.setItem(k, v) } catch {} mem[k] = v }
-            };
+        // ────────────────────────────────────────
+        // HELPERS
+        // ────────────────────────────────────────
+        const pad = n => String(n).padStart(2, '0');
+        const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+        const toM = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+        const fmt = m => {
+            if (m == null || isNaN(m)) return '–';
+            const abs = Math.abs(m);
+            const h = Math.floor(abs/60), mn = Math.round(abs%60);
+            let s = mn ? `${h}h ${mn}min` : `${h}h`;
+            return m < 0 ? '−' + s : s;
+        };
+        const DY = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+        const DMS = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+        const DML = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+        const INTERN_TYPES = ['u','s','h','f'];
+        const OT_MINS = 8*60;
+        const APS_MAX = 8*60;
+        const APS_WEEK_CAP = 39*60;
+        const TINFO = {
+            n:  { dot:'dot-n',  col:'col-n',  tag:'et-n',  lbl:'Normal' },
+            nt: { dot:'dot-nt', col:'col-nt', tag:'et-nt', lbl:'Nacht' },
+            u:  { dot:'dot-u',  col:'col-u',  tag:'et-u',  lbl:'Urlaub' },
+            o:  { dot:'dot-o',  col:'col-o',  tag:'et-o',  lbl:'Überstunden' },
+            s:  { dot:'dot-s',  col:'col-s',  tag:'et-s',  lbl:'Schlechtwetter' },
+            h:  { dot:'dot-h',  col:'col-h',  tag:'et-h',  lbl:'Hitzefrei' },
+            f:  { dot:'dot-f',  col:'col-f',  tag:'et-f',  lbl:'Feiertag' }
+        };
 
-            function loadD() { try { D = JSON.parse(st.g(SK)) || {} } catch { D = {} } }
-            function saveD() { st.s(SK, JSON.stringify(D)) }
-            function loadS() {
-                try { const s = JSON.parse(st.g(SS)); if (s) Object.assign(S, s) } catch {}
-                document.getElementById('soll').value = S.soll;
-                document.getElementById('url-start').value = S.urlStart;
-                document.getElementById('url-from').value = S.urlFrom || '';
-                document.getElementById('aps-start-val').value = S.apsStart;
-            }
-            function saveSett() {
-                S.soll = parseFloat(document.getElementById('soll').value) || 40;
-                S.urlStart = parseFloat(document.getElementById('url-start').value) || 5;
-                S.urlFrom = document.getElementById('url-from').value || '';
-                S.apsStart = parseFloat(document.getElementById('aps-start-val').value) || 7;
-                st.s(SS, JSON.stringify(S));
-            }
+        function ddisp(s) { const d = new Date(s+'T12:00:00'); return `${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}`; }
+        function span(a,b) { let s=toM(a), e=toM(b); if(e<=s) e+=1440; return e-s; }
+        function nightAdj(a,b,p,f) {
+            let s=toM(a), e=toM(b); if(e<=s) e+=1440;
+            const tot=e-s; if(!tot) return {net:0,nMin:0,dMin:0};
+            let nRaw=0;
+            for(let d=-1;d<=1;d++){const ws=d*1440+1200,we=d*1440+1740;nRaw+=Math.max(0,Math.min(e,we)-Math.max(s,ws));}
+            nRaw=Math.min(tot,nRaw);const dRaw=tot-nRaw;
+            const nNet=Math.max(0,nRaw-p*(nRaw/tot)),dNet=Math.max(0,dRaw-p*(dRaw/tot));
+            return {net:dNet+nNet*f,nMin:nNet,dMin:dNet};
+        }
+        function isoWk(s) {
+            const d=new Date(s+'T12:00:00'),t=new Date(d);
+            t.setDate(d.getDate()-((d.getDay()+6)%7)+3);
+            const y=t.getFullYear(),j=new Date(y,0,1);
+            j.setDate(j.getDate()-((j.getDay()+6)%7)+3);
+            return `${y}-W${pad(1+Math.round((t-j)/604800000))}`;
+        }
+        function wkMon(y,w) {
+            const j=new Date(y,0,1);j.setDate(j.getDate()-((j.getDay()+6)%7)+3);
+            const t=new Date(j);t.setDate(j.getDate()+(w-1)*7);t.setDate(t.getDate()-3);return t;
+        }
+        function wkLabel(k) {
+            const [ys,ws]=k.split('-W');const w=parseInt(ws),y=parseInt(ys);
+            const m=wkMon(y,w),su=new Date(m);su.setDate(m.getDate()+6);
+            return m.getMonth()===su.getMonth()?`${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}`:`${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
+        }
+        const keys = () => Object.keys(D).sort();
 
-            const pad = n => String(n).padStart(2, '0');
-            const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-            const toM = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m };
-            const fmt = m => {
-                if (!m && m !== 0) return '–';
-                const h = Math.floor(Math.abs(m) / 60), mn = Math.round(Math.abs(m) % 60);
-                return (m < 0 ? '−' : '') + (mn ? `${h}h ${mn}min` : `${h}h`);
-            };
+        function calcOT() {
+            const soll=S.soll*60;
+            const byWk={};
+            keys().forEach(k=>{
+                const e=D[k];const wk=isoWk(k);
+                if(!byWk[wk]) byWk[wk]=0;
+                if(e.type==='o') byWk[wk]+=OT_MINS;
+                else if(e.type==='n'||e.type==='nt') byWk[wk]+=(e.net||0);
+            });
+            const totalOT=Object.values(byWk).reduce((s,wIst)=>s+Math.max(0,wIst-soll),0);
+            const apsStart=S.apsStart*60;
+            const aps=S.apsFull?APS_MAX:Math.min(apsStart+totalOT,APS_MAX);
+            const fus=S.apsFull?(apsStart+totalOT):Math.max(0,totalOT-(APS_MAX-apsStart));
+            return {totalOT,aps,fus,byWk};
+        }
+        function calcUrl() {
+            let auto=0;
+            if(S.urlFrom){
+                const from=new Date(S.urlFrom+'T12:00:00'),now=new Date();
+                const diffMs=now-from;if(diffMs>0) auto=Math.floor(diffMs/(14*86400000));
+            }
+            const used=keys().filter(k=>D[k].type==='u').length;
+            return {saldo:S.urlStart+auto-used,auto,used};
+        }
 
-            function ddisp(s) { const d = new Date(s + 'T12:00:00'); return `${DY[d.getDay()]}, ${d.getDate()}. ${DMS[d.getMonth()]} ${d.getFullYear()}` }
-            function span(a, b) { let s = toM(a), e = toM(b); if (e <= s) e += 1440; return e - s }
-            function nightAdj(a, b, p, f) {
-                let s = toM(a), e = toM(b); if (e <= s) e += 1440;
-                const tot = e - s; if (!tot) return { net: 0, nMin: 0, dMin: 0 };
-                let nRaw = 0;
-                for (let d = -1; d <= 1; d++) { const ws = d * 1440 + 1200, we = d * 1440 + 1740; nRaw += Math.max(0, Math.min(e, we) - Math.max(s, ws)) }
-                nRaw = Math.min(tot, nRaw); const dRaw = tot - nRaw;
-                const nNet = Math.max(0, nRaw - p * (nRaw / tot)), dNet = Math.max(0, dRaw - p * (dRaw / tot));
-                return { net: dNet + nNet * f, nMin: nNet, dMin: dNet };
-            }
-            function isoWk(s) {
-                const d = new Date(s + 'T12:00:00'), t = new Date(d);
-                t.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
-                const y = t.getFullYear(), j = new Date(y, 0, 1);
-                j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
-                return `${y}-W${pad(1+Math.round((t-j)/604800000))}`;
-            }
-            function wkMon(y, w) {
-                const j = new Date(y, 0, 1); j.setDate(j.getDate() - ((j.getDay() + 6) % 7) + 3);
-                const t = new Date(j); t.setDate(j.getDate() + (w - 1) * 7); t.setDate(t.getDate() - 3);
-                return t;
-            }
-            function wkLabel(k) {
-                const [ys, ws] = k.split('-W'); const w = parseInt(ws), y = parseInt(ys);
-                const m = wkMon(y, w), su = new Date(m); su.setDate(m.getDate() + 6);
-                return m.getMonth() === su.getMonth() ? `${m.getDate()}.–${su.getDate()}. ${DMS[m.getMonth()]} ${su.getFullYear()}` : `${m.getDate()}. ${DMS[m.getMonth()]} – ${su.getDate()}. ${DMS[su.getMonth()]} ${su.getFullYear()}`;
-            }
-            const keys = () => Object.keys(D).sort();
+        // ────────────────────────────────────────
+        // UI UPDATES
+        // ────────────────────────────────────────
+        function tick() {
+            const n=new Date();
+            document.getElementById('clkt').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
+            document.getElementById('clkd').textContent=`${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
+        }
+        function updCounter() { document.getElementById('ecnt').textContent=`${Object.keys(D).length} Einträge`; }
 
-            function calcOT() {
-                const soll = S.soll * 60;
-                const byWk = {};
-                keys().forEach(k => {
-                    const e = D[k]; const wk = isoWk(k);
-                    if (!byWk[wk]) byWk[wk] = 0;
-                    if (e.type === 'o') byWk[wk] += OT_MINS;
-                    else if (e.type === 'n' || e.type === 'nt') byWk[wk] += (e.net || 0);
-                });
-                const totalOT = Object.values(byWk).reduce((s, wIst) => s + Math.max(0, wIst - soll), 0);
-                const apsStart = S.apsStart * 60;
-                const aps = S.apsFull ? APS_MAX : Math.min(apsStart + totalOT, APS_MAX);
-                const fus = S.apsFull ? (apsStart + totalOT) : Math.max(0, totalOT - (APS_MAX - apsStart));
-                return { totalOT, aps, fus, byWk };
+        function updatePreview() {
+            const box=document.getElementById('pvb');
+            if(currentType==='o'){box.innerHTML='⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme)';return;}
+            if(INTERN_TYPES.includes(currentType)){box.innerHTML=`${TINFO[currentType]?.lbl||currentType}: <strong>firmenintern verrechnet</strong>`;return;}
+            const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
+            if(!a||!b){box.innerHTML='Netto: <strong>–</strong>';return;}
+            if(currentType==='nt'){
+                const f=parseFloat(document.getElementById('nf').value)||2,r=nightAdj(a,b,p,f);
+                box.innerHTML=`Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:10px;color:#a1a1aa">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
+            }else{
+                box.innerHTML=`Netto: <strong>${fmt(Math.max(0,span(a,b)-p))}</strong>`;
             }
-            function calcUrl() {
-                let auto = 0;
-                if (S.urlFrom) {
-                    const from = new Date(S.urlFrom + 'T12:00:00'), now = new Date();
-                    const diffMs = now - from; if (diffMs > 0) auto = Math.floor(diffMs / (14 * 86400000));
+        }
+
+        function resetForm() {
+            document.getElementById('fd').value=iso(new Date());
+            document.getElementById('fs').value='07:00';document.getElementById('fe').value='15:30';
+            document.getElementById('fp').value='30';document.getElementById('fn').value='';
+            document.getElementById('nf').value='2';
+            document.getElementById('ftit').textContent='Neuer Eintrag';
+            document.getElementById('sbtn').textContent='Speichern';
+            document.getElementById('cbtn').style.display='none';
+            editingKey=null;
+            setType('n');
+            updatePreview();
+        }
+
+        function setType(t) {
+            currentType=t;
+            document.querySelectorAll('#typeSeg .sg').forEach(b=>b.classList.remove('on'));
+            document.querySelector(`#typeSeg .sg[data-type="${t}"]`)?.classList.add('on');
+            const needTime=t==='n'||t==='nt';
+            document.getElementById('tfields').style.display=needTime?'block':'none';
+            document.getElementById('nf-row').style.display=t==='nt'?'block':'none';
+            updatePreview();
+        }
+
+        function startEdit(dateKey) {
+            const e=D[dateKey];if(!e)return;
+            editingKey=dateKey;
+            document.getElementById('fd').value=dateKey;
+            document.getElementById('fn').value=e.note||'';
+            if(e.type==='n'){document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;}
+            else if(e.type==='nt'){document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;document.getElementById('nf').value=String(e.factor||2);}
+            setType(e.type);
+            document.getElementById('ftit').textContent='Bearbeiten';
+            document.getElementById('sbtn').textContent='Aktualisieren';
+            document.getElementById('cbtn').style.display='block';
+            switchTab('e');
+            window.scrollTo(0,0);
+        }
+
+        function saveEntry() {
+            const date=document.getElementById('fd').value,note=document.getElementById('fn').value.trim();
+            if(!date) return alert('Bitte Datum ausfüllen.');
+            const dd=new Date(date+'T12:00:00'),dow=dd.getDay();
+            const warns=[];
+            if(dow===0||dow===6) warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
+            if(D[date]&&date!==editingKey) warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
+            if(dd>new Date()&&date!==editingKey) warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
+            if(warns.length&&!confirm(warns.join('\n\n')+'\n\nSpeichern?')) return;
+
+            let entry;
+            if(currentType==='n'){
+                const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
+                if(!a||!b) return alert('Bitte Von und Bis ausfüllen.');
+                if(span(a,b)>14*60&&!confirm('Schicht über 14h — stimmt das?')) return;
+                entry={type:'n',start:a,end:b,pause:p,net:Math.max(0,span(a,b)-p),note};
+            }else if(currentType==='nt'){
+                const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
+                if(!a||!b) return alert('Bitte Von und Bis ausfüllen.');
+                const f=parseFloat(document.getElementById('nf').value)||2,r=nightAdj(a,b,p,f);
+                entry={type:'nt',start:a,end:b,pause:p,net:r.net,nMin:r.nMin,dMin:r.dMin,factor:f,note};
+            }else if(currentType==='o'){
+                entry={type:'o',net:OT_MINS,note};
+            }else{
+                entry={type:currentType,net:0,note};
+            }
+            D[date]=entry;saveD();resetForm();updCounter();checkApsFull();switchTab('k');updateKonten();
+        }
+
+        function deleteEntry(dateKey) {
+            if(!confirm(`${ddisp(dateKey)} löschen?`)) return;
+            delete D[dateKey];saveD();updCounter();updateKonten();
+            if(document.getElementById('sec-w').classList.contains('on')) renderWeek();
+            if(document.getElementById('sec-m').classList.contains('on')) renderMonth();
+        }
+
+        function checkApsFull() {
+            if(S.apsFull) return;
+            const ot=calcOT();
+            if(ot.aps>=APS_MAX){
+                S.apsFull=true;S.apsFullDate=iso(new Date());
+                st.s(SS,JSON.stringify(S));
+                setTimeout(()=>{alert('✅ APS-Konto voll (8h erreicht)! Ab jetzt gehen alle Überstunden an Fussenegger.');},200);
+            }
+        }
+
+        // ────────────────────────────────────────
+        // KONTEN
+        // ────────────────────────────────────────
+        function updateKonten() {
+            const ot=calcOT(),url=calcUrl(),soll=S.soll*60;
+            const apsKonto=document.getElementById('aps-konto'),apsLabel=document.getElementById('aps-label');
+            if(S.apsFull){
+                apsKonto.className='konto k-aps grau';apsLabel.className='kl grau';
+                apsLabel.textContent='APS – Überstundenkonto (abgeschlossen)';
+                document.getElementById('aps-h').textContent='0h';document.getElementById('aps-h').className='kh grau';
+                document.getElementById('aps-sub').textContent=`Voll seit ${S.apsFullDate||'—'} · alles → Fussenegger`;
+                document.getElementById('aps-bar').style.width='0%';
+            }else{
+                apsKonto.className='konto k-aps';apsLabel.className='kl aps';apsLabel.textContent='APS – Überstundenkonto';
+                document.getElementById('aps-h').textContent=fmt(ot.aps);document.getElementById('aps-h').className='kh aps';
+                document.getElementById('aps-sub').textContent=`von max. 8h (${Math.round(ot.aps/APS_MAX*100)}%)`;
+                document.getElementById('aps-bar').style.width=Math.min(100,ot.aps/APS_MAX*100)+'%';
+            }
+            document.getElementById('fus-h').textContent=fmt(ot.fus);
+            document.getElementById('url-h').textContent=`${Math.max(0,url.saldo)} Tage`;
+            document.getElementById('url-sub').textContent=`${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
+
+            const today=new Date(),mon=new Date(today);mon.setDate(today.getDate()-((today.getDay()+6)%7));
+            const dks=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dks.push(iso(d));}
+            const wIst=dks.reduce((s,k)=>{const e=D[k];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s;},0);
+            const diff=wIst-soll;
+            document.getElementById('k-week').innerHTML=`
+                <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
+                <div class="otrow"><div class="otl">Soll</div><span class="otv">${fmt(soll)}</span></div>
+                <div class="otrow"><div class="otl">Differenz</div><span class="otv ${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${fmt(diff)}</span></div>`;
+        }
+
+        // ────────────────────────────────────────
+        // WOCHE
+        // ────────────────────────────────────────
+        function renderWeek() {
+            const today=new Date(),tdi=iso(today);
+            const mon=new Date(today);mon.setDate(today.getDate()-((today.getDay()+6)%7)+weekOffset*7);
+            const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+            const wk=isoWk(iso(mon)),wn=parseInt(wk.split('-W')[1]);
+            document.getElementById('wnl').textContent=`KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
+            let h='<div class="wbox"><div class="wkhr"><span class="wkkw">KW '+wn+'</span></div>';
+            for(let i=0;i<7;i++){
+                const d=new Date(mon);d.setDate(mon.getDate()+i);
+                const dk=iso(d),e=D[dk],isWe=i>=5,isT=dk===tdi;
+                const ti=e?TINFO[e.type]:null;
+                let dotCls='dot-x',hStr='–',hCls='e',meta='';
+                if(e){
+                    dotCls=ti.dot;hCls=ti.col;
+                    if(e.type==='n'||e.type==='nt') hStr=fmt(e.net);
+                    else if(e.type==='o') hStr='8h';
+                    else hStr=ti.lbl;
+                    if(e.type==='n'||e.type==='nt') meta=`<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
                 }
-                const used = keys().filter(k => D[k].type === 'u').length;
-                const otUsed = keys().filter(k => D[k].type === 'o').length;
-                return { saldo: S.urlStart + auto - used, auto, used, otUsed };
+                h+=`<div class="wd${isWe?' we':''}${isT?' td':''}" data-date="${dk}">
+                    <div class="wdl"><div class="dot ${dotCls}"></div>
+                    <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}. ${DMS[d.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                    <span class="wdh ${hCls}">${hStr}</span>
+                    ${e?`<button class="del" data-del="${dk}">×</button>`:''}
+                    </div></div>`;
             }
+            h+='</div>';
+            document.getElementById('wbox').innerHTML=h;
+        }
 
-            function tick() {
-                const n = new Date();
-                document.getElementById('clkt').textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}`;
-                document.getElementById('clkd').textContent = `${DY[n.getDay()]}, ${n.getDate()}. ${DMS[n.getMonth()]}`;
-            }
-            function setNow() { const n = new Date(); document.getElementById('fe').value = `${pad(n.getHours())}:${pad(n.getMinutes())}`; uprev() }
-            function go(t) {
-                document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
-                document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
-                document.getElementById('sec-' + t).classList.add('on');
-                ['e','k','w','m','x'].forEach((id,i) => { if (id === t) document.querySelectorAll('.tb')[i].classList.add('on') });
-                if (t === 'k') rkonten();
-                if (t === 'w') rwv();
-                if (t === 'm') rmonth();
-                if (t === 'x') rxsel();
-            }
-            function setT(t) {
-                eT = t;
-                Object.keys(TINFO).forEach(x => { const el = document.getElementById('tb-'+x); if(el) el.classList.remove('on') });
-                document.getElementById('tb-'+t)?.classList.add('on');
-                const needTime = t === 'n' || t === 'nt';
-                document.getElementById('tfields').style.display = needTime ? 'block' : 'none';
-                document.getElementById('nf-row').style.display = t === 'nt' ? 'block' : 'none';
-                uprev();
-            }
-            function uprev() {
-                const box = document.getElementById('pvb');
-                if (eT === 'o') { box.innerHTML = '⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme, geht auf Überstundenkonto)'; return; }
-                if (INTERN_TYPES.includes(eT)) { box.innerHTML = `${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong> (keine Stundenberechnung)`; return; }
-                const a = document.getElementById('fs').value, b = document.getElementById('fe').value, p = parseInt(document.getElementById('fp').value) || 0;
-                if (!a || !b) { box.innerHTML = 'Netto: <strong>–</strong>'; return }
-                if (eT === 'nt') {
-                    const f = parseFloat(document.getElementById('nf').value) || 2, r = nightAdj(a,b,p,f);
-                    box.innerHTML = `Netto: <strong>${fmt(r.net)}</strong> <span style="font-size:10px;color:#a1a1aa">Tag ${fmt(r.dMin)} · Nacht ${fmt(r.nMin)} ×${f}</span>`;
-                } else {
-                    box.innerHTML = `Netto: <strong>${fmt(Math.max(0,span(a,b)-p))}</strong>`;
-                }
-            }
-            function saveE() {
-                const date = document.getElementById('fd').value, note = document.getElementById('fn').value.trim();
-                if (!date) return alert('Bitte Datum ausfüllen.');
-                const warns = [];
-                const dd = new Date(date + 'T12:00:00'), dow = dd.getDay();
-                if (dow === 0 || dow === 6) warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
-                if (D[date] && date !== editK) warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
-                if (dd > new Date() && date !== editK) warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
-                if (warns.length && !confirm(warns.join('\n\n')+'\n\nSpeichern?')) return;
-                let e;
-                if (eT === 'n') {
-                    const a = document.getElementById('fs').value, b = document.getElementById('fe').value, p = parseInt(document.getElementById('fp').value) || 0;
-                    if (!a || !b) return alert('Bitte Von und Bis ausfüllen.');
-                    if (span(a,b) > 14*60 && !confirm('Schicht über 14h — stimmt das?')) return;
-                    e = { type:'n', start:a, end:b, pause:p, net: Math.max(0,span(a,b)-p), note };
-                } else if (eT === 'nt') {
-                    const a = document.getElementById('fs').value, b = document.getElementById('fe').value, p = parseInt(document.getElementById('fp').value) || 0;
-                    if (!a || !b) return alert('Bitte Von und Bis ausfüllen.');
-                    const f = parseFloat(document.getElementById('nf').value) || 2, r = nightAdj(a,b,p,f);
-                    e = { type:'nt', start:a, end:b, pause:p, net:r.net, nMin:r.nMin, dMin:r.dMin, factor:f, note };
-                } else if (eT === 'o') {
-                    e = { type:'o', net:OT_MINS, note };
-                } else {
-                    e = { type:eT, net:0, note };
-                }
-                D[date] = e; saveD(); editK = null; resetF(); upd(); checkApsFull(); go('k');
-            }
-            function checkApsFull() {
-                if (S.apsFull) return;
-                const ot = calcOT();
-                if (ot.aps >= APS_MAX) { S.apsFull = true; S.apsFullDate = iso(new Date()); st.s(SS, JSON.stringify(S)); setTimeout(() => { alert('✅ APS-Konto voll (8h erreicht)! Ab jetzt gehen alle Überstunden an Fussenegger.'); }, 200); }
-            }
-            function cancelE() { editK = null; resetF() }
-            function resetF() {
-                document.getElementById('fd').value = iso(new Date());
-                document.getElementById('fs').value = '07:00'; document.getElementById('fe').value = '15:30';
-                document.getElementById('fp').value = '30'; document.getElementById('fn').value = '';
-                document.getElementById('nf').value = '2';
-                document.getElementById('ftit').textContent = 'Neuer Eintrag';
-                document.getElementById('sbtn').textContent = 'Speichern';
-                document.getElementById('cbtn').style.display = 'none';
-                setT('n');
-            }
-            function startEdit(k) {
-                const e = D[k]; editK = k;
-                document.getElementById('fd').value = k; document.getElementById('fn').value = e.note || '';
-                if (e.type === 'n') { document.getElementById('fs').value = e.start; document.getElementById('fe').value = e.end; document.getElementById('fp').value = e.pause; setT('n') }
-                else if (e.type === 'nt') { document.getElementById('fs').value = e.start; document.getElementById('fe').value = e.end; document.getElementById('fp').value = e.pause; document.getElementById('nf').value = String(e.factor||2); setT('nt') }
-                else setT(e.type);
-                document.getElementById('ftit').textContent = 'Bearbeiten';
-                document.getElementById('sbtn').textContent = 'Aktualisieren';
-                document.getElementById('cbtn').style.display = 'block';
-                uprev(); go('e'); window.scrollTo(0,0);
-            }
-            function delE(k) { if (!confirm(`${ddisp(k)} löschen?`)) return; delete D[k]; saveD(); upd(); rkonten() }
-            function upd() { document.getElementById('ecnt').textContent = `${Object.keys(D).length} Einträge` }
+        function changeWeek(dir) { weekOffset+=dir; renderWeek(); }
 
-            function rkonten() {
-                const ot = calcOT(), url = calcUrl(), soll = S.soll*60;
-                const apsKonto = document.getElementById('aps-konto'), apsLabel = document.getElementById('aps-label');
-                if (S.apsFull) {
-                    apsKonto.className = 'konto k-aps grau'; apsLabel.className = 'kl grau'; apsLabel.textContent = 'APS – Überstundenkonto (abgeschlossen)';
-                    document.getElementById('aps-h').textContent = '0h'; document.getElementById('aps-h').className = 'kh grau';
-                    document.getElementById('aps-sub').textContent = `Voll seit ${S.apsFullDate||'—'} · alles → Fussenegger`;
-                    document.getElementById('aps-bar').style.width = '0%';
-                } else {
-                    apsKonto.className = 'konto k-aps'; apsLabel.className = 'kl aps'; apsLabel.textContent = 'APS – Überstundenkonto';
-                    document.getElementById('aps-h').textContent = fmt(ot.aps); document.getElementById('aps-h').className = 'kh aps';
-                    document.getElementById('aps-sub').textContent = `von max. 8h (${Math.round(ot.aps/APS_MAX*100)}%)`;
-                    document.getElementById('aps-bar').style.width = Math.min(100, ot.aps/APS_MAX*100) + '%';
-                }
-                document.getElementById('fus-h').textContent = fmt(ot.fus);
-                document.getElementById('url-h').textContent = `${Math.max(0,url.saldo)} Tage`;
-                document.getElementById('url-sub').textContent = `${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
-                const today = new Date(), mon = new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
-                const dks = []; for (let i=0;i<7;i++) { const d = new Date(mon); d.setDate(mon.getDate()+i); dks.push(iso(d)) }
-                const wIst = dks.reduce((s,k) => { const e = D[k]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
-                const diff = wIst - soll;
-                document.getElementById('k-week').innerHTML = `
-                    <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
-                    <div class="otrow"><div class="otl">Soll</div><span class="otv">${fmt(soll)}</span></div>
-                    <div class="otrow"><div class="otl">Differenz</div><span class="otv ${diff>=0?'pos':'neg'}">${diff>=0?'+':''}${fmt(diff)}</span></div>`;
-                document.getElementById('soll').value = S.soll;
-                document.getElementById('url-start').value = S.urlStart;
-                document.getElementById('url-from').value = S.urlFrom||'';
-                document.getElementById('aps-start-val').value = S.apsStart;
+        // ────────────────────────────────────────
+        // MONAT
+        // ────────────────────────────────────────
+        function renderMonth() {
+            const now=new Date(),y=now.getFullYear(),mo=now.getMonth()+monthOffset;
+            const d1=new Date(y,mo,1);const yr=d1.getFullYear(),mr=d1.getMonth();
+            document.getElementById('mnl').textContent=`${DML[mr]} ${yr}`;
+            const daysInMonth=new Date(yr,mr+1,0).getDate();
+            const byWk={};
+            for(let day=1;day<=daysInMonth;day++){
+                const dk=`${yr}-${pad(mr+1)}-${pad(day)}`;const wk=isoWk(dk);
+                if(!byWk[wk]) byWk[wk]=[];byWk[wk].push(dk);
             }
-
-            function rwv() {
-                const today = new Date(), tdi = iso(today);
-                const mon = new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7) + wOff*7);
-                const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-                const wk = isoWk(iso(mon)), wn = parseInt(wk.split('-W')[1]);
-                document.getElementById('wnl').textContent = `KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
-                let h = '<div class="wbox"><div class="wkhr"><span class="wkkw">KW '+wn+'</span></div>';
-                for (let i=0;i<7;i++) {
-                    const d = new Date(mon); d.setDate(mon.getDate()+i);
-                    const dk = iso(d), e = D[dk], isWe = i>=5, isT = dk===tdi;
-                    const ti = e?TINFO[e.type]:null;
-                    let dotCls='dot-x', hStr='–', hCls='e', meta='';
-                    if(e) {
-                        dotCls = ti.dot; hCls = ti.col;
-                        if(e.type==='n'||e.type==='nt') hStr = fmt(e.net);
-                        else if(e.type==='o') hStr = '8h';
-                        else hStr = ti.lbl;
-                        if(e.type==='n'||e.type==='nt') meta = `<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
+            let html='';
+            Object.keys(byWk).sort().forEach(wk=>{
+                const dks=byWk[wk];
+                const wIst=dks.reduce((s,k)=>{const e=D[k];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s;},0);
+                const wn=parseInt(wk.split('-W')[1]);
+                html+=`<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn} · ${wkLabel(wk)}</span><span class="wktb">${fmt(wIst)}</span></div>`;
+                dks.forEach(dk=>{
+                    const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
+                    const isWe=d.getDay()===0||d.getDay()===6;const isT=dk===iso(new Date());
+                    const ti=e?TINFO[e.type]:null;
+                    let dotCls='dot-x',hStr='–',hCls='e',meta='';
+                    if(e){
+                        dotCls=ti.dot;hCls=ti.col;
+                        if(e.type==='n'||e.type==='nt') hStr=fmt(e.net);
+                        else if(e.type==='o') hStr='8h';
+                        else hStr=ti.lbl;
+                        if(e.type==='n'||e.type==='nt') meta=`<div class="wdm">${e.start}–${e.end}</div>`;
                     }
-                    h += `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
+                    html+=`<div class="wd${isWe?' we':''}${isT?' td':''}" data-date="${dk}">
                         <div class="wdl"><div class="dot ${dotCls}"></div>
-                        <div><div class="wdn">${DY[(i+1)%7]}<span class="wddt">${d.getDate()}. ${DMS[d.getMonth()]}</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
+                        <div><div class="wdn">${dn}<span class="wddt">${d.getDate()}.</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
                         </div>
                         <div style="display:flex;align-items:center;gap:6px">
                         <span class="wdh ${hCls}">${hStr}</span>
-                        ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
+                        ${e?`<button class="del" data-del="${dk}">×</button>`:''}
                         </div></div>`;
-                }
-                h += '</div>'; document.getElementById('wbox').innerHTML = h;
-            }
-
-            function rmonth() {
-                const now = new Date(), y = now.getFullYear(), mo = now.getMonth() + mOff;
-                const d1 = new Date(y, mo, 1); const yr = d1.getFullYear(), mr = d1.getMonth();
-                document.getElementById('mnl').textContent = `${DML[mr]} ${yr}`;
-                const daysInMonth = new Date(yr, mr+1, 0).getDate();
-                const byWk = {};
-                for (let day=1; day<=daysInMonth; day++) {
-                    const dk = `${yr}-${pad(mr+1)}-${pad(day)}`; const wk = isoWk(dk);
-                    if (!byWk[wk]) byWk[wk] = []; byWk[wk].push(dk);
-                }
-                let html = '';
-                Object.keys(byWk).sort().forEach(wk => {
-                    const dks = byWk[wk];
-                    const wIst = dks.reduce((s,k) => { const e = D[k]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
-                    const wn = parseInt(wk.split('-W')[1]);
-                    html += `<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn} · ${wkLabel(wk)}</span><span class="wktb">${fmt(wIst)}</span></div>`;
-                    dks.forEach(dk => {
-                        const e = D[dk]; const d = new Date(dk+'T12:00:00'); const dn = DY[d.getDay()];
-                        const isWe = d.getDay()===0||d.getDay()===6; const isT = dk===iso(new Date());
-                        const ti = e?TINFO[e.type]:null;
-                        let dotCls='dot-x', hStr='–', hCls='e', meta='';
-                        if(e) {
-                            dotCls = ti.dot; hCls = ti.col;
-                            if(e.type==='n'||e.type==='nt') hStr = fmt(e.net);
-                            else if(e.type==='o') hStr = '8h';
-                            else hStr = ti.lbl;
-                            if(e.type==='n'||e.type==='nt') meta = `<div class="wdm">${e.start}–${e.end}</div>`;
-                        }
-                        html += `<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
-                            <div class="wdl"><div class="dot ${dotCls}"></div>
-                            <div><div class="wdn">${dn}<span class="wddt">${d.getDate()}.</span>${e?`<span class="etag ${ti.tag}">${ti.lbl}</span>`:''}</div>${meta}</div>
-                            </div>
-                            <div style="display:flex;align-items:center;gap:6px">
-                            <span class="wdh ${hCls}">${hStr}</span>
-                            ${e?`<button class="del" onclick="event.stopPropagation();delE('${dk}')">×</button>`:''}
-                            </div></div>`;
-                    });
-                    html += '</div>';
                 });
-                document.getElementById('mbox').innerHTML = html || '<div class="empty">Keine Tage in diesem Monat.</div>';
-            }
+                html+='</div>';
+            });
+            document.getElementById('mbox').innerHTML=html||'<div class="empty">Keine Tage in diesem Monat.</div>';
+        }
 
-            function setXV(v) { xView=v; document.getElementById('xv-aps').classList.toggle('on',v==='aps'); document.getElementById('xv-fus').classList.toggle('on',v==='fus'); rxp(); }
-            function rxsel() {
-                const sel = document.getElementById('xmon'); const cur = sel.value;
-                const months = [...new Set(keys().map(k=>k.slice(0,7)))].sort((a,b)=>b.localeCompare(a));
-                sel.innerHTML = '<option value="">Alle</option>';
-                months.forEach(m => {
-                    const [y,mo] = m.split('-'); const op = document.createElement('option');
-                    op.value = m; op.textContent = `${DML[parseInt(mo)-1]} ${y}`; if(m===cur) op.selected=true; sel.appendChild(op);
+        function changeMonth(dir) { monthOffset+=dir; renderMonth(); }
+
+        // ────────────────────────────────────────
+        // AUSDRUCK
+        // ────────────────────────────────────────
+        function setXV(v) {
+            xView=v;
+            document.querySelectorAll('#xvSeg .sg').forEach(b=>b.classList.toggle('on',b.dataset.xv===v));
+            renderXView();
+        }
+        function populateXMonth() {
+            const sel=document.getElementById('xmon');const cur=sel.value;
+            const months=[...new Set(keys().map(k=>k.slice(0,7)))].sort((a,b)=>b.localeCompare(a));
+            sel.innerHTML='<option value="">Alle</option>';
+            months.forEach(m=>{
+                const [y,mo]=m.split('-');const op=document.createElement('option');
+                op.value=m;op.textContent=`${DML[parseInt(mo)-1]} ${y}`;if(m===cur)op.selected=true;
+                sel.appendChild(op);
+            });
+            renderXView();
+        }
+        function renderXView() {
+            const el=document.getElementById('xview');const monFilter=document.getElementById('xmon').value;
+            if(!monFilter){el.innerHTML='<div class="empty">Bitte Monat auswählen.</div>';return;}
+            const [y,mo]=monFilter.split('-').map(Number);const daysInMonth=new Date(y,mo,0).getDate();
+            const monDays=[];for(let day=1;day<=daysInMonth;day++) monDays.push(`${monFilter}-${pad(day)}`);
+            const byWk={};monDays.forEach(dk=>{const wk=isoWk(dk);if(!byWk[wk])byWk[wk]=[];byWk[wk].push(dk);});
+            let h='';
+            if(xView==='aps'){
+                let totalAps=0;
+                Object.keys(byWk).sort().forEach(wk=>{
+                    const dks=byWk[wk];const wn=parseInt(wk.split('-W')[1]);
+                    const wIst=dks.reduce((s,dk)=>{const e=D[dk];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s;},0);
+                    const arbTage=dks.filter(dk=>{const e=D[dk];return e&&(e.type==='n'||e.type==='nt'||e.type==='o');});
+                    const ziel=Math.min(wIst,APS_WEEK_CAP);totalAps+=ziel;
+                    const nArb=arbTage.length||1;const proTag=Math.floor(ziel/nArb/15)*15;let rest=ziel-proTag*nArb;
+                    const tagH={};arbTage.forEach(dk=>{tagH[dk]=proTag+(rest>=15?(rest-=15,15):0);});
+                    h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#f97316">KW ${wn} · ${wkLabel(wk)}</span><span style="font-size:14px;font-weight:800;color:#f97316">${fmt(ziel)}</span></div>`;
+                    dks.forEach(dk=>{
+                        const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
+                        if(!e) h+=`<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
+                        else if(INTERN_TYPES.includes(e.type)){const ti=TINFO[e.type];h+=`<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`;}
+                        else h+=`<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700;color:#e4e4e7">${fmt(tagH[dk])}</span></div>`;
+                    });
+                    h+='</div>';
                 });
-                rxp();
-            }
-            function rxp() {
-                const el = document.getElementById('xview'); const monFilter = document.getElementById('xmon').value;
-                if (!monFilter) { el.innerHTML='<div class="empty">Bitte Monat auswählen.</div>'; return; }
-                const [y,mo] = monFilter.split('-').map(Number); const daysInMonth = new Date(y,mo,0).getDate();
-                const monDays = []; for (let day=1;day<=daysInMonth;day++) monDays.push(`${monFilter}-${pad(day)}`);
-                const byWk = {}; monDays.forEach(dk => { const wk = isoWk(dk); if(!byWk[wk]) byWk[wk]=[]; byWk[wk].push(dk); });
-                const soll = S.soll*60; let h='';
-                if (xView==='aps') {
-                    let totalAps=0;
-                    Object.keys(byWk).sort().forEach(wk => {
-                        const dks = byWk[wk]; const wn = parseInt(wk.split('-W')[1]);
-                        const wIst = dks.reduce((s,dk)=>{ const e=D[dk]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
-                        const arbTage = dks.filter(dk=>{ const e=D[dk]; return e&&(e.type==='n'||e.type==='nt'||e.type==='o'); });
-                        const internTage = dks.filter(dk=>{ const e=D[dk]; return e&&INTERN_TYPES.includes(e.type); });
-                        const leereTage = dks.filter(dk=>!D[dk]);
-                        if (wIst===0 && internTage.length===0 && leereTage.length===dks.length) return;
-                        const ziel = Math.min(wIst, APS_WEEK_CAP); totalAps += ziel;
-                        const nArb = arbTage.length||1; const proTag = Math.floor(ziel/nArb/15)*15; let rest = ziel - proTag*nArb;
-                        const tagH = {}; arbTage.forEach(dk => { tagH[dk] = proTag + (rest>=15?(rest-=15,15):0); });
-                        h += `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                            <span style="font-size:11px;font-weight:700;color:#f97316">KW ${wn} · ${wkLabel(wk)}</span>
-                            <span style="font-size:14px;font-weight:800;color:#f97316">${fmt(ziel)}</span></div>`;
-                        dks.forEach(dk => {
-                            const e = D[dk]; const d = new Date(dk+'T12:00:00'); const dn = DY[d.getDay()];
-                            if (!e) h += `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
-                            else if (INTERN_TYPES.includes(e.type)) { const ti = TINFO[e.type]; h += `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`; }
-                            else h += `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700;color:#e4e4e7">${fmt(tagH[dk])}</span></div>`;
-                        });
-                        h += '</div>';
+                h+=`<div class="card" style="background:rgba(249,115,22,.06);border-color:rgba(249,115,22,.25)"><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800"><span>Gesamt APS</span><span style="color:#f97316">${fmt(totalAps)}</span></div><div style="font-size:10px;color:#a1a1aa;margin-top:4px">Max. 39h/Woche · ${S.apsFull?'✅ APS-Konto voll':'⏳ APS-Konto noch offen'}</div></div>`;
+            }else{
+                Object.keys(byWk).sort().forEach(wk=>{
+                    const dks=byWk[wk];const wn=parseInt(wk.split('-W')[1]);
+                    const wIst=dks.reduce((s,dk)=>{const e=D[dk];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s;},0);
+                    h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#3b82f6">KW ${wn} · ${wkLabel(wk)}</span><span style="font-size:14px;font-weight:800;color:#3b82f6">${fmt(wIst)}</span></div>`;
+                    dks.forEach(dk=>{
+                        const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
+                        if(!e) h+=`<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
+                        else if(INTERN_TYPES.includes(e.type)){const ti=TINFO[e.type];h+=`<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`;}
+                        else{const hrs=e.type==='o'?OT_MINS:(e.net||0);const detail=e.type==='o'?'Überstunden-Tag':(e.type==='nt'?`${e.start}–${e.end} 🌙×${e.factor}`:`${e.start}–${e.end} · Pause ${e.pause}min`);h+=`<div class="xview-entry"><div><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><div style="font-size:9px;color:#52525b">${detail}</div></div><span style="font-weight:700;color:#e4e4e7">${fmt(hrs)}</span></div>`;}
                     });
-                    h += `<div class="card" style="background:rgba(249,115,22,.06);border-color:rgba(249,115,22,.25)"><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800"><span>Gesamt APS</span><span style="color:#f97316">${fmt(totalAps)}</span></div><div style="font-size:10px;color:#a1a1aa;margin-top:4px">Max. 39h/Woche · ${S.apsFull?'✅ APS-Konto voll':'⏳ APS-Konto noch offen'}</div></div>`;
-                } else {
-                    Object.keys(byWk).sort().forEach(wk => {
-                        const dks = byWk[wk]; const wn = parseInt(wk.split('-W')[1]);
-                        const wIst = dks.reduce((s,dk)=>{ const e=D[dk]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s },0);
-                        h += `<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#3b82f6">KW ${wn} · ${wkLabel(wk)}</span><span style="font-size:14px;font-weight:800;color:#3b82f6">${fmt(wIst)}</span></div>`;
-                        dks.forEach(dk => {
-                            const e = D[dk]; const d = new Date(dk+'T12:00:00'); const dn = DY[d.getDay()];
-                            if (!e) h += `<div class="xview-entry"><span style="color:#3f3f46">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3f3f46">–</span></div>`;
-                            else if (INTERN_TYPES.includes(e.type)) { const ti = TINFO[e.type]; h += `<div class="xview-entry"><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#a1a1aa">${ti.lbl}</span></div>`; }
-                            else {
-                                const hrs = e.type==='o'?OT_MINS:(e.net||0); const detail = e.type==='o'?'Überstunden-Tag':(e.type==='nt'?`${e.start}–${e.end} 🌙×${e.factor}`:`${e.start}–${e.end} · Pause ${e.pause}min`);
-                                h += `<div class="xview-entry"><div><span style="color:#a1a1aa">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><div style="font-size:9px;color:#52525b">${detail}</div></div><span style="font-weight:700;color:#e4e4e7">${fmt(hrs)}</span></div>`;
-                            }
-                        });
-                        h += '</div>';
-                    });
-                    const totalFus = Object.keys(byWk).reduce((s,wk)=>s+byWk[wk].reduce((ws,dk)=>{ const e=D[dk]; if(!e) return ws; if(e.type==='o') return ws+OT_MINS; if(e.type==='n'||e.type==='nt') return ws+(e.net||0); return ws },0),0);
-                    const ot = calcOT();
-                    h += `<div class="card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.18)"><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800"><span>Gesamt</span><span style="color:#3b82f6">${fmt(totalFus)}</span></div><div style="height:1px;background:#27272a;margin:8px 0"></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>→ APS</span><span style="color:#f97316;font-weight:700">${S.apsFull?'Abgeschlossen':fmt(ot.aps)}</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span>→ Fussenegger</span><span style="color:#3b82f6;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
-                }
-                el.innerHTML = h || '<div class="empty">Keine Einträge für diesen Monat.</div>';
+                    h+='</div>';
+                });
+                const totalFus=Object.keys(byWk).reduce((s,wk)=>s+byWk[wk].reduce((ws,dk)=>{const e=D[dk];if(!e)return ws;if(e.type==='o')return ws+OT_MINS;if(e.type==='n'||e.type==='nt')return ws+(e.net||0);return ws;},0),0);
+                const ot=calcOT();
+                h+=`<div class="card" style="background:rgba(59,130,246,.05);border-color:rgba(59,130,246,.18)"><div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800"><span>Gesamt</span><span style="color:#3b82f6">${fmt(totalFus)}</span></div><div style="height:1px;background:#27272a;margin:8px 0"></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>→ APS</span><span style="color:#f97316;font-weight:700">${S.apsFull?'Abgeschlossen':fmt(ot.aps)}</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span>→ Fussenegger</span><span style="color:#3b82f6;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
             }
-            function doExp() { const b = new Blob([JSON.stringify(D,null,2)],{type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `arbeitszeiten_${iso(new Date())}.json`; a.click(); }
+            el.innerHTML=h||'<div class="empty">Keine Einträge für diesen Monat.</div>';
+        }
+        function exportData() {
+            const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+            const a=document.createElement('a');a.href=URL.createObjectURL(b);
+            a.download=`arbeitszeiten_${iso(new Date())}.json`;a.click();
+        }
 
-            // Navigation buttons exposed globally
-            window.prevWeek = function() { wOff--; rwv(); };
-            window.nextWeek = function() { wOff++; rwv(); };
-            window.prevMonth = function() { mOff--; rmonth(); };
-            window.nextMonth = function() { mOff++; rmonth(); };
+        // ────────────────────────────────────────
+        // TAB SWITCHING
+        // ────────────────────────────────────────
+        function switchTab(t) {
+            document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+            document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+            document.getElementById('sec-'+t).classList.add('on');
+            document.querySelector(`.tb[data-tab="${t}"]`)?.classList.add('on');
+            if(t==='k') updateKonten();
+            if(t==='w') renderWeek();
+            if(t==='m') renderMonth();
+            if(t==='x') populateXMonth();
+        }
 
-            // Expose other needed functions
-            window.go = go;
-            window.setT = setT;
-            window.uprev = uprev;
-            window.saveE = saveE;
-            window.cancelE = cancelE;
-            window.startEdit = startEdit;
-            window.delE = delE;
-            window.setNow = setNow;
-            window.rkonten = rkonten;
-            window.rwv = rwv;
-            window.rmonth = rmonth;
-            window.setXV = setXV;
-            window.rxsel = rxsel;
-            window.rxp = rxp;
-            window.doExp = doExp;
-            window.saveSett = saveSett;
+        // ────────────────────────────────────────
+        // EVENT LISTENERS (delegation)
+        // ────────────────────────────────────────
+        document.querySelectorAll('.tb').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+        document.getElementById('typeSeg').addEventListener('click',e=>{
+            const btn=e.target.closest('.sg');if(!btn)return;setType(btn.dataset.type);
+        });
+        document.getElementById('sbtn').addEventListener('click',saveEntry);
+        document.getElementById('cbtn').addEventListener('click',resetForm);
+        document.getElementById('setNowBtn').addEventListener('click',()=>{
+            const n=new Date();document.getElementById('fe').value=`${pad(n.getHours())}:${pad(n.getMinutes())}`;updatePreview();
+        });
+        ['fs','fe','fp','nf'].forEach(id=>document.getElementById(id)?.addEventListener('input',updatePreview));
+        document.getElementById('prevWeekBtn').addEventListener('click',()=>changeWeek(-1));
+        document.getElementById('nextWeekBtn').addEventListener('click',()=>changeWeek(1));
+        document.getElementById('prevMonthBtn').addEventListener('click',()=>changeMonth(-1));
+        document.getElementById('nextMonthBtn').addEventListener('click',()=>changeMonth(1));
+        document.getElementById('xmon').addEventListener('change',renderXView);
+        document.getElementById('xvSeg').addEventListener('click',e=>{
+            const btn=e.target.closest('.sg');if(!btn)return;setXV(btn.dataset.xv);
+        });
+        document.getElementById('exportBtn').addEventListener('click',exportData);
+        ['soll','url-start','url-from','aps-start-val'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>{saveSett();updateKonten();}));
 
-            loadD(); loadS(); upd(); resetF(); tick(); setInterval(tick, 10000);
-        })();
+        // Delegation für Klicks auf Tage und Löschen-Buttons
+        document.getElementById('wbox').addEventListener('click',e=>{
+            const delBtn=e.target.closest('.del');if(delBtn){e.stopPropagation();deleteEntry(delBtn.dataset.del);renderWeek();return;}
+            const day=e.target.closest('.wd');if(day&&day.dataset.date) startEdit(day.dataset.date);
+        });
+        document.getElementById('mbox').addEventListener('click',e=>{
+            const delBtn=e.target.closest('.del');if(delBtn){e.stopPropagation();deleteEntry(delBtn.dataset.del);renderMonth();return;}
+            const day=e.target.closest('.wd');if(day&&day.dataset.date) startEdit(day.dataset.date);
+        });
+
+        // ────────────────────────────────────────
+        // INIT
+        // ────────────────────────────────────────
+        loadD();loadS();updCounter();resetForm();tick();setInterval(tick,10000);
+    })();
     </script>
 </body>
 </html>
