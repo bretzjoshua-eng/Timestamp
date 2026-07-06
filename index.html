@@ -94,7 +94,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .pos{color:#30D158}.neg{color:#FF453A}.col-o{color:#FF6B35}.col-f{color:#64D2FF}
 .empty{text-align:center;padding:32px;color:#48484A;font-size:14px}
 .xview-entry{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #2C2C2E;font-size:13px}
-.xview-entry.empty-day{opacity:.5}
+.xview-entry.empty-day{opacity:.6}
 #print-area{display:none}
 @media print{body{background:#fff!important;color:#000!important}#app{display:none!important}#print-area{display:block!important}}
 </style>
@@ -663,57 +663,86 @@ function rxp(){
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
       
-      const wIst=dks.reduce((s,dk)=>{
-        const e=D[dk];if(!e)return s;
-        if(e.type==='o')return s+OT_MINS;
-        if(e.type==='n'||e.type==='nt')return s+(e.net||0);
-        return s;
-      },0);
-      
-      // **NEUE LOGIK:** Verteile auf ALLE Mo-Fr Tage, auch ohne Eintrag
+      // Alle Tage der Woche mit Informationen
       const allDays=dks.map(dk=>{
         const d=new Date(dk+'T12:00:00');
         const dow=d.getDay();
         return{dk,dow,e:D[dk]};
       });
       
-      // Nur Mo–Fr + Arbeitstage am Wochenende
-      const verteilTage=allDays.filter(({dow,e})=>{
-        if(dow>=1&&dow<=5)return true; // Mo-Fr immer
-        if(e&&(e.type==='n'||e.type==='nt'||e.type==='o'))return true; // Sa/So nur wenn gearbeitet
+      // Tatsächliche Arbeitszeit der Woche (n, nt, o)
+      const wIst=dks.reduce((s,dk)=>{
+        const e=D[dk]; if(!e) return s;
+        if(e.type==='o') return s+OT_MINS;
+        if(e.type==='n'||e.type==='nt') return s+(e.net||0);
+        return s;
+      },0);
+      
+      // Tage für die Verteilung:
+      // Mo–Fr immer (außer interner Eintrag), Sa/So nur bei Arbeitseintrag
+      const verteilTage = allDays.filter(({dow, e}) => {
+        if (dow >= 1 && dow <= 5) return true; // Mo–Fr
+        if (e && (e.type === 'n' || e.type === 'nt' || e.type === 'o')) return true;
         return false;
       });
+      // Interne Einträge aus der Verteilung nehmen
+      const verteilbar = verteilTage.filter(({e}) => !e || !INTERN_TYPES.includes(e.type));
       
-      // Ausnahme: Tage mit Intern-Einträgen (u/s/h/f) nicht für Verteilung
-      const verteilbar=verteilTage.filter(({e})=>!e||!INTERN_TYPES.includes(e.type));
+      // Wenn keine Arbeit oder keine verteilbaren Tage -> nur interne anzeigen
+      if (wIst === 0 || verteilbar.length === 0) {
+        const hasIntern = allDays.some(({e}) => e && INTERN_TYPES.includes(e.type));
+        if (hasIntern) {
+          h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
+            <span style="font-size:14px;font-weight:800;color:#FF6B35">0h</span></div>`;
+          dks.forEach(dk=>{
+            const e=D[dk]; const d=new Date(dk+'T12:00:00'); const dn=DY[d.getDay()];
+            if(e && INTERN_TYPES.includes(e.type)){
+              const ti=TINFO[e.type];
+              h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
+            } else {
+              h+=`<div class="xview-entry empty-day"><span style="color:#3A3A3C">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3A3A3C">–</span></div>`;
+            }
+          });
+          h+='</div>';
+        }
+        return;
+      }
       
-      if(wIst===0&&verteilbar.length===0)return;
-      
-      const ziel=Math.min(wIst,soll);
-      const nVert=verteilbar.length||1;
-      const proTag=Math.floor(ziel/nVert/15)*15;
+      const ziel=Math.min(wIst, soll);
+      const nVert=verteilbar.length;
+      // 15-Minuten-Schritte
+      let proTag=Math.floor(ziel/nVert/15)*15;
       let rest=ziel-proTag*nVert;
       const tagH={};
-      verteilbar.forEach(({dk})=>{tagH[dk]=proTag+(rest>=15?(rest-=15,15):0)});
+      verteilbar.forEach(({dk})=>{
+        tagH[dk]=proTag + (rest>=15 ? (rest-=15, 15) : 0);
+      });
       
       h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
         <span style="font-size:14px;font-weight:800;color:#FF6B35">${fmt(ziel)}</span></div>`;
       
       dks.forEach(dk=>{
-        const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
-        if(INTERN_TYPES.includes(e?.type)){
+        const e=D[dk]; const d=new Date(dk+'T12:00:00'); const dn=DY[d.getDay()];
+        if(e && INTERN_TYPES.includes(e.type)){
           const ti=TINFO[e.type];
           h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
-        }else if(tagH[dk]!==undefined){
-          h+=`<div class="xview-entry${!e?' empty-day':''}"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="font-weight:700">${fmt(tagH[dk])}</span></div>`;
+        } else if(tagH[dk] !== undefined){
+          const isReal = e && (e.type==='n'||e.type==='nt'||e.type==='o');
+          const label = isReal ? '' : ' (verteilt)';
+          h+=`<div class="xview-entry${!e?' empty-day':''}"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}${label}</span><span style="font-weight:700">${fmt(tagH[dk])}</span></div>`;
+        } else {
+          h+=`<div class="xview-entry empty-day"><span style="color:#3A3A3C">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3A3A3C">–</span></div>`;
         }
       });
       h+='</div>';
     });
     
     const totalMon=Object.keys(byWk).reduce((s,wk)=>{
-      return s+Math.min(byWk[wk].reduce((ws,dk)=>{const e=D[dk];if(!e)return ws;if(e.type==='o')return ws+OT_MINS;if(e.type==='n'||e.type==='nt')return ws+(e.net||0);return ws},0),soll);
+      const dks=byWk[wk];
+      const wIst=dks.reduce((ws,dk)=>{const e=D[dk]; if(!e) return ws; if(e.type==='o') return ws+OT_MINS; if(e.type==='n'||e.type==='nt') return ws+(e.net||0); return ws;},0);
+      return s+Math.min(wIst, 39*60);
     },0);
     h+=`<div class="card" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.3)">
       <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
@@ -721,7 +750,7 @@ function rxp(){
       <div style="font-size:11px;color:#8E8E93;margin-top:4px">Max. 39h/Woche · ${S.apsStatus==='cleared'?'✅ Abgeschlossen':'⏳ '+S.apsStatus}</div></div>`;
       
   } else {
-    // Fussenegger
+    // Fussenegger (unverändert)
     Object.keys(byWk).sort().forEach(wk=>{
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
@@ -730,7 +759,7 @@ function rxp(){
         <span style="font-size:12px;font-weight:700;color:#64D2FF">KW ${wn}</span>
         <span style="font-size:14px;font-weight:800;color:#64D2FF">${fmt(wIst)}</span></div>`;
       dks.forEach(dk=>{
-        const e=D[dk];const d=new Date(dk+'T12:00:00');const dn=DY[d.getDay()];
+        const e=D[dk]; const d=new Date(dk+'T12:00:00'); const dn=DY[d.getDay()];
         if(!e){
           h+=`<div class="xview-entry"><span style="color:#3A3A3C">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3A3A3C">–</span></div>`;
         }else if(INTERN_TYPES.includes(e.type)){
