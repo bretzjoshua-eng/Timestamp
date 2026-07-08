@@ -239,11 +239,12 @@ const DML=['Januar','Februar','März','April','Mai','Juni','Juli','August','Sept
 const INTERN_TYPES=['u','s','h','f'];
 const OT_MINS=8*60;
 const APS_MAX=8*60;
+const MAX_DAY=7.8*60; // 468 min
 
 // ════════════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════════════
-let D={}, S={soll:40, urlStart:5, urlFrom:'', apsStart:7, apsStatus:'active', apsFullDate:'', apsClearedDate:''};
+let D={}, S={soll:40, urlStart:5, urlFrom:'', apsStart:7, apsStatus:'active', apsFullDate:'', apsClearedDate:'', fusAtClear:0, totalOT_at_clear:0};
 let eT='n', wOff=0, mOff=0, xView='aps', editK=null;
 
 // ════════════════════════════════════════════════════════
@@ -258,6 +259,9 @@ function loadD(){try{D=JSON.parse(st.g(SK))||{}}catch{D={}}}
 function saveD(){st.s(SK,JSON.stringify(D))}
 function loadS(){
   try{const s=JSON.parse(st.g(SS));if(s)Object.assign(S,s)}catch{}
+  // defaults für neue Felder
+  if (S.fusAtClear === undefined) S.fusAtClear = 0;
+  if (S.totalOT_at_clear === undefined) S.totalOT_at_clear = 0;
   document.getElementById('soll').value=S.soll;
   document.getElementById('url-start').value=S.urlStart;
   document.getElementById('url-from').value=S.urlFrom||'';
@@ -332,19 +336,22 @@ function calcOT(){
     else if(e.type==='n'||e.type==='nt')byWk[wk]+=e.net||0;
   });
   const totalOT=Object.values(byWk).reduce((s,wIst)=>s+Math.max(0,wIst-soll),0);
-  const apsStart=S.apsStart*60;
-  
-  if(S.apsStatus==='cleared'){
-    return{totalOT,aps:0,fus:apsStart+totalOT};
-  }else if(S.apsStatus==='full'){
-    const aps=APS_MAX;
-    const fus=Math.max(0,totalOT-(APS_MAX-apsStart));
-    return{totalOT,aps,fus};
-  }else{
-    const aps=Math.min(apsStart+totalOT,APS_MAX);
-    const fus=Math.max(0,totalOT-(APS_MAX-apsStart));
-    return{totalOT,aps,fus};
+  let aps, fus;
+  if (S.apsStatus==='cleared') {
+    aps=0;
+    const totalOT_current=totalOT;
+    const fusAtClear=S.fusAtClear||0;
+    const totalOT_at_clear=S.totalOT_at_clear||0;
+    fus=Math.max(0, fusAtClear + (totalOT_current - totalOT_at_clear));
+  } else if (S.apsStatus==='full') {
+    aps=APS_MAX;
+    fus=Math.max(0, totalOT - (APS_MAX - S.apsStart*60));
+  } else { // active
+    const apsStart=S.apsStart*60;
+    aps=Math.min(apsStart+totalOT, APS_MAX);
+    fus=Math.max(0, totalOT - (APS_MAX - apsStart));
   }
+  return {totalOT, aps, fus};
 }
 function calcUrl(){
   let auto=0;
@@ -419,6 +426,17 @@ function saveE(){
   if(warns.length&&!confirm(warns.join('\n\n')+'\n\nSpeichern?'))return;
   
   let e;
+  // Urlaub -> ggf. APS clearen
+  if(eT==='u' && S.apsStatus==='full' && S.apsStatus!=='cleared') {
+    const ot=calcOT();
+    S.apsStatus='cleared';
+    S.apsClearedDate=date;
+    S.fusAtClear=ot.fus;
+    S.totalOT_at_clear=ot.totalOT;
+    st.s(SS,JSON.stringify(S));
+    alert('✅ APS-Konto auf 0 gesetzt! Die bisherigen APS-Überstunden verschwinden und werden nicht zu Fussenegger übertragen.');
+  }
+  
   if(eT==='n'){
     const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
     if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
@@ -430,12 +448,7 @@ function saveE(){
     const f=parseFloat(document.getElementById('nf').value)||2,r=nightAdj(a,b,p,f);
     e={type:'nt',start:a,end:b,pause:p,net:r.net,nMin:r.nMin,dMin:r.dMin,factor:f,note};
   }else if(eT==='o'){
-    if(S.apsStatus==='full'&&!S.apsClearedDate){
-      S.apsClearedDate=date;
-      S.apsStatus='cleared';
-      st.s(SS,JSON.stringify(S));
-      alert('✅ APS-Konto auf 0 gesetzt! Alle Überstunden gehen ab jetzt an Fussenegger.');
-    }
+    // bei Überstunden-Tag kein Clearen (das passiert nur bei Urlaub)
     e={type:'o',net:OT_MINS,note};
   }else{
     e={type:eT,net:0,note};
@@ -658,12 +671,12 @@ function rxp(){
   
   let h='';
   if(xView==='aps'){
-    const soll=39*60;
+    const soll=39*60; // APS-Soll 39h/Woche
     Object.keys(byWk).sort().forEach(wk=>{
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
       
-      // Alle Tage der Woche mit Informationen
+      // Alle Tage mit Informationen
       const allDays=dks.map(dk=>{
         const d=new Date(dk+'T12:00:00');
         const dow=d.getDay();
@@ -678,57 +691,72 @@ function rxp(){
         return s;
       },0);
       
-      // Tage für die Verteilung:
-      // Mo–Fr immer (außer interner Eintrag), Sa/So nur bei Arbeitseintrag
-      const verteilTage = allDays.filter(({dow, e}) => {
-        if (dow >= 1 && dow <= 5) return true; // Mo–Fr
-        if (e && (e.type === 'n' || e.type === 'nt' || e.type === 'o')) return true;
+      // Tage mit echten Einträgen (n, nt, o) – ihre reale Arbeitszeit
+      const realDays = allDays.filter(({e}) => e && (e.type==='n'||e.type==='nt'||e.type==='o'));
+      const realSum = realDays.reduce((s, {dk}) => {
+        const e=D[dk];
+        if(e.type==='o') return s+OT_MINS;
+        return s+(e.net||0);
+      }, 0);
+      
+      // Freie Tage für Verteilung: Mo-Fr ohne Eintrag
+      const freeDays = allDays.filter(({dow, e}) => {
+        if (dow>=1 && dow<=5 && !e) return true; // Mo-Fr ohne Eintrag
         return false;
       });
-      // Interne Einträge aus der Verteilung nehmen
-      const verteilbar = verteilTage.filter(({e}) => !e || !INTERN_TYPES.includes(e.type));
       
-      // Wenn keine Arbeit oder keine verteilbaren Tage -> nur interne anzeigen
-      if (wIst === 0 || verteilbar.length === 0) {
-        const hasIntern = allDays.some(({e}) => e && INTERN_TYPES.includes(e.type));
-        if (hasIntern) {
-          h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
-            <span style="font-size:14px;font-weight:800;color:#FF6B35">0h</span></div>`;
-          dks.forEach(dk=>{
-            const e=D[dk]; const d=new Date(dk+'T12:00:00'); const dn=DY[d.getDay()];
-            if(e && INTERN_TYPES.includes(e.type)){
-              const ti=TINFO[e.type];
-              h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
-            } else {
-              h+=`<div class="xview-entry empty-day"><span style="color:#3A3A3C">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3A3A3C">–</span></div>`;
-            }
-          });
-          h+='</div>';
+      // Ziel: min(wIst, 39h)
+      const ziel = Math.min(wIst, soll);
+      let verbleibend = Math.max(0, ziel - realSum);
+      
+      // Verteilung auf freie Tage, max 468 min pro Tag
+      const nFree = freeDays.length;
+      const tagH = {};
+      // Für echte Tage setzen wir die echte Zeit
+      realDays.forEach(({dk}) => {
+        const e=D[dk];
+        tagH[dk] = (e.type==='o') ? OT_MINS : (e.net||0);
+      });
+      // Für freie Tage verteilen
+      if (nFree > 0 && verbleibend > 0) {
+        let maxPerDay = MAX_DAY;
+        // Verteile gleichmäßig, aber begrenze auf maxPerDay
+        let totalKapazität = nFree * maxPerDay;
+        let zuVerteilen = Math.min(verbleibend, totalKapazität);
+        // gleichmäßige Verteilung in 15-Minuten-Schritten
+        let proTag = Math.floor(zuVerteilen / nFree / 15) * 15;
+        let rest = zuVerteilen - proTag * nFree;
+        freeDays.forEach(({dk}) => {
+          let val = proTag;
+          if (rest >= 15) { val += 15; rest -= 15; }
+          tagH[dk] = val;
+        });
+        // Falls verbleibend > totalKapazität, werden die freien Tage auf max gefüllt
+        if (verbleibend > totalKapazität) {
+          freeDays.forEach(({dk}) => tagH[dk] = maxPerDay);
         }
-        return;
+      } else {
+        freeDays.forEach(({dk}) => tagH[dk] = 0);
       }
       
-      const ziel=Math.min(wIst, soll);
-      const nVert=verteilbar.length;
-      // 15-Minuten-Schritte
-      let proTag=Math.floor(ziel/nVert/15)*15;
-      let rest=ziel-proTag*nVert;
-      const tagH={};
-      verteilbar.forEach(({dk})=>{
-        tagH[dk]=proTag + (rest>=15 ? (rest-=15, 15) : 0);
-      });
+      // Ausgabe
+      const hasIntern = allDays.some(({e}) => e && INTERN_TYPES.includes(e.type));
+      const hasReal = realDays.length > 0;
+      const hasFree = freeDays.length > 0;
+      if (!hasReal && !hasIntern && !hasFree) return; // keine Einträge
       
       h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
         <span style="font-size:14px;font-weight:800;color:#FF6B35">${fmt(ziel)}</span></div>`;
       
       dks.forEach(dk=>{
-        const e=D[dk]; const d=new Date(dk+'T12:00:00'); const dn=DY[d.getDay()];
-        if(e && INTERN_TYPES.includes(e.type)){
+        const e=D[dk];
+        const d=new Date(dk+'T12:00:00');
+        const dn=DY[d.getDay()];
+        if (e && INTERN_TYPES.includes(e.type)) {
           const ti=TINFO[e.type];
           h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
-        } else if(tagH[dk] !== undefined){
+        } else if (tagH[dk] !== undefined) {
           const isReal = e && (e.type==='n'||e.type==='nt'||e.type==='o');
           const label = isReal ? '' : ' (verteilt)';
           h+=`<div class="xview-entry${!e?' empty-day':''}"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}${label}</span><span style="font-weight:700">${fmt(tagH[dk])}</span></div>`;
