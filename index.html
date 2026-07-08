@@ -720,12 +720,12 @@ function rxp(){
       // Ziel = min(wIst, 39h)
       const ziel = Math.min(wIst, APS_SOLL);
       
-      // Tage mit echten Einträgen (n, nt, o) – deren reale Zeit
+      // Tage mit echten Einträgen (n, nt, o) – deren reale Zeit, gedeckelt auf MAX_DAY
       const realDays = allDays.filter(({e}) => e && (e.type==='n'||e.type==='nt'||e.type==='o'));
       const realSum = realDays.reduce((s, {dk}) => {
         const e=D[dk];
-        if(e.type==='o') return s+OT_MINS;
-        return s+(e.net||0);
+        let val = (e.type==='o') ? OT_MINS : (e.net||0);
+        return s + Math.min(val, MAX_DAY);
       }, 0);
       
       // Freie Tage (Mo–Fr ohne Eintrag)
@@ -733,12 +733,13 @@ function rxp(){
       
       let verbleibend = Math.max(0, ziel - realSum);
       const tagH = {};
-      // Echte Tage übernehmen
+      // Echte Tage – auf MAX_DAY deckeln
       realDays.forEach(({dk}) => {
         const e=D[dk];
-        tagH[dk] = (e.type==='o') ? OT_MINS : (e.net||0);
+        let val = (e.type==='o') ? OT_MINS : (e.net||0);
+        tagH[dk] = Math.min(val, MAX_DAY);
       });
-      // Freie Tage bekommen den Rest, max 468 min
+      // Freie Tage bekommen den Rest, max MAX_DAY
       if(freeDays.length>0 && verbleibend>0){
         const maxPerDay = MAX_DAY;
         const totalKapazität = freeDays.length * maxPerDay;
@@ -760,7 +761,6 @@ function rxp(){
       }
       
       // Ausgabe
-      const hasIntern = allDays.some(({e}) => e && INTERN_TYPES.includes(e.type));
       h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
         <span style="font-size:14px;font-weight:800;color:#FF6B35">${fmt(ziel)}</span></div>`;
