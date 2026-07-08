@@ -696,8 +696,9 @@ function rxp(){
         if(e.type==='n'||e.type==='nt') return s+(e.net||0);
         return s;
       },0);
-      if(wIst===0) {
-        // Zeige nur interne Einträge, falls vorhanden
+      
+      // Wenn keine Arbeitsstunden, zeige nur interne Einträge
+      if(wIst===0){
         const hasIntern = allDays.some(({e})=>e && INTERN_TYPES.includes(e.type));
         if(hasIntern){
           h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -717,47 +718,31 @@ function rxp(){
         return;
       }
       
-      // Ziel = min(wIst, 39h)
       const ziel = Math.min(wIst, APS_SOLL);
-      
-      // Tage mit echten Einträgen (n, nt, o) – deren reale Zeit, gedeckelt auf MAX_DAY
-      const realDays = allDays.filter(({e}) => e && (e.type==='n'||e.type==='nt'||e.type==='o'));
-      const realSum = realDays.reduce((s, {dk}) => {
-        const e=D[dk];
-        let val = (e.type==='o') ? OT_MINS : (e.net||0);
-        return s + Math.min(val, MAX_DAY);
-      }, 0);
-      
-      // Freie Tage (Mo–Fr ohne Eintrag)
-      const freeDays = allDays.filter(({dow, e}) => dow>=1 && dow<=5 && !e);
-      
-      let verbleibend = Math.max(0, ziel - realSum);
       const tagH = {};
-      // Echte Tage – auf MAX_DAY deckeln
-      realDays.forEach(({dk}) => {
-        const e=D[dk];
-        let val = (e.type==='o') ? OT_MINS : (e.net||0);
-        tagH[dk] = Math.min(val, MAX_DAY);
-      });
-      // Freie Tage bekommen den Rest, max MAX_DAY
-      if(freeDays.length>0 && verbleibend>0){
-        const maxPerDay = MAX_DAY;
-        const totalKapazität = freeDays.length * maxPerDay;
-        let zuVerteilen = Math.min(verbleibend, totalKapazität);
-        // Gleichmäßig in 15-Min-Schritten
-        let proTag = Math.floor(zuVerteilen / freeDays.length / 15) * 15;
-        let rest = zuVerteilen - proTag * freeDays.length;
-        freeDays.forEach(({dk}) => {
-          let val = proTag;
-          if(rest >= 15){ val += 15; rest -= 15; }
-          tagH[dk] = val;
+      
+      // Neue Logik:
+      if (wIst >= APS_SOLL) {
+        // Bei >= 39h: alle Mo–Fr Tage (außer interne) auf MAX_DAY setzen
+        // Interne Tage werden separat behandelt
+        allDays.forEach(({dk, dow, e}) => {
+          if (dow >= 1 && dow <= 5 && !(e && INTERN_TYPES.includes(e.type))) {
+            tagH[dk] = MAX_DAY;
+          } else {
+            // interne oder Wochenende – später separat behandelt
+          }
         });
-        // Falls mehr als Kapazität, fülle alle auf max
-        if(verbleibend > totalKapazität){
-          freeDays.forEach(({dk}) => tagH[dk] = maxPerDay);
-        }
       } else {
-        freeDays.forEach(({dk}) => tagH[dk] = 0);
+        // Bei < 39h: echte Werte übernehmen (max. MAX_DAY), freie Tage 0
+        allDays.forEach(({dk, dow, e}) => {
+          if (dow >= 1 && dow <= 5 && e && !INTERN_TYPES.includes(e.type)) {
+            let val = (e.type==='o') ? OT_MINS : (e.net||0);
+            tagH[dk] = Math.min(val, MAX_DAY);
+          } else if (dow >= 1 && dow <= 5 && !e) {
+            tagH[dk] = 0;
+          }
+          // Sa/So werden ignoriert
+        });
       }
       
       // Ausgabe
@@ -772,7 +757,7 @@ function rxp(){
         if(e && INTERN_TYPES.includes(e.type)){
           const ti=TINFO[e.type];
           h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
-        } else if(tagH[dk] !== undefined){
+        } else if (tagH[dk] !== undefined) {
           const isReal = e && (e.type==='n'||e.type==='nt'||e.type==='o');
           const label = isReal ? '' : ' (verteilt)';
           h+=`<div class="xview-entry${!e?' empty-day':''}"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}${label}</span><span style="font-weight:700">${fmt(tagH[dk])}</span></div>`;
@@ -783,7 +768,7 @@ function rxp(){
       h+='</div>';
     });
     
-    // Gesamtsumme über den Monat (nur die auf 39h gekürzten Wochen)
+    // Gesamtsumme über den Monat
     const totalMon = Object.keys(byWk).reduce((s,wk)=>{
       const dks=byWk[wk];
       const wIst = dks.reduce((ws,dk)=>{ const e=D[dk]; if(!e) return ws; if(e.type==='o') return ws+OT_MINS; if(e.type==='n'||e.type==='nt') return ws+(e.net||0); return ws; },0);
