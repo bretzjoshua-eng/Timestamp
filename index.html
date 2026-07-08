@@ -237,9 +237,10 @@ const DY=['So','Mo','Di','Mi','Do','Fr','Sa'];
 const DMS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 const DML=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const INTERN_TYPES=['u','s','h','f'];
-const OT_MINS=8*60;
-const APS_MAX=8*60;
-const MAX_DAY=7.8*60; // 468 min
+const OT_MINS=8*60;          // 8h pro Überstunden-Tag
+const APS_MAX=8*60;          // 8h max. für APS
+const APS_SOLL=39*60;        // 39h pro Woche für Überstundenberechnung
+const MAX_DAY=7.8*60;        // 7,8h = 468 min
 
 // ════════════════════════════════════════════════════════
 // STATE
@@ -326,42 +327,50 @@ const TINFO={
 // BERECHNUNGEN
 // ════════════════════════════════════════════════════════
 function calcOT(){
-  const soll=S.soll*60;
+  // Summiere pro Woche die tatsächlichen Arbeitsstunden (n, nt, o)
   const byWk={};
   keys().forEach(k=>{
     const e=D[k];
     const wk=isoWk(k);
-    if(!byWk[wk])byWk[wk]=0;
-    if(e.type==='o')byWk[wk]+=OT_MINS;
-    else if(e.type==='n'||e.type==='nt')byWk[wk]+=e.net||0;
+    if(!byWk[wk]) byWk[wk]=0;
+    if(e.type==='o') byWk[wk] += OT_MINS;
+    else if(e.type==='n' || e.type==='nt') byWk[wk] += (e.net||0);
   });
-  const totalOT=Object.values(byWk).reduce((s,wIst)=>s+Math.max(0,wIst-soll),0);
-  let aps, fus;
-  if (S.apsStatus==='cleared') {
-    aps=0;
-    const totalOT_current=totalOT;
-    const fusAtClear=S.fusAtClear||0;
-    const totalOT_at_clear=S.totalOT_at_clear||0;
-    fus=Math.max(0, fusAtClear + (totalOT_current - totalOT_at_clear));
-  } else if (S.apsStatus==='full') {
-    aps=APS_MAX;
-    fus=Math.max(0, totalOT - (APS_MAX - S.apsStart*60));
-  } else { // active
-    const apsStart=S.apsStart*60;
-    aps=Math.min(apsStart+totalOT, APS_MAX);
-    fus=Math.max(0, totalOT - (APS_MAX - apsStart));
+  // Gesamtüberstunden = Summe der positiven Differenzen (Ist - APS_SOLL) pro Woche
+  let totalOT = 0;
+  for (const wk in byWk) {
+    const ist = byWk[wk];
+    if (ist > APS_SOLL) totalOT += (ist - APS_SOLL);
   }
-  return {totalOT, aps, fus};
+  
+  let aps, fus;
+  if (S.apsStatus === 'cleared') {
+    aps = 0;
+    const totalOT_current = totalOT;
+    const fusAtClear = S.fusAtClear || 0;
+    const totalOT_at_clear = S.totalOT_at_clear || 0;
+    fus = Math.max(0, fusAtClear + (totalOT_current - totalOT_at_clear));
+  } else if (S.apsStatus === 'full') {
+    aps = APS_MAX;
+    const apsStart = S.apsStart * 60;
+    fus = Math.max(0, totalOT - (APS_MAX - apsStart));
+  } else { // active
+    const apsStart = S.apsStart * 60;
+    aps = Math.min(apsStart + totalOT, APS_MAX);
+    fus = Math.max(0, totalOT - (APS_MAX - apsStart));
+  }
+  return { totalOT, aps, fus };
 }
+
 function calcUrl(){
   let auto=0;
   if(S.urlFrom){
-    const from=new Date(S.urlFrom+'T12:00:00'),now=new Date();
+    const from=new Date(S.urlFrom+'T12:00:00'), now=new Date();
     const diffMs=now-from;
-    if(diffMs>0)auto=Math.floor(diffMs/(14*86400000));
+    if(diffMs>0) auto=Math.floor(diffMs/(14*86400000));
   }
   const used=keys().filter(k=>D[k].type==='u').length;
-  return{saldo:S.urlStart+auto-used,auto,used};
+  return { saldo: S.urlStart + auto - used, auto, used };
 }
 
 // ════════════════════════════════════════════════════════
@@ -381,11 +390,11 @@ function go(t){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
   document.getElementById('sec-'+t).classList.add('on');
-  ['e','k','w','m','x'].forEach((id,i)=>{if(id===t)document.querySelectorAll('.tb')[i].classList.add('on')});
-  if(t==='k')rkonten();
-  if(t==='w')rwv();
-  if(t==='m')rmonth();
-  if(t==='x')rxsel();
+  ['e','k','w','m','x'].forEach((id,i)=>{if(id===t) document.querySelectorAll('.tb')[i].classList.add('on')});
+  if(t==='k') rkonten();
+  if(t==='w') rwv();
+  if(t==='m') rmonth();
+  if(t==='x') rxsel();
 }
 
 // ════════════════════════════════════════════════════════
@@ -393,19 +402,19 @@ function go(t){
 // ════════════════════════════════════════════════════════
 function setT(t){
   eT=t;
-  Object.keys(TINFO).forEach(x=>{const el=document.getElementById('tb-'+x);if(el)el.classList.remove('on')});
+  Object.keys(TINFO).forEach(x=>{const el=document.getElementById('tb-'+x); if(el) el.classList.remove('on')});
   document.getElementById('tb-'+t)?.classList.add('on');
-  const needTime=t==='n'||t==='nt';
-  document.getElementById('tfields').style.display=needTime?'block':'none';
-  document.getElementById('nf-row').style.display=t==='nt'?'block':'none';
+  const needTime = (t==='n' || t==='nt');
+  document.getElementById('tfields').style.display = needTime ? 'block':'none';
+  document.getElementById('nf-row').style.display = (t==='nt') ? 'block':'none';
   uprev();
 }
 function uprev(){
   const box=document.getElementById('pvb');
-  if(eT==='o'){box.innerHTML='⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme)';return}
-  if(INTERN_TYPES.includes(eT)){box.innerHTML=`${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong>`;return}
-  const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
-  if(!a||!b){box.innerHTML='Netto: <strong>–</strong>';return}
+  if(eT==='o'){ box.innerHTML='⚡ <strong>Überstunden-Tag: 8h</strong> (zählt zur Wochensumme)'; return; }
+  if(INTERN_TYPES.includes(eT)){ box.innerHTML=`${TINFO[eT]?.lbl||eT}: <strong>firmenintern verrechnet</strong>`; return; }
+  const a=document.getElementById('fs').value, b=document.getElementById('fe').value, p=parseInt(document.getElementById('fp').value)||0;
+  if(!a||!b){ box.innerHTML='Netto: <strong>–</strong>'; return; }
   if(eT==='nt'){
     const f=parseFloat(document.getElementById('nf').value)||2;
     const r=nightAdj(a,b,p,f);
@@ -415,64 +424,63 @@ function uprev(){
   }
 }
 function saveE(){
-  const date=document.getElementById('fd').value,note=document.getElementById('fn').value.trim();
-  if(!date)return alert('Bitte Datum ausfüllen.');
+  const date=document.getElementById('fd').value, note=document.getElementById('fn').value.trim();
+  if(!date) return alert('Bitte Datum ausfüllen.');
   
   const warns=[];
-  const dd=new Date(date+'T12:00:00'),dow=dd.getDay();
-  if(dow===0||dow===6)warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
-  if(D[date]&&date!==editK)warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
-  if(dd>new Date()&&date!==editK)warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
-  if(warns.length&&!confirm(warns.join('\n\n')+'\n\nSpeichern?'))return;
+  const dd=new Date(date+'T12:00:00'), dow=dd.getDay();
+  if(dow===0||dow===6) warns.push(`📅 ${ddisp(date)} ist ein ${dow===0?'Sonntag':'Samstag'} — wirklich eintragen?`);
+  if(D[date]&&date!==editK) warns.push(`⚠️ Für diesen Tag gibt es bereits einen Eintrag. Überschreiben?`);
+  if(dd>new Date()&&date!==editK) warns.push(`🔮 Dieses Datum liegt in der Zukunft.`);
+  if(warns.length&&!confirm(warns.join('\n\n')+'\n\nSpeichern?')) return;
   
   let e;
   // Urlaub -> ggf. APS clearen
   if(eT==='u' && S.apsStatus==='full' && S.apsStatus!=='cleared') {
     const ot=calcOT();
-    S.apsStatus='cleared';
-    S.apsClearedDate=date;
-    S.fusAtClear=ot.fus;
-    S.totalOT_at_clear=ot.totalOT;
-    st.s(SS,JSON.stringify(S));
+    S.apsStatus = 'cleared';
+    S.apsClearedDate = date;
+    S.fusAtClear = ot.fus;
+    S.totalOT_at_clear = ot.totalOT;
+    st.s(SS, JSON.stringify(S));
     alert('✅ APS-Konto auf 0 gesetzt! Die bisherigen APS-Überstunden verschwinden und werden nicht zu Fussenegger übertragen.');
   }
   
   if(eT==='n'){
     const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
-    if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
-    if(span(a,b)>14*60&&!confirm('Schicht über 14h — stimmt das?'))return;
-    e={type:'n',start:a,end:b,pause:p,net:Math.max(0,span(a,b)-p),note};
+    if(!a||!b) return alert('Bitte Von und Bis ausfüllen.');
+    if(span(a,b)>14*60&&!confirm('Schicht über 14h — stimmt das?')) return;
+    e={type:'n', start:a, end:b, pause:p, net:Math.max(0, span(a,b)-p), note};
   }else if(eT==='nt'){
     const a=document.getElementById('fs').value,b=document.getElementById('fe').value,p=parseInt(document.getElementById('fp').value)||0;
-    if(!a||!b)return alert('Bitte Von und Bis ausfüllen.');
-    const f=parseFloat(document.getElementById('nf').value)||2,r=nightAdj(a,b,p,f);
-    e={type:'nt',start:a,end:b,pause:p,net:r.net,nMin:r.nMin,dMin:r.dMin,factor:f,note};
+    if(!a||!b) return alert('Bitte Von und Bis ausfüllen.');
+    const f=parseFloat(document.getElementById('nf').value)||2, r=nightAdj(a,b,p,f);
+    e={type:'nt', start:a, end:b, pause:p, net:r.net, nMin:r.nMin, dMin:r.dMin, factor:f, note};
   }else if(eT==='o'){
-    // bei Überstunden-Tag kein Clearen (das passiert nur bei Urlaub)
-    e={type:'o',net:OT_MINS,note};
+    e={type:'o', net:OT_MINS, note};
   }else{
-    e={type:eT,net:0,note};
+    e={type:eT, net:0, note};
   }
   
-  D[date]=e;saveD();editK=null;resetF();upd();
+  D[date]=e; saveD(); editK=null; resetF(); upd();
   checkApsFull();
   go('k');
 }
 function checkApsFull(){
-  if(S.apsStatus!=='active')return;
+  if(S.apsStatus!=='active') return;
   const ot=calcOT();
-  if(ot.aps>=APS_MAX){
+  if(ot.aps >= APS_MAX){
     S.apsStatus='full';
     S.apsFullDate=iso(new Date());
-    st.s(SS,JSON.stringify(S));
-    console.log('APS voll bei 8h erreicht am',S.apsFullDate);
+    st.s(SS, JSON.stringify(S));
+    console.log('APS voll bei 8h erreicht am', S.apsFullDate);
   }
 }
-function cancelE(){editK=null;resetF()}
+function cancelE(){ editK=null; resetF(); }
 function resetF(){
   document.getElementById('fd').value=iso(new Date());
-  document.getElementById('fs').value='07:00';document.getElementById('fe').value='15:30';
-  document.getElementById('fp').value='30';document.getElementById('fn').value='';
+  document.getElementById('fs').value='07:00'; document.getElementById('fe').value='15:30';
+  document.getElementById('fp').value='30'; document.getElementById('fn').value='';
   document.getElementById('nf').value='2';
   document.getElementById('ftit').textContent='Neuer Eintrag';
   document.getElementById('sbtn').textContent='Speichern';
@@ -480,24 +488,24 @@ function resetF(){
   setT('n');
 }
 function startEdit(k){
-  const e=D[k];editK=k;
-  document.getElementById('fd').value=k;document.getElementById('fn').value=e.note||'';
-  if(e.type==='n'){document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;setT('n')}
-  else if(e.type==='nt'){document.getElementById('fs').value=e.start;document.getElementById('fe').value=e.end;document.getElementById('fp').value=e.pause;document.getElementById('nf').value=String(e.factor||2);setT('nt')}
+  const e=D[k]; editK=k;
+  document.getElementById('fd').value=k; document.getElementById('fn').value=e.note||'';
+  if(e.type==='n'){ document.getElementById('fs').value=e.start; document.getElementById('fe').value=e.end; document.getElementById('fp').value=e.pause; setT('n'); }
+  else if(e.type==='nt'){ document.getElementById('fs').value=e.start; document.getElementById('fe').value=e.end; document.getElementById('fp').value=e.pause; document.getElementById('nf').value=String(e.factor||2); setT('nt'); }
   else setT(e.type);
   document.getElementById('ftit').textContent='Bearbeiten';
   document.getElementById('sbtn').textContent='Aktualisieren';
   document.getElementById('cbtn').style.display='block';
-  uprev();go('e');window.scrollTo(0,0);
+  uprev(); go('e'); window.scrollTo(0,0);
 }
-function delE(k){if(!confirm(`${ddisp(k)} löschen?`))return;delete D[k];saveD();upd();rkonten()}
-function upd(){document.getElementById('ecnt').textContent=`${Object.keys(D).length} Einträge`}
+function delE(k){ if(!confirm(`${ddisp(k)} löschen?`)) return; delete D[k]; saveD(); upd(); rkonten(); }
+function upd(){ document.getElementById('ecnt').textContent=`${Object.keys(D).length} Einträge`; }
 
 // ════════════════════════════════════════════════════════
 // KONTEN
 // ════════════════════════════════════════════════════════
 function rkonten(){
-  const ot=calcOT(),url=calcUrl(),soll=S.soll*60;
+  const ot=calcOT(), url=calcUrl(), soll=S.soll*60;
   
   const apsKonto=document.getElementById('aps-konto');
   const apsLabel=document.getElementById('aps-label');
@@ -525,17 +533,17 @@ function rkonten(){
     document.getElementById('aps-h').textContent=fmt(ot.aps);
     document.getElementById('aps-h').className='kh aps';
     document.getElementById('aps-sub').textContent=`von max. 8h (${Math.round(ot.aps/APS_MAX*100)}%)`;
-    document.getElementById('aps-bar').style.width=Math.min(100,ot.aps/APS_MAX*100)+'%';
+    document.getElementById('aps-bar').style.width=Math.min(100, ot.aps/APS_MAX*100)+'%';
   }
   
   document.getElementById('fus-h').textContent=fmt(ot.fus);
-  document.getElementById('url-h').textContent=`${Math.max(0,url.saldo)} Tage`;
+  document.getElementById('url-h').textContent=`${Math.max(0, url.saldo)} Tage`;
   document.getElementById('url-sub').textContent=`${url.used} verbraucht · ${url.auto} automatisch hinzugekommen`;
   
-  const today=new Date(),tdi=iso(today);
-  const mon=new Date(today);mon.setDate(today.getDate()-((today.getDay()+6)%7));
-  const dks=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dks.push(iso(d))}
-  const wIst=dks.reduce((s,k)=>{const e=D[k];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s},0);
+  const today=new Date(), tdi=iso(today);
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  const dks=[]; for(let i=0;i<7;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); dks.push(iso(d)); }
+  const wIst=dks.reduce((s,k)=>{ const e=D[k]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s; },0);
   const diff=wIst-soll;
   document.getElementById('k-week').innerHTML=`
     <div class="otrow"><div class="otl">Ist-Stunden<small>inkl. Überstunden-Tage</small></div><span class="otv">${fmt(wIst)}</span></div>
@@ -547,23 +555,23 @@ function rkonten(){
 // WOCHENANSICHT
 // ════════════════════════════════════════════════════════
 function rwv(){
-  const today=new Date(),tdi=iso(today);
-  const mon=new Date(today);mon.setDate(today.getDate()-((today.getDay()+6)%7)+wOff*7);
-  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
-  const wk=isoWk(iso(mon)),wn=parseInt(wk.split('-W')[1]);
+  const today=new Date(), tdi=iso(today);
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7)+wOff*7);
+  const sun=new Date(mon); sun.setDate(mon.getDate()+6);
+  const wk=isoWk(iso(mon)), wn=parseInt(wk.split('-W')[1]);
   document.getElementById('wnl').textContent=`KW ${wn} · ${mon.getDate()}. ${DMS[mon.getMonth()]} – ${sun.getDate()}. ${DMS[sun.getMonth()]} ${sun.getFullYear()}`;
   let h='<div class="wbox"><div class="wkhr"><span class="wkkw">KW '+wn+'</span></div>';
   for(let i=0;i<7;i++){
-    const d=new Date(mon);d.setDate(mon.getDate()+i);
-    const dk=iso(d),e=D[dk],isWe=i>=5,isT=dk===tdi;
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    const dk=iso(d), e=D[dk], isWe=i>=5, isT=dk===tdi;
     const ti=e?TINFO[e.type]:null;
-    let dotCls='dot-x',hStr='–',hCls='e',meta='';
+    let dotCls='dot-x', hStr='–', hCls='e', meta='';
     if(e){
-      dotCls=ti.dot;hCls=ti.col;
-      if(e.type==='n'||e.type==='nt')hStr=fmt(e.net);
-      else if(e.type==='o')hStr='8h';
+      dotCls=ti.dot; hCls=ti.col;
+      if(e.type==='n'||e.type==='nt') hStr=fmt(e.net);
+      else if(e.type==='o') hStr='8h';
       else hStr=ti.lbl;
-      if(e.type==='n'||e.type==='nt')meta=`<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
+      if(e.type==='n'||e.type==='nt') meta=`<div class="wdm">${e.start}–${e.end} · Pause ${e.pause}min</div>`;
     }
     h+=`<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
       <div class="wdl"><div class="dot ${dotCls}"></div>
@@ -582,41 +590,41 @@ function rwv(){
 // MONATSANSICHT
 // ════════════════════════════════════════════════════════
 function rmonth(){
-  const now=new Date(),y=now.getFullYear(),mo=now.getMonth()+mOff;
-  const d1=new Date(y,mo,1);
-  const yr=d1.getFullYear(),mr=d1.getMonth();
+  const now=new Date(), y=now.getFullYear(), mo=now.getMonth()+mOff;
+  const d1=new Date(y, mo, 1);
+  const yr=d1.getFullYear(), mr=d1.getMonth();
   document.getElementById('mnl').textContent=`${DML[mr]} ${yr}`;
-  const daysInMonth=new Date(yr,mr+1,0).getDate();
+  const daysInMonth=new Date(yr, mr+1, 0).getDate();
   
   const byWk={};
-  for(let day=1;day<=daysInMonth;day++){
+  for(let day=1; day<=daysInMonth; day++){
     const dk=`${yr}-${pad(mr+1)}-${pad(day)}`;
     const wk=isoWk(dk);
-    if(!byWk[wk])byWk[wk]=[];
+    if(!byWk[wk]) byWk[wk]=[];
     byWk[wk].push(dk);
   }
   
   let html='';
   Object.keys(byWk).sort().forEach(wk=>{
     const dks=byWk[wk];
-    const wIst=dks.reduce((s,k)=>{const e=D[k];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s},0);
+    const wIst=dks.reduce((s,k)=>{ const e=D[k]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s; },0);
     const wn=parseInt(wk.split('-W')[1]);
     html+=`<div class="wbox"><div class="wkhr"><span class="wkkw">KW ${wn}</span><span class="wktb">${fmt(wIst)}</span></div>`;
     
     const[ys,ws]=wk.split('-W');
-    const mon=wkMon(parseInt(ys),parseInt(ws));
+    const mon=wkMon(parseInt(ys), parseInt(ws));
     for(let i=0;i<7;i++){
-      const d=new Date(mon);d.setDate(mon.getDate()+i);
-      if(d.getMonth()!==mr)continue;
-      const dk=iso(d),e=D[dk],isWe=i>=5,isT=dk===iso(new Date());
+      const d=new Date(mon); d.setDate(mon.getDate()+i);
+      if(d.getMonth()!==mr) continue;
+      const dk=iso(d), e=D[dk], isWe=i>=5, isT=dk===iso(new Date());
       const ti=e?TINFO[e.type]:null;
-      let dotCls='dot-x',hStr='–',hCls='e',meta='';
+      let dotCls='dot-x', hStr='–', hCls='e', meta='';
       if(e){
-        dotCls=ti.dot;hCls=ti.col;
-        if(e.type==='n'||e.type==='nt')hStr=fmt(e.net);
-        else if(e.type==='o')hStr='8h';
+        dotCls=ti.dot; hCls=ti.col;
+        if(e.type==='n'||e.type==='nt') hStr=fmt(e.net);
+        else if(e.type==='o') hStr='8h';
         else hStr=ti.lbl;
-        if(e.type==='n'||e.type==='nt')meta=`<div class="wdm">${e.start}–${e.end}</div>`;
+        if(e.type==='n'||e.type==='nt') meta=`<div class="wdm">${e.start}–${e.end}</div>`;
       }
       html+=`<div class="wd${isWe?' we':''}${isT?' td':''}" onclick="startEdit('${dk}')">
         <div class="wdl"><div class="dot ${dotCls}"></div>
@@ -629,7 +637,7 @@ function rmonth(){
     }
     html+='</div>';
   });
-  if(!html)html='<div class="empty">Keine Einträge in diesem Monat.</div>';
+  if(!html) html='<div class="empty">Keine Einträge in diesem Monat.</div>';
   document.getElementById('mbox').innerHTML=html;
 }
 
@@ -638,8 +646,8 @@ function rmonth(){
 // ════════════════════════════════════════════════════════
 function setXV(v){
   xView=v;
-  document.getElementById('xv-aps').classList.toggle('on',v==='aps');
-  document.getElementById('xv-fus').classList.toggle('on',v==='fus');
+  document.getElementById('xv-aps').classList.toggle('on', v==='aps');
+  document.getElementById('xv-fus').classList.toggle('on', v==='fus');
   rxp();
 }
 function rxsel(){
@@ -650,8 +658,8 @@ function rxsel(){
   months.forEach(m=>{
     const[y,mo]=m.split('-');
     const op=document.createElement('option');
-    op.value=m;op.textContent=`${DML[parseInt(mo)-1]} ${y}`;
-    if(m===cur)op.selected=true;
+    op.value=m; op.textContent=`${DML[parseInt(mo)-1]} ${y}`;
+    if(m===cur) op.selected=true;
     sel.appendChild(op);
   });
   rxp();
@@ -659,39 +667,60 @@ function rxsel(){
 function rxp(){
   const el=document.getElementById('xview');
   const monFilter=document.getElementById('xmon').value;
-  if(!monFilter){el.innerHTML='<div class="empty">Bitte Monat auswählen.</div>';return}
+  if(!monFilter){ el.innerHTML='<div class="empty">Bitte Monat auswählen.</div>'; return; }
   const[y,mo]=monFilter.split('-').map(Number);
-  const daysInMonth=new Date(y,mo,0).getDate();
+  const daysInMonth=new Date(y, mo, 0).getDate();
   
   const monDays=[];
-  for(let day=1;day<=daysInMonth;day++)monDays.push(`${monFilter}-${pad(day)}`);
+  for(let day=1; day<=daysInMonth; day++) monDays.push(`${monFilter}-${pad(day)}`);
   
   const byWk={};
-  monDays.forEach(dk=>{const wk=isoWk(dk);if(!byWk[wk])byWk[wk]=[];byWk[wk].push(dk)});
+  monDays.forEach(dk=>{ const wk=isoWk(dk); if(!byWk[wk]) byWk[wk]=[]; byWk[wk].push(dk); });
   
   let h='';
   if(xView==='aps'){
-    const soll=39*60; // APS-Soll 39h/Woche
     Object.keys(byWk).sort().forEach(wk=>{
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
       
-      // Alle Tage mit Informationen
       const allDays=dks.map(dk=>{
         const d=new Date(dk+'T12:00:00');
         const dow=d.getDay();
-        return{dk,dow,e:D[dk]};
+        return {dk, dow, e:D[dk]};
       });
       
-      // Tatsächliche Arbeitszeit der Woche (n, nt, o)
-      const wIst=dks.reduce((s,dk)=>{
+      // Ist-Stunden der Woche (n, nt, o)
+      const wIst = dks.reduce((s,dk)=>{
         const e=D[dk]; if(!e) return s;
         if(e.type==='o') return s+OT_MINS;
         if(e.type==='n'||e.type==='nt') return s+(e.net||0);
         return s;
       },0);
+      if(wIst===0) {
+        // Zeige nur interne Einträge, falls vorhanden
+        const hasIntern = allDays.some(({e})=>e && INTERN_TYPES.includes(e.type));
+        if(hasIntern){
+          h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
+            <span style="font-size:14px;font-weight:800;color:#FF6B35">0h</span></div>`;
+          dks.forEach(dk=>{
+            const e=D[dk]; const d=new Date(dk+'T12:00:00'); const dn=DY[d.getDay()];
+            if(e && INTERN_TYPES.includes(e.type)){
+              const ti=TINFO[e.type];
+              h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
+            } else {
+              h+=`<div class="xview-entry empty-day"><span style="color:#3A3A3C">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span><span style="color:#3A3A3C">–</span></div>`;
+            }
+          });
+          h+='</div>';
+        }
+        return;
+      }
       
-      // Tage mit echten Einträgen (n, nt, o) – ihre reale Arbeitszeit
+      // Ziel = min(wIst, 39h)
+      const ziel = Math.min(wIst, APS_SOLL);
+      
+      // Tage mit echten Einträgen (n, nt, o) – deren reale Zeit
       const realDays = allDays.filter(({e}) => e && (e.type==='n'||e.type==='nt'||e.type==='o'));
       const realSum = realDays.reduce((s, {dk}) => {
         const e=D[dk];
@@ -699,40 +728,31 @@ function rxp(){
         return s+(e.net||0);
       }, 0);
       
-      // Freie Tage für Verteilung: Mo-Fr ohne Eintrag
-      const freeDays = allDays.filter(({dow, e}) => {
-        if (dow>=1 && dow<=5 && !e) return true; // Mo-Fr ohne Eintrag
-        return false;
-      });
+      // Freie Tage (Mo–Fr ohne Eintrag)
+      const freeDays = allDays.filter(({dow, e}) => dow>=1 && dow<=5 && !e);
       
-      // Ziel: min(wIst, 39h)
-      const ziel = Math.min(wIst, soll);
       let verbleibend = Math.max(0, ziel - realSum);
-      
-      // Verteilung auf freie Tage, max 468 min pro Tag
-      const nFree = freeDays.length;
       const tagH = {};
-      // Für echte Tage setzen wir die echte Zeit
+      // Echte Tage übernehmen
       realDays.forEach(({dk}) => {
         const e=D[dk];
         tagH[dk] = (e.type==='o') ? OT_MINS : (e.net||0);
       });
-      // Für freie Tage verteilen
-      if (nFree > 0 && verbleibend > 0) {
-        let maxPerDay = MAX_DAY;
-        // Verteile gleichmäßig, aber begrenze auf maxPerDay
-        let totalKapazität = nFree * maxPerDay;
+      // Freie Tage bekommen den Rest, max 468 min
+      if(freeDays.length>0 && verbleibend>0){
+        const maxPerDay = MAX_DAY;
+        const totalKapazität = freeDays.length * maxPerDay;
         let zuVerteilen = Math.min(verbleibend, totalKapazität);
-        // gleichmäßige Verteilung in 15-Minuten-Schritten
-        let proTag = Math.floor(zuVerteilen / nFree / 15) * 15;
-        let rest = zuVerteilen - proTag * nFree;
+        // Gleichmäßig in 15-Min-Schritten
+        let proTag = Math.floor(zuVerteilen / freeDays.length / 15) * 15;
+        let rest = zuVerteilen - proTag * freeDays.length;
         freeDays.forEach(({dk}) => {
           let val = proTag;
-          if (rest >= 15) { val += 15; rest -= 15; }
+          if(rest >= 15){ val += 15; rest -= 15; }
           tagH[dk] = val;
         });
-        // Falls verbleibend > totalKapazität, werden die freien Tage auf max gefüllt
-        if (verbleibend > totalKapazität) {
+        // Falls mehr als Kapazität, fülle alle auf max
+        if(verbleibend > totalKapazität){
           freeDays.forEach(({dk}) => tagH[dk] = maxPerDay);
         }
       } else {
@@ -741,10 +761,6 @@ function rxp(){
       
       // Ausgabe
       const hasIntern = allDays.some(({e}) => e && INTERN_TYPES.includes(e.type));
-      const hasReal = realDays.length > 0;
-      const hasFree = freeDays.length > 0;
-      if (!hasReal && !hasIntern && !hasFree) return; // keine Einträge
-      
       h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:12px;font-weight:700;color:#FF6B35">KW ${wn}</span>
         <span style="font-size:14px;font-weight:800;color:#FF6B35">${fmt(ziel)}</span></div>`;
@@ -753,10 +769,10 @@ function rxp(){
         const e=D[dk];
         const d=new Date(dk+'T12:00:00');
         const dn=DY[d.getDay()];
-        if (e && INTERN_TYPES.includes(e.type)) {
+        if(e && INTERN_TYPES.includes(e.type)){
           const ti=TINFO[e.type];
           h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
-        } else if (tagH[dk] !== undefined) {
+        } else if(tagH[dk] !== undefined){
           const isReal = e && (e.type==='n'||e.type==='nt'||e.type==='o');
           const label = isReal ? '' : ' (verteilt)';
           h+=`<div class="xview-entry${!e?' empty-day':''}"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}${label}</span><span style="font-weight:700">${fmt(tagH[dk])}</span></div>`;
@@ -767,10 +783,11 @@ function rxp(){
       h+='</div>';
     });
     
-    const totalMon=Object.keys(byWk).reduce((s,wk)=>{
+    // Gesamtsumme über den Monat (nur die auf 39h gekürzten Wochen)
+    const totalMon = Object.keys(byWk).reduce((s,wk)=>{
       const dks=byWk[wk];
-      const wIst=dks.reduce((ws,dk)=>{const e=D[dk]; if(!e) return ws; if(e.type==='o') return ws+OT_MINS; if(e.type==='n'||e.type==='nt') return ws+(e.net||0); return ws;},0);
-      return s+Math.min(wIst, 39*60);
+      const wIst = dks.reduce((ws,dk)=>{ const e=D[dk]; if(!e) return ws; if(e.type==='o') return ws+OT_MINS; if(e.type==='n'||e.type==='nt') return ws+(e.net||0); return ws; },0);
+      return s + Math.min(wIst, APS_SOLL);
     },0);
     h+=`<div class="card" style="background:rgba(255,107,53,.08);border-color:rgba(255,107,53,.3)">
       <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800">
@@ -778,11 +795,11 @@ function rxp(){
       <div style="font-size:11px;color:#8E8E93;margin-top:4px">Max. 39h/Woche · ${S.apsStatus==='cleared'?'✅ Abgeschlossen':'⏳ '+S.apsStatus}</div></div>`;
       
   } else {
-    // Fussenegger (unverändert)
+    // Fussenegger – unverändert
     Object.keys(byWk).sort().forEach(wk=>{
       const dks=byWk[wk];
       const wn=parseInt(wk.split('-W')[1]);
-      const wIst=dks.reduce((s,dk)=>{const e=D[dk];if(!e)return s;if(e.type==='o')return s+OT_MINS;if(e.type==='n'||e.type==='nt')return s+(e.net||0);return s},0);
+      const wIst = dks.reduce((s,dk)=>{ const e=D[dk]; if(!e) return s; if(e.type==='o') return s+OT_MINS; if(e.type==='n'||e.type==='nt') return s+(e.net||0); return s; },0);
       h+=`<div class="card-sm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:12px;font-weight:700;color:#64D2FF">KW ${wn}</span>
         <span style="font-size:14px;font-weight:800;color:#64D2FF">${fmt(wIst)}</span></div>`;
@@ -794,8 +811,8 @@ function rxp(){
           const ti=TINFO[e.type];
           h+=`<div class="xview-entry"><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]} <span class="etag ${ti.tag}">${ti.lbl}</span></span><span style="color:#8E8E93">${ti.lbl}</span></div>`;
         }else{
-          const hrs=e.type==='o'?OT_MINS:e.net||0;
-          const detail=e.type==='o'?'Überstunden-Tag':(e.type==='nt'?`${e.start}–${e.end} 🌙×${e.factor}`:`${e.start}–${e.end} · Pause ${e.pause}min`);
+          const hrs = (e.type==='o') ? OT_MINS : (e.net||0);
+          const detail = (e.type==='o') ? 'Überstunden-Tag' : (e.type==='nt' ? `${e.start}–${e.end} 🌙×${e.factor}` : `${e.start}–${e.end} · Pause ${e.pause}min`);
           h+=`<div class="xview-entry">
             <div><span style="color:#8E8E93">${dn}, ${d.getDate()}. ${DMS[d.getMonth()]}</span>
             <div style="font-size:10px;color:#48484A">${detail}</div></div>
@@ -813,17 +830,17 @@ function rxp(){
       <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px"><span>→ APS</span><span style="color:#FF6B35;font-weight:700">${S.apsStatus==='cleared'?'0h':fmt(ot.aps)}</span></div>
       <div style="display:flex;justify-content:space-between;font-size:13px"><span>→ Fussenegger</span><span style="color:#64D2FF;font-weight:700">${fmt(ot.fus)}</span></div></div>`;
   }
-  el.innerHTML=h||'<div class="empty">Keine Einträge für diesen Monat.</div>';
+  el.innerHTML = h || '<div class="empty">Keine Einträge für diesen Monat.</div>';
 }
 function doExp(){
-  const b=new Blob([JSON.stringify({data:D,settings:S},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`arbeitszeiten_${iso(new Date())}.json`;a.click();
+  const b=new Blob([JSON.stringify({data:D, settings:S}, null, 2)], {type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`arbeitszeiten_${iso(new Date())}.json`; a.click();
 }
 
 // ════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════
-loadD();loadS();upd();resetF();tick();setInterval(tick,10000);
+loadD(); loadS(); upd(); resetF(); tick(); setInterval(tick,10000);
 </script>
 </body>
 </html>
